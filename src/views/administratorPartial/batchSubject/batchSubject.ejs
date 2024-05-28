@@ -1,0 +1,398 @@
+
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+    <div class="manageAddRoom-container">
+        <div id="title">
+          <h2> Batch and Subject Information</h2>
+        </div>
+        <div class="table batchSubject_info" id="batchSubject-table">
+            <!-- <div class="batchSection-btn">
+                <button class="newadd" onclick="openbatchSubjectModal()">Add Subject Information</button>
+                <button class="newadd" onclick="openbatchSubjectModal()">Add Batch And Subject Information</button>
+            </div> -->
+            <div class="subjectBatch_add">
+                <div class="batchSection-btn">
+                    <button class="newadd" id="addSubjectBtn" onclick="toggleSection('subject-info')">Add Subject Information</button>
+                    <button class="newadd" id="addBatchAndSubjectBtn" onclick="toggleSection('batchSection-info')">Add Batch And Section Information</button>
+                </div>
+                <div class="subject-info">
+                    <form  id="subjectForm" action="/Administrator/settings/subjectInfo" method="post">
+                        <div class="subject-value">
+                            <input class="courseCode " type="text" name="courseCode" placeholder="Enter Course Code" autocomplete="off">
+                            <input class="courseName " type="text" name="courseName" placeholder="Enter Course Name" autocomplete="off">
+                            <input class="courseCredit " type="Number" name="courseCredit" placeholder="Enter Credit" autocomplete="off">
+                            <input type="submit" value="Save Subject">
+                        </div>
+                        <div class="subject-value-error">
+                            <div class="subject-value-error-element">
+                                <p class="error courseCode-error"></p>
+                            </div>
+                            <div class="subject-value-error-element">
+                                <p class="error courseName-error"></p>                          
+                            </div>
+                            <div class="subject-value-error-element">
+                                <p class="error courseCredit-error"></p>                           
+                            </div>
+                            <div class="subject-value-error-element"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="batchSection-info" id="batchSection-info">
+                    <form id="batchSectionForm">
+                        <div class="batchSubject-value">
+                            <input class="batch " type="text" name="batch" placeholder="Enter Batch" autocomplete="off">
+                            <input class="firstPart " type="text" name="firstPart" placeholder="Section First part" autocomplete="off">
+                            <input class="howSection " type="Number" name="howSection" id="howSection" placeholder="How many Section" autocomplete="off">
+                            <p class="newadd" id="addSubjectBtn" onclick="CreateSection()">Create Section</p>
+                        </div>
+                        <div id="error-value"></div>
+                        <div class="subject-value-error">
+                            <div class="subject-value-error-element">
+                                <p class="error batch-error"></p>
+                            </div>
+                            <div class="subject-value-error-element">
+                                <p class="error firstPart-error"></p>                          
+                            </div>
+                            <div class="subject-value-error-element">
+                                <p class="error howSection-error"></p>                           
+                            </div>
+                            <div class="subject-value-error-element"></div>
+                        </div>
+                        <div class="section-value" id="section-value"></div>
+                        <div class="subject-value-error">
+                            <div class="subject-value-error-element">
+                                <p class="error sectionName-error"></p>
+                            </div>
+                        </div>
+                        <div  id="section-submit"></div>
+                        <!-- <input type="submit" value="Create Section"> -->
+
+                    </form>
+                </div>
+             </div>
+            <div class="subjectBatch_show">
+                <div class="batchSection-btn">
+                    <button class="newadd active" id="showSubjectBtn" onclick="toggleSectionShow('subject-info-show')">Show Subject Information</button>
+                    <button class="newadd" id="showBatchAndSubjectBtn" onclick="toggleSectionShow('batchSection-info-show')">Show Batch And Section Information</button>
+                </div>
+                <div class="subject-info-show" id="subject-info-show">
+                    <% for (const [index, subject] of subjectShort.entries()) { %>   
+                        <% if (index == 0) { %>
+                            <div class="subjectShort-header">
+                                <div class="subjectShort-header-item">subject Code</div>
+                                <div class="subjectShort-header-item">subject Name</div>
+                                <div class="subjectShort-header-item">Cradit</div>
+                            </div>     
+                        <% } %>  
+                        <div class="subjectShort-value">
+                            <div class="subjectShort-itm">
+                                <%= subject.subjectCode %>
+                            </div>
+                            <div class="subjectShort-itm">
+                                <%= subject.subjectName %>
+                            </div>
+                            <div class="subjectShort-itm">
+                                <%= subject.subjectCreadit %>
+                            </div>
+                        </div>
+                     <% } %>
+                </div>
+                <div class="batchSection-info-show" id="batchSection-info-show">
+                    <% for (const [index, batchSection] of batchSectionShort.entries()) { %>
+                        <% if (index == 0) { %>
+                            <div class="subjectShort-header">
+                                <div class="subjectShort-header-item">Batch</div>
+                                <div class="subjectShort-header-item">Section Name</div>
+                            </div>     
+                        <% } %>
+                        <div class="subjectShort-value">
+                        <div class="subjectShort-itm">
+                            <%= batchSection.batch %>
+                        </div>
+                        <div class="subjectShort-itm">
+                            <% for (const [index, sectionName] of batchSection.sectionName.entries()) { %>
+                                <%= sectionName %>,
+                                <% } %>                           
+                        </div>                       
+                    </div>                       
+                        <% } %>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+      <!-- manu open close -->
+<%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>
+      
+<script>
+    // Function to show a toast message
+function showToast(message, isError = false) {
+  Toastify({
+    text: message,
+    duration: 5000,
+    backgroundColor: isError ? "#f44336" : "",
+  }).showToast();
+}
+
+    //   const subjectForm = document.querySelector("#subjectForm");
+      const subjectForm = document.getElementById('subjectForm')
+  subjectForm.onsubmit = async function (event) {
+    // subjectForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        // clear errors first---------------------------->>
+        const errorPlaceholders = document.querySelectorAll("p.error");
+        console.log("errorPlaceholders");
+        console.log(errorPlaceholders);
+        //    clear errors first---------------------------->>
+        for (let i = 0; i < errorPlaceholders.length; i++) {
+            errorPlaceholders[i].style.display = "none";
+        }
+
+        const inputErrors = document.querySelectorAll("input.error");
+        console.log("inputErrors");
+        console.log(inputErrors);
+        // clear errors red border first---------------------------->>
+        if (inputErrors.length > 0) {
+            for (let j = 0; j < inputErrors.length; j++) {
+                inputErrors[j].classList.remove("error");
+            }
+        }
+        // // ------------------------------------------>>
+
+        const formData = new FormData(subjectForm);
+        console.log("formData");
+        console.log(formData);
+        // send the request to server
+        // let response = await fetch("/Administrator/soltTime", {
+         let response = await fetch("/Administrator/settings/subjectInfo", {
+
+            method: "post",
+            body: formData,
+        });
+        let responseData = await response.json();
+        console.log("resultr");
+        console.log("resultr", responseData);
+        // handle error and response
+        if (responseData.errors) {
+            await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+
+            // errors
+            console.log("working go");
+            // console.log(fieldName)
+
+            Object.keys(responseData.errors).forEach((fieldName) => {
+                // add error class to all inputs
+            console.log(fieldName)
+            const escapedFieldName = fieldName.replace(/\[/g, '\\\[').replace(/\]/g, '\\\]'); 
+            const errorPlace = document.querySelector(`.${fieldName}`);
+           errorPlace.classList.add("error");
+            const errorPlaceholder = document.querySelector(
+                `.${escapedFieldName}-error`
+            );
+            console.log(errorPlaceholder)
+
+            errorPlaceholder.innerHTML = responseData.errors[fieldName];
+
+            // make all placeholders visible
+            errorPlaceholder.style.display = "block";
+            });
+        } else {
+            await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+
+            console.log("close");
+            // Set the flag before reloading the page
+    localStorage.setItem('shouldToggleClass', 'true');
+            setTimeout(() => {
+        console.log("riody done!!!");
+        location.reload();
+
+        // Toggle 'active' class on elements after a delay
+        // document.getElementById('addSubjectBtn').classList.toggle('active');
+        // document.querySelector('.subject-info').classList.toggle('active');
+    }, 100);
+        }
+    // });
+    };
+
+    const batchSectionForm = document.getElementById('batchSectionForm')
+  batchSectionForm.onsubmit = async function (event) {
+    // batchSectionForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        // clear errors first---------------------------->>
+        const errorPlaceholders = document.querySelectorAll("p.error");
+        console.log("errorPlaceholders");
+        console.log(errorPlaceholders);
+        //    clear errors first---------------------------->>
+        for (let i = 0; i < errorPlaceholders.length; i++) {
+            errorPlaceholders[i].style.display = "none";
+        }
+
+        const inputErrors = document.querySelectorAll("input.error");
+        console.log("inputErrors");
+        console.log(inputErrors);
+        // clear errors red border first---------------------------->>
+        if (inputErrors.length > 0) {
+            for (let j = 0; j < inputErrors.length; j++) {
+                inputErrors[j].classList.remove("error");
+            }
+        }
+        // // ------------------------------------------>>
+
+        const formData = new FormData(batchSectionForm);
+        console.log("formData");
+        console.log(formData);
+        // send the request to server
+        // let response = await fetch("/Administrator/soltTime", { Administrator settings
+         let response = await fetch("/Administrator/settings/batchSection/save", {
+
+            method: "post",
+            body: formData,
+        });
+        let responseData = await response.json();
+        console.log("resultr");
+        console.log("resultr", responseData);
+        // handle error and response
+        if (responseData.errors) {
+            await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+
+            // errors
+            console.log("working go");
+            // console.log(fieldName)
+
+            Object.keys(responseData.errors).forEach((fieldName) => {
+            const notInclude = ['sectionName']
+                if (!notInclude.includes(fieldName)) {
+                    const errorPlace = document.querySelector(`.${fieldName}`);
+                    errorPlace.classList.add("error");
+                }
+            const errorPlaceholder = document.querySelector(`.${fieldName}-error`);
+            errorPlaceholder.innerHTML = responseData.errors[fieldName];
+            // make all placeholders visible
+            errorPlaceholder.style.display = "block";
+            });
+        } else {
+            await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+
+            console.log("close");
+            // Set the flag before reloading the page
+    localStorage.setItem('shouldToggleClassDatchSection', 'true');
+            setTimeout(() => {
+        console.log("riody done!!!");
+        location.reload();
+
+        // Toggle 'active' class on elements after a delay
+        // document.getElementById('addSubjectBtn').classList.toggle('active');
+        // document.querySelector('.subject-info').classList.toggle('active');
+    }, 100);
+        }
+    // });
+    };
+
+window.addEventListener('load', () => { 
+    const shouldToggle = localStorage.getItem('shouldToggleClass') === 'true';
+    const shouldToggleDatchSection = localStorage.getItem('shouldToggleClassDatchSection') === 'true';
+
+    if (shouldToggle) {
+        // Toggle 'active' class on elements
+        document.getElementById('addSubjectBtn').classList.toggle('active');
+        const subjectInfoElement = document.querySelector('.subject-info');
+        if (subjectInfoElement) {
+            subjectInfoElement.classList.toggle('active');
+        }
+
+        // Remove the flag from local storage
+        localStorage.removeItem('shouldToggleClass');
+    }
+    if (shouldToggleDatchSection) {
+        // Toggle 'active' class on elements 
+        document.getElementById('addBatchAndSubjectBtn').classList.toggle('active');
+        document.getElementById('batchSection-info').classList.toggle('active');
+        // Remove the flag from local storage
+        localStorage.removeItem('shouldToggleClassDatchSection');
+    }
+});
+
+function toggleSectionShow(sectionNameShow) {
+    const subjectSectionShow = document.querySelector('.subject-info-show');
+    const batchSectionShow = document.querySelector('.batchSection-info-show');
+
+    if (sectionNameShow === 'subject-info-show') {
+        subjectSectionShow.classList.remove('Inactive');
+        subjectSectionShow.classList.add('active');
+        batchSectionShow.classList.remove('active');
+        batchSectionShow.classList.add('Inactive');
+        document.getElementById('showSubjectBtn').classList.add('active');
+        document.getElementById('showBatchAndSubjectBtn').classList.remove('active');
+    } else if (sectionNameShow === 'batchSection-info-show') {
+        batchSectionShow.classList.remove('Inactive');
+        batchSectionShow.classList.add('active');
+        subjectSectionShow.classList.remove('active');
+        subjectSectionShow.classList.add('Inactive');
+        document.getElementById('showBatchAndSubjectBtn').classList.add('active');
+        document.getElementById('showSubjectBtn').classList.remove('active');
+    }
+}
+function toggleSection(sectionName) {
+    const subjectSection = document.querySelector('.subject-info');
+    const batchSection = document.querySelector('.batchSection-info');
+
+    if (sectionName === 'subject-info') {
+        subjectSection.classList.toggle('active');
+        batchSection.classList.remove('active');
+        document.getElementById('addSubjectBtn').classList.toggle('active');
+        document.getElementById('addBatchAndSubjectBtn').classList.remove('active');
+    } else if (sectionName === 'batchSection-info') {
+        batchSection.classList.toggle('active');
+        subjectSection.classList.remove('active');
+        document.getElementById('addBatchAndSubjectBtn').classList.toggle('active');
+        document.getElementById('addSubjectBtn').classList.remove('active');
+    }
+}
+function CreateSection() {
+    const batchInput = document.querySelector('[name="batch"]');
+    const firstPartInput = document.querySelector('.firstPart');
+    const howSectionInput = document.querySelector('#howSection');
+
+    const batchValue = batchInput.value;
+    console.log(batchValue)
+    const firstPartValue = firstPartInput.value;
+    console.log(firstPartValue)
+
+    const howSectionValue = parseInt(howSectionInput.value);
+    console.log(howSectionValue)
+
+    const sectionValueError = document.querySelector('#error-value');
+    const sectionValueContainer = document.querySelector('#section-value');
+    const sectionValuesubmit = document.querySelector('#section-submit');
+    sectionValueError.innerHTML = ''; // Clear existing sections 
+    sectionValueContainer.innerHTML = ''; // Clear existing sections 
+    sectionValuesubmit.innerHTML = ''; // Clear existing sections 
+
+    // const sectionValueContainer = document.querySelector('#section-value');
+    // sectionValueContainer.innerHTML = ''; // Clear existing sections
+    if (!(firstPartValue.trim() === "")) {
+        if (!(isNaN(howSectionValue))) {
+            for (let i = 1; i <= howSectionValue; i++) {
+        const sectionName = `${firstPartValue}_${String.fromCharCode(64 + i)}`;
+        const sectionElement = `<input class=" " type="text" name="sectionName" placeholder="Enter section Name" value="${sectionName}">`;
+        sectionValueContainer.innerHTML += sectionElement;
+            }
+            sectionValuesubmit.innerHTML += `<input type="submit" value="Create Section">`;
+        } else {
+            const sectionElement = `<div class="error-input" >Please Add how many section Create !!!</div>`;
+            sectionValueError.innerHTML += sectionElement;
+        }
+} else {
+    const sectionElement = `<div class="error-input" >Please Add section first part !!!</div>`;
+    sectionValueError.innerHTML += sectionElement;
+}
+    
+}
+</script>
+
+</body>
+</html>

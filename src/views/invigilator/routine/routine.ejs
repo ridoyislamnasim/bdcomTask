@@ -1,0 +1,172 @@
+<%- include(`../../administratorPartial/commonPartial/header.ejs`); %>
+<%- include(`../common/invigilatorMenu.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+
+    <div class="manageAddRoom-container">
+      <div id="title">
+        <h2>Routine</h2>
+      </div>
+      <div id="routine-info">
+        <!-- info title -->
+        <div class="info-title">
+          <span>Daffodil International University (DSC)</span>
+          <span> Department of Computer Science and Engineering (Day and Evening Program)</span>
+          <span>Final Examination Routine, Spring 2023</span>
+        </div>
+        <!-- new table -->
+        <div id="routine-table" style="text-align: center;">
+          <div id="routine-header">
+            <div class="table-head date-title">
+              Date
+            </div>
+            <% for (const slotInfo of slotInfos) { %>
+            <div class="table-head">
+              <div class="slot-name-time">
+              Slot <%= slotInfo.slotname %>:
+              <%= slotInfo.starttime.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' }).replace(/(AM|PM)/, '') %>
+              - <%= slotInfo.endtime.toLocaleString([], { hour: 'numeric', minute: 'numeric', hour12: true }) %>     
+            </div>
+              <div  class="batch">
+                Batch
+              </div>
+            </div>
+
+            <% } %>
+          </div>
+          <div id="routine-body">
+            <% for (const dateInfo of dateInfos) { %>
+
+            <div class="routine-body-item" id="routine-body-item">
+              <div class="routine-body-item-value date-item-value" id="date-item-value">
+                <% const date = dateInfo.examDate;
+                const day = date.getDate();
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                const month = monthNames[date.getMonth()];
+                const year = date.getFullYear();               
+                const formattedDate = `${day} ${month} ${year}`;
+                %> 
+                <%= formattedDate %> <br>
+                <%= dateInfo.examDate.toLocaleDateString(undefined, {  weekday: 'long' }) %>
+              </div>
+              <!-- <div class="slot-div"> -->
+              <% for( let index = 0; index < slotInfos.length; index++ ) { %>
+              <% let subjectOddHas = 0 %>
+              <% let subjectEvenHas = 0 %>
+              <div class="routine-body-item-value slot" id="inputs-container">
+                <div class="item-value odd <%= index %>">
+                  <div class="subject-array odd-subject-array">
+                    <% let maxSubjectOdd = 0; %>
+                     <!-- max subject index find start -->
+                    <% for (const oneDate of Routine) { %>
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>         
+                     <% for (const oneSlot of oneDate.slotInfo) { %>
+                      <% maxSubjectOdd = Math.max(
+                        maxSubjectOdd,
+                           oneSlot.oddqurstionInfo.subjectInformation.length,
+                         ); %>
+                    <% } %>    
+                    <% } %>    
+                    <% } %>     
+                      <!-- max subject index find end -->
+                    <% for (const oneDate of Routine) { %>                                 
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>         
+                        <% for( let oneDate_index = 0; oneDate_index < oneDate.slotInfo.length; oneDate_index++ ) { %>
+                          <% if (oneDate_index == index ) { %>
+                            <% for (const subject of oneDate.slotInfo[oneDate_index].oddqurstionInfo.subjectInformation) { %>
+                              <%  subjectOddHas += 1 %>
+                              <div class="input-div">
+                                <div class="subjectLevelTerm-container">
+                                  <div class="course-info">
+                                    <div class="content">
+                                      
+                                      <%= subject.courseCode %>: <%= subject.courseName %> 
+                                    </div>
+                                  </div>
+                                  <div class="batch-info">
+                                    <%= subject.level %><%= subject.term %><br> <%= subject.batch %>
+                                  </div>
+                                </div>
+                              </div>
+                            <% } %>                          
+                          <% } %>  
+                        <% } %>
+                      <% } %>
+                    <% } %>
+                      <% for( let index = 0; index <  (Math.max(1,maxSubjectOdd) - subjectOddHas); index++ ) { %>                     
+                      <div class="input-div">
+                            <div class="subjectLevelTerm-container">
+                                <div class="course-info"></div>
+                                <div class="batch-info"></div>
+                            </div>
+                      </div>
+                      <% } %>
+                  </div>
+                </div>
+                <div class="item-value even <%= index %>">
+                  <div class="subject-array even-subject-array">
+                    <% let maxSubjecteven = 0; %>
+                    <!-- max subject index find start -->
+                    <% for (const oneDate of Routine) { %>
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>        
+                        <% for( let oneDate_index = 0; oneDate_index < oneDate.slotInfo.length; oneDate_index++ ) { %>
+                       <% for (const oneSlot of oneDate.slotInfo) { %>
+                      <% maxSubjecteven = Math.max(
+                            maxSubjecteven,
+                            oneSlot.evenqurstionInfo.subjectInformation.length
+                          ); %>
+                    <% } %>                   
+                    <% } %>                   
+                    <% } %>                   
+                    <% } %>              
+                    <!-- max subject index find end --> 
+                    <% for (const oneDate of Routine) { %>
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>        
+                        <% for( let oneDate_index = 0; oneDate_index < oneDate.slotInfo.length; oneDate_index++ ) { %>
+                          <% if (oneDate_index == index ) { %>
+                            <% for (const subject of oneDate.slotInfo[oneDate_index].evenqurstionInfo.subjectInformation) { %>
+                              <%  subjectEvenHas += 1 %>                  
+                              <div class="input-div">
+                                <div class="subjectLevelTerm-container">
+                                  <div class="course-info">
+                                    <div class="content">
+                                      
+                                      <%= subject.courseCode %>: <%= subject.courseName %> 
+                                    </div>
+                                  </div>
+                                  <div class="batch-info">
+                                    <%= subject.level %><%= subject.term %> <br> <%= subject.batch %>
+                                  </div>
+                                </div>
+                              </div>
+                            <% } %>                          
+                          <% } %>  
+                        <% } %>
+                      <% } %>
+                    <% } %> 
+                    <% for( let index = 0; index < (Math.max(1,maxSubjecteven) - subjectEvenHas); index++ ) { %>                     
+                      <div class="input-div">
+                        <div class="subjectLevelTerm-container">
+                            <div class="course-info"></div>
+                            <div class="batch-info"></div>
+                        </div>
+                      </div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+              <!-- </div> -->
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <!-- new table -->
+ 
+
+         </div>
+      </div>
+    </div>
+</section>
+<!-- manu open close -->
+<%- include(`../../administratorPartial/commonPartial/manuOpenCloseScript.ejs`); %>

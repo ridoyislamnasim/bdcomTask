@@ -1,0 +1,68 @@
+<script>
+  const inputDepartmentName = document.querySelector("input#departmentName");
+  console.log("inputDepartmentName",inputDepartmentName)
+  const inputDepartment = document.querySelector("input#department"+"Name");
+  console.log("inputDepartment",inputDepartment)
+
+  let departmentName_placeholder = document.querySelector(".search_departmentName");
+
+  async function sendDepartmentRequestServer() {
+    console.log("Ridoy islam");
+    // send the request to server
+    let response = await fetch(
+      "/Administrator/ExamSchedule/examschedule/department",
+      {
+        method: "post",
+        // body: JSON.stringify({
+        //   // send input value
+        //   inputExamTimeslotValue: inputExamExamDate.value,
+        // }),
+        // headers: {
+        //   "Content-type": "application/json; charset=UTF-8",
+        // },
+      }
+    );
+    console.log("resultDepartment");
+    let resultDepartment = await response.json();
+    console.log("resultDepartment", resultDepartment);
+
+    // const examSlotValue = document.querySelector(".examSlotValue");
+    // const result = examSlotValue.value
+    // console.log("Ridoy islam", examSlotValue.value);
+    // console.log("Ridoy islam", result.refTimeSlot.length);
+
+    if (resultDepartment.length > 0) {
+      let generatedHtml = "<ul>";
+        resultDepartment.forEach((department, index) => {
+        // const avatar = departmentName.avatar
+        //   ? "./uploads/avatars/" + departmentName.avatar
+        //   : "./images/nophoto.png";
+
+        generatedHtml += `<li onclick="createDepartmentInput('${department._id}')">
+                <div class="departmentName">
+                  <div class="username">${department._id}</div>
+                </div>
+              </li>`;
+      });
+      generatedHtml += "</ul>";
+      // created html push popupOption
+      departmentName_placeholder.innerHTML = generatedHtml;
+      // popUpOption show
+      departmentName_placeholder.style.display = "block";
+      departmentName_placeholder.style.top = "210px";
+    }
+  }
+
+  async function createDepartmentInput(departmentName) {
+    // input value set 
+    inputDepartmentName.value = `${departmentName}`;
+    // popoup option hide 
+    departmentName_placeholder.style.display = "none";
+    // show the tost
+    successToast.showToast();
+  }
+ 
+
+
+</script> 
+

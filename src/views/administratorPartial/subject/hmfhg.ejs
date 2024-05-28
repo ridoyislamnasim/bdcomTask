@@ -1,0 +1,657 @@
+<div class="model-blar" style="position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;">
+</div>
+
+<div class="subject-add-modal" id="popup-model">
+
+
+  <div style="    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-right: -10px;">
+    <a href="#" onclick="closeSubjectAddModal()" class="modal-subject-close">+</a>
+  </div>
+
+  <div class="modal-title">
+    <h2>Add Batch And Subject Information</h2>
+  </div>
+  <div class="modal-body">
+    <form id="add-subjectInfo-form">
+
+
+
+      <div class=" levalTermDiv newrowscloumns">
+        <div class="sublevalTermDiv">
+          <!-- <input class="inputLevel" type="text" placeholder="Enter Level" name="level" /> -->
+          <div class="dropdown">
+            <input class="employeeDesignation dropdown-toggle dropdown-toggle-emp-profile " type="text" placeholder="Select Level" type="text" name="level" readonly>
+            <i class="bx bx-chevron-down"></i>
+            <div class="dropdown-content dropdown-content-emp-profile">
+              <div class="dropdown-option">L1</div>
+              <div class="dropdown-option">L2</div>
+              <div class="dropdown-option">L3</div>
+              <div class="dropdown-option">L4</div>
+            </div>
+          </div>
+          <p class="error level-error"></p>
+          <!-- <input class="inputTerm" type="text" placeholder="Enter Term" name="term" /> -->
+          <div class="dropdown">
+            <input class="employeeDesignation dropdown-toggle dropdown-toggle-emp-profile " type="text" placeholder="Select Level" type="text" name="level" readonly>
+            <i class="bx bx-chevron-down"></i>
+            <div class="dropdown-content dropdown-content-emp-profile">
+              <div class="dropdown-option">T1</div>
+              <div class="dropdown-option">T2</div>
+            </div>
+          </div>
+          <p class="error term-error"></p>
+          <input class="batch" type="text" placeholder="Enter Batch (Batch-53)" name="batch" autocomplete="off" />
+          <input class="studentBatch stu_profile_input" oninput='BatchSearch(this)' type="text" name="studentBatch" placeholder="Enter your Batch (Batch-53)" value="" autocomplete="off">
+          <div class="studentBath-searchInfo"></div>
+          <p class="error batch-error"></p>
+
+        </div>
+      </div>
+      <div class="howRowcloumsDiv">
+        <div class="addRowCol">
+          <div class="" style="display: flex;flex-direction: column;width: 100%;">
+            <input class="howmanySection" type="number" placeholder="How many Section have ?" value="howmanySection" name="howmanySection" />
+            <p class="error howmanySection-error"></p>
+          </div>
+          <div class="" style="display: flex;flex-direction: column;width: 100%;">
+            <input class="howmanyCourse" type="number" placeholder="How many Course have ?" value="howmanyCourse" name="howmanyCourse" />
+            <p class="error howmanyCourse-error"></p>
+          </div>
+          <div class="sectionAdd">
+            <a href="#" onclick="createCourseSectionInputFild()" class=" newadd">add</a>
+          </div>
+          <div class="closeDiv" style="display: none;">
+            <div style="display: flex;">
+              <a href="#" onclick="closeAll_CourseSectionInputFild()" class=" newrowcloumn newadd">clear</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="examDateDiv newrowscloumns">
+
+      </div>
+
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+
+</div>
+
+
+<!-- </div> -->
+<!-- </div>
+</div> -->
+<script>
+  $(document).ready(function() {
+    // Initialize Select2
+    $('.inputLevel').select2();
+
+    // Add custom styles (margins and paddings) to the dropdown options
+    $('.select2-results__option').css({
+      'padding': '10px', // Custom padding
+      'margin': '5px', // Custom margin
+    });
+  });
+</script>
+
+//dropdown ----------------------------------
+<script>
+  //dropdown=---------------------------------- 
+
+  const dropdownToggle = document.querySelectorAll('.dropdown-toggle');
+  const dropdownContent = document.querySelectorAll('.dropdown-content');
+  const dropdownOptions = document.querySelectorAll('.dropdown-option');
+  console.log(dropdownToggle)
+  dropdownToggle.forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      // dropdownContent.classList.remove('hide');
+      this.parentElement.classList.toggle('show');
+      this.parentElement.querySelector('.dropdown-content').classList.toggle('show')
+    });
+  });
+
+
+  dropdownOptions.forEach(function(option) {
+
+
+    option.addEventListener('click', function() {
+      const dropdown = this.closest('.dropdown');
+      const toggle = dropdown.querySelector('.dropdown-toggle');
+      const content = dropdown.querySelector('.dropdown-content');
+      dropdownOptions.forEach(function(opt) {
+        opt.classList.remove('active');
+        opt.style.backgroundColor = '';
+      });
+      this.style.backgroundColor = '#52d794';
+      this.classList.add('active');
+      toggle.value = this.textContent;
+      content.classList.remove('show');
+      dropdown.classList.remove('show');
+    });
+
+
+    option.addEventListener('mouseenter', function() {
+      if (!this.classList.contains('active')) {
+        this.style.backgroundColor = '#01B3BD';
+      }
+    });
+
+    option.addEventListener('mouseleave', function() {
+      if (!this.classList.contains('active')) {
+        this.style.backgroundColor = '';
+      }
+    });
+  });
+  //dropdown ----------------------
+</script>
+<!-- batch Search  -->
+<script>
+  let debounceTimeout;
+  async function BatchSearch(event) {
+    //  console.log(this)
+    console.log("event", event)
+    console.log("event", event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(debounceTimeout);
+
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    debounceTimeout = setTimeout(async () => {
+      let response = await fetch("/Student/Batch/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log("Routine/seatch", result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseInfo = ''
+          for (const Batch of result.searchResult) {
+            courseInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="studentBath-searchInfo-body">
+                <div class="courseCode studentBath-searchInfo-value">${Batch.batch}</div>
+              </div>
+          `
+          }
+          courseInfo += ` <a onclick="removedstudentBathSearchItem(this)" class="routinr-input-close">+</a> `
+          // users_placeholder.innerHTML = generatedHtml;
+          event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseInfo;
+          // search Value any side
+
+          // popup.style.display = 'block';
+          // any where show test
+          const studentBathSearchInfoItem = document.querySelectorAll('.studentBath-searchInfo-body');
+          console.log('studentBathSearchInfoItem', studentBathSearchInfoItem)
+          studentBathSearchInfoItem.forEach(function(option) {
+            option.addEventListener('click', function() {
+              console.log('-------------', this)
+              const dropdown = this.closest('.studentBath-searchInfo');
+              const toggleInput = document.querySelector('.studentBatch');
+              // const content = dropdown.querySelector('.stu-p-dropdown-content');
+              studentBathSearchInfoItem.forEach(function(opt) {
+                opt.classList.remove('active');
+                opt.style.backgroundColor = '';
+              });
+              toggleInput.value = this.querySelector('.studentBath-searchInfo-value').textContent.trim();
+              dropdown.style.display = 'none';
+            });
+
+            option.addEventListener('mouseenter', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '#01B3BD';
+              }
+            });
+            option.addEventListener('mouseleave', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '';
+              }
+            });
+          });
+
+        }
+      } else {
+        console.log("error working")
+      }
+
+    }, 500);
+  }
+  async function removedstudentBathSearchItem(value) {
+    value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+</script>
+<script>
+  //remove item 
+  function removeditem() {
+    this.parentElement.remove();
+    // const closebox = document.querySelectorAll(".subrowcloumsDiv")
+    // closebox.forEach((item, index, arr) => {
+    //   console.log("item", item)
+    //   item.firstElementChild.value = "col " + (index + 1)
+    //   console.log("index", index)
+    //   console.log("arr", arr)
+    // })
+  }
+
+  function closeAll_CourseSectionInputFild() {
+    //   this.parentElement.remove();
+    // get the parent element to be removed
+    const parentElem = document.querySelector('.examDateDiv');
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+      parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    // parentElem.remove();
+    document.querySelector(".sectionAdd").style.display = "block";
+    document.querySelector(".closeDiv").style.display = "none";
+    const howmanySection = document.querySelector(".howmanySection")
+    howmanySection.value = '';
+    const newrowcloumn = document.querySelector(".howmanyCourse")
+    newrowcloumn.value = '';
+    newrowcloumn.style.display = "block";
+    howmanySection.style.display = "block";
+  }
+
+  function oneNewCourse(index) {
+    const newExamDateAppend = document.querySelector(".examDateDiv")
+    const courseSectionInputDiv = document.createElement("div")
+    courseSectionInputDiv.className = `courseSectionInputDiv${index}`
+    //sub div under create input fill
+
+    // course input fild craete 
+    const courseInputMainDiv = document.createElement("Div")
+    courseInputMainDiv.className = "courseInputMainDiv"
+    const courseInputDiv = document.createElement("Div")
+    courseInputDiv.className = "courseInputDiv"
+    const courseInput = document.createElement("input")
+    courseInput.type = "text";
+    courseInput.placeholder = "Enter Course Name"
+    courseInput.className = "inputCourseName"
+    courseInput.id = `CourseName[${index}]`
+    courseInput.name = `CourseName[]`
+
+    const courseCodeInput = document.createElement("input")
+    courseCodeInput.type = "text";
+    courseCodeInput.placeholder = "Enter Course Code"
+    courseCodeInput.className = "inputCourseCode"
+    courseCodeInput.id = `courseCode[${index}]`
+    courseCodeInput.name = `courseCode[]`
+    // End course input fild craete
+    //erroe msg fild <p class="error level-error"></p>
+    const courseErrorDiv = document.createElement("Div")
+    courseErrorDiv.className = "courseInputDiv"
+
+    const courseNameError = document.createElement("p")
+    courseNameError.className = `error CourseName[${index}]-error`
+    const courseCodeError = document.createElement("p")
+    courseCodeError.className = `error courseCode[${index}]-error`
+
+    // course Input create
+    newExamDateAppend.appendChild(courseSectionInputDiv)
+    courseSectionInputDiv.appendChild(courseInputMainDiv)
+    courseInputMainDiv.appendChild(courseInputDiv)
+    courseInputDiv.appendChild(courseInput)
+    courseInputDiv.appendChild(courseCodeInput)
+    courseInputMainDiv.appendChild(courseErrorDiv)
+    courseErrorDiv.appendChild(courseNameError)
+    courseErrorDiv.appendChild(courseCodeError)
+
+
+    // End course Input create
+
+    document.querySelector(".sectionAdd").style.display = "none";
+    document.querySelector(".closeDiv").style.display = "block";
+
+  }
+
+  function oneNewSectionCreate(index, count, indexSection, howSection) {
+
+    const courseSectionInputDiv = document.querySelector(`.courseSectionInputDiv${index}`)
+    //Section table div 
+    // Section input table Header craete
+    const tableHeader = document.createElement("Div")
+    tableHeader.className = "tableHeader"
+    const sectionNameHeader = document.createElement("span")
+    sectionNameHeader.innerHTML = "Section";
+    sectionNameHeader.className = "sectionNameHeader"
+
+    const rg_studentHeader = document.createElement("span")
+    rg_studentHeader.innerHTML = "Rg. Student";
+    rg_studentHeader.className = "rg_studentHeader"
+
+    const teacher_initail_Header = document.createElement("span")
+    teacher_initail_Header.innerHTML = "Teacher Initial";
+    teacher_initail_Header.className = "teacherInitailHeader"
+
+    //End Section input table Header craete 
+    //error msg 
+    const one_SectionErroeInputDiv = document.createElement("Div")
+    one_SectionErroeInputDiv.className = "one_SectionInputDiv"
+    const error_sectionName = document.createElement("p")
+    error_sectionName.className = `error error_sectionName[${index}]-error`
+    const error_rg_student = document.createElement("p")
+    error_rg_student.className = `error error_rg_student[${index}]-error`
+    const error_teacherInitial = document.createElement("p")
+    error_teacherInitial.className = `error error_teacherInitial[${index}]-error`
+
+    // Section input fild 
+    const one_SectionInputDiv = document.createElement("Div")
+    one_SectionInputDiv.className = "one_SectionInputDiv"
+
+    const sectionNameInput = document.createElement("input")
+    sectionNameInput.type = "text";
+    sectionNameInput.className = "sectionNameInput inputTable"
+    sectionNameInput.id = `sectionName[${count}]`
+    sectionNameInput.name = `sectionName[]`
+
+    const rg_student = document.createElement("input")
+    rg_student.type = "number";
+    rg_student.className = "rg_student inputTable"
+    rg_student.id = `rg_student[${count}]`
+    rg_student.name = `rg_student[]`
+
+    const teacherInitial = document.createElement("input")
+    teacherInitial.type = "text";
+    teacherInitial.className = "teacherInitial inputTable"
+    teacherInitial.id = `teacherInitial[${count}]`
+    teacherInitial.name = `teacherInitial[]`
+    // End Section input fild 
+
+
+    // Section InFo Input Table Header create
+    if (indexSection == 0) {
+      const courseSectionInputDiv = document.querySelector(`.courseSectionInputDiv${index}`)
+      courseSectionInputDiv.appendChild(tableHeader)
+      tableHeader.appendChild(sectionNameHeader)
+      tableHeader.appendChild(rg_studentHeader)
+      tableHeader.appendChild(teacher_initail_Header)
+    }
+    //End Section InFo Input Table Header create
+
+    // Section Input Div create
+    courseSectionInputDiv.appendChild(one_SectionInputDiv)
+    // Section Input Div create
+
+    //input fild Create
+    // courseInputMainDiv.appendChild(one_SectionInputDiv) 
+    one_SectionInputDiv.appendChild(sectionNameInput)
+    one_SectionInputDiv.appendChild(rg_student)
+    one_SectionInputDiv.appendChild(teacherInitial)
+    //input fild Create
+    //error msg field ceater 
+    if (indexSection == (howSection - 1)) {
+      courseSectionInputDiv.appendChild(one_SectionErroeInputDiv)
+      one_SectionErroeInputDiv.appendChild(error_sectionName)
+      one_SectionErroeInputDiv.appendChild(error_rg_student)
+      one_SectionErroeInputDiv.appendChild(error_teacherInitial)
+    }
+  }
+
+  function createCourseSectionInputFild() {
+    const howmanyCourse = document.querySelector(".howmanyCourse")
+    const howmanySection = document.querySelector(".howmanySection")
+    console.log("newrowcloumn", howmanyCourse.value)
+    let howCourse = howmanyCourse.value
+    let howSection = howmanySection.value
+    if (howCourse && howSection) {
+      let count = 0;
+      for (let index = 0; index < howCourse; index++) {
+        console.log(" is ", index)
+        oneNewCourse(index)
+        for (let indexSection = 0; indexSection < howSection; indexSection++) {
+          oneNewSectionCreate(index, count, indexSection, howSection)
+          count += 1
+        }
+        // underLine Div
+        const courseSectionInputDiv = document.querySelector(`.courseSectionInputDiv${index}`)
+        const underLineDiv = document.createElement("div")
+        underLineDiv.className = "underLineSubject"
+        courseSectionInputDiv.appendChild(underLineDiv)
+      }
+      howmanyCourse.style.display = "none";
+      howmanySection.style.display = "none";
+    }
+  }
+  //-----------------------------------add slot related work--
+
+  function removeslotditem() {
+    this.parentElement.remove();
+  }
+
+  function closeAllslot(value) {
+
+    const parentElem = document.querySelector(`.slotCreateDiv${value}subslotDiv`);
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+      parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    parentElem.remove();
+
+
+
+    const slotInputBoxindex = `.slotInputBox${value}`
+    // document.querySelector(slotInputBoxindex).style.display = "block";
+    // document.querySelector(`.slotClearFlexDiv${value}`).style.display = "none";
+    const slotinput = document.querySelector(`.howmanySlot${value}`)
+    console.log("slotinput", slotinput, slotinput.value)
+    slotinput.value = '';
+  }
+
+  function oneNewSlot(index, index2, howManyCol) {
+    const val = `.slotCreateDiv${index}`
+    const newExamDateAppend = document.querySelector(val)
+
+    const newslot = document.createElement("div")
+    // "subslotDiv"
+    newslot.className = `slotCreateDiv${index}subslotDiv  subslotDiv`
+    //sub div under create input fill
+    const examSlotInput = document.createElement("input")
+    examSlotInput.type = "text";
+    examSlotInput.placeholder = "enter slot name"
+    examSlotInput.className = "inputSlotName"
+    examSlotInput.name = "slotName"
+
+    if (index2 == 0) {
+      newExamDateAppend.appendChild(newslot)
+      newslot.appendChild(examSlotInput)
+    } else {
+      const val2 = `.slotCreateDiv${index}subslotDiv`
+      const newExamDateAppend = document.querySelector(val2)
+      console.log("newExamDateAppend", index, newExamDateAppend)
+      newExamDateAppend.appendChild(examSlotInput)
+
+    }
+    console.log(index2, howManyCol)
+    if (index2 == (howManyCol - 1)) {
+      console.log(index2, howManyCol)
+
+      // slot claer div
+      const val = `.slotCreateDiv${index}subslotDiv`
+      const slotAppendClear = document.querySelector(val)
+
+      // const val = `.slotCreateDiv${index}`
+      // console.log(val)
+      // const newExamDateAppend = document.querySelector(val)
+
+      const slotClearDiv = document.createElement("div")
+      slotClearDiv.className = "slotClearDiv";
+      const slotClearFlexDiv = document.createElement("div")
+      slotClearFlexDiv.className = `slotClearFlexDiv${index}`;
+      const slotClear = document.createElement("span")
+      slotClear.innerHTML = "clear"
+      slotClear.className = "openclose newadd"
+
+      slotClear.addEventListener("click", function() {
+        closeAllslot(index)
+      })
+      slotAppendClear.appendChild(slotClearDiv)
+      slotClearDiv.appendChild(slotClearFlexDiv)
+      slotClearFlexDiv.appendChild(slotClear)
+
+      //end slot claer div
+
+    } else {
+
+    }
+
+
+    const slotInputBoxindex = `.slotInputBox${index}`
+    document.querySelector(slotInputBoxindex).style.display = "none";
+    document.querySelector(".closeDiv").style.display = "block";
+
+
+
+  }
+
+  function createslot(value) {
+    console.log(value)
+    const manySlot = `.howmanySlot${value}`
+    const howmanySlotCreate = document.querySelector(manySlot)
+    console.log("newrowcloumn", howmanySlotCreate.value)
+    let howManyCol = howmanySlotCreate.value
+    for (let index = 0; index < howManyCol; index++) {
+      console.log(" is ", index)
+      oneNewSlot(value, index, howManyCol)
+    }
+
+
+
+
+  }
+
+  //----------------------------------end-add slot related work--
+
+  // console.log("ridoy", rooms);
+  const popupModel = document.querySelector("#popup-model");
+  const model_blar = document.querySelector(".model-blar");
+  const form = document.querySelector("#add-subjectInfo-form");
+
+  function closeSubjectAddModal() {
+    popupModel.style.display = "none";
+    model_blar.style.display = "none";
+  }
+
+  function openAddSubjectModal() {
+    popupModel.style.display = "block";
+    model_blar.style.display = "block";
+
+  }
+
+  // Function to show a toast message
+  function showToast(message, isError = false) {
+    Toastify({
+      text: message,
+      duration: 5000,
+      backgroundColor: isError ? "#f44336" : "",
+    }).showToast();
+  }
+
+  form.onsubmit = async function(event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    const errorPlaceholders = document.querySelectorAll("p.error");
+    console.log("errorPlaceholders");
+    console.log(errorPlaceholders);
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+      errorPlaceholders[i].style.display = "none";
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
+    // // ------------------------------------------>>
+
+    const formData = new FormData(form);
+    console.log("formData");
+    // send the request to server
+    let response = await fetch("/Administrator/subjects", {
+      method: "post",
+      body: formData,
+    });
+    let responseData = await response.json();
+    console.log("responseData", responseData);
+    // handle error and response
+    if (responseData.errors) {
+      // errors
+      console.log("working go");
+      // console.log(fieldName)
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+
+      Object.keys(responseData.errors).forEach((fieldName) => {
+        // add error class to all inputs
+        console.log(fieldName)
+        console.log("form", form)
+        let fied = fieldName.split('[')[0];
+        const notInclude = ['error_sectionName', 'error_rg_student', 'error_teacherInitial']
+        if (!notInclude.includes(fied)) {
+          form[fieldName].classList.add("error");
+        }
+        const formErrorMsgFiels = ["level", 'batch', "term", "howmanySection", "howmanyCourse", "CourseName", "courseCode", "error_sectionName", "error_rg_student", "error_teacherInitial"];
+
+        if (formErrorMsgFiels.includes(fied)) {
+          console.log(fied)
+          console.log("fieldName-", fieldName)
+          // }
+          // if (!(fieldName.includes("["))) {
+          console.log("fieldName contains [0]", fieldName);
+
+          //         const field = form.querySelector(".CourseName[0]-error");
+          //         field.classList.add("error");
+          // console.log("============================",field)
+          // set all error placeholders (p tag) textContent
+          const escapedFieldName = fieldName.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
+          const errorPlaceholder = document.querySelector(
+            `.${escapedFieldName}-error`
+          );
+          console.log("errorPlaceholderDown");
+          // console.log(errorPlaceholder);
+          console.log("fieldName");
+          console.log(fieldName);
+          errorPlaceholder.innerHTML = responseData.errors[fieldName];
+          // make all placeholders visible
+          errorPlaceholder.style.display = "block";
+        }
+
+      });
+    } else {
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+      console.log("close");
+      // successToast.showToast();
+      closeSubjectAddModal();
+      document.querySelector("p.error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
+  };
+</script>

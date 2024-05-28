@@ -1,0 +1,61 @@
+ <!-- ---------------------------deleteModelExamSchedule models  -->
+ <div class="modal-wrapper" id="delete-exeamSchedul-modal">
+    <div class="modal">
+      <a href="#" onclick="closeExamScheduleDeleteModal()" class="modal-close">+</a>
+      <div class="modal-title">
+        <h2>Delete Section Student</h2>
+      </div>
+      <div class="modal-body">
+        <form id="delete-exeamSchedul-form">
+            <span>Are you sure delete this?</span>
+            <p id="deleteExamScheduleId" style="display: none;"></p>
+          <input type="submit" value="Submit" onclick="deleteSend()"/>
+        </form>
+      </div>
+    </div>
+  </div>
+
+      <script>
+        // console.log(document.querySelector("#roomid").innerHTML)
+        // console.log(document.querySelector("#roomid").innerText)
+
+
+        // const formDelete = document.querySelector("#delete-sectionStudent-modal");
+        // formDelete.onsubmit =async function(event){
+        //   event.preventDefault();
+        const deleteExamScheduleModal = document.querySelector("#delete-exeamSchedul-modal");
+        const deleteExamScheduleSend = document.querySelector("#delete-exeamSchedul-form");
+        const deleteToast = Toastify({
+            text: "User was deleted successfully!",
+            duration: 3000,
+        });
+        function closeExamScheduleDeleteModal() {
+          // console.log("run end")
+          deleteExamScheduleModal.style.display = "none";
+        }
+
+         function openExamScheduleDeleteModal(ScheduleDeleteId) {
+          console.log("deleteRoomtId----",ScheduleDeleteId)
+          const deleteExamScheduleId= document.querySelector("#deleteExamScheduleId");
+          deleteExamScheduleId.innerHTML =ScheduleDeleteId;   
+          deleteExamScheduleModal.style.display = "block";
+        //   console.log(roomId)
+            
+        }
+        
+        async function deleteSend(){
+          const ExamSchedule_Id= document.querySelector("#deleteExamScheduleId").innerHTML;
+      // console.log("deleteRoom_Id",deleteRoom_Id)
+              let response =await  fetch(`/Administrator/ExamSchedule/examschedule/${ExamSchedule_Id}`, {
+                method: "DELETE",
+            });
+            deleteToast.showToast();
+            closeDeleteModal()
+            setTimeout(() => {
+        location.reload();
+      }, 1000);
+
+            }
+          
+            
+    </script>

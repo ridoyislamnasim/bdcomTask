@@ -1,0 +1,126 @@
+
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+    <div class="manageAddRoom-container">
+        <div id="title">
+          <h2> Manage Duty Roster</h2>
+        </div>
+        <div class="table_top">
+            <div class="left">
+                <button class="newadd" onclick="createDutyRosterFunction()">Create Duty Roster</button>
+            </div>
+            <div class="right">
+                <!-- <div class="need">
+                <span>Invigilator Need : </span>
+                <span>
+                </span>
+                </div>
+                <div class="assigend" >
+                    <span>Invigilator assigend : </span>
+                    <span>
+                      <%= emp_pro_info.invigilatorAssigned  %>
+                    </span>
+                </div> -->
+
+            </div>
+        </div>
+  
+        <div class="table invilator_info" id="rooms-table">
+          <table>
+            <thead>
+              <tr >
+                <th rowspan="2" >Inital</th>
+                
+                <% for (const e_dateSlot of examdateSlot) { %>
+                  <th colspan="<%= e_dateSlot.SlotInfo.length %>" style="text-align: center;">
+                    <% const date = new Date(e_dateSlot.examDate) %>
+                    <%= date.toLocaleDateString() %>
+                  </th>
+                <% } %>
+              </tr>
+              <tr>
+                <% for (const e_dateSlot of examdateSlot) { %>
+                  <% for (const e_Slot of e_dateSlot.SlotInfo) { %>
+                    <th>
+                      <%= e_Slot.slotName %>
+                    </th>
+                   
+               <% } %>
+               <% } %>
+
+              </tr>
+            </thead>
+            <tbody class="table_body">
+              <% if (emp_pro_info) { %>
+                <% for( let index = 0; index < emp_pro_info.length; index++ ) { %> 
+                  <tr id="row-<%= index %>" >
+                    <td class="employeeInitial">
+                      <span><%= emp_pro_info[index].employeeInitial  %></span>
+                    </td> 
+                       
+                        <% for (const dateSlot of dutyRoster) { %>
+                          <% for (const slot of dateSlot.slotWiseInfo) { %>
+                            <td class="employeeInitial"><span>
+                            <% for (const invigilator of slot.invigilatorInfo) { %>
+                             
+                                <% if (invigilator.employeeId == emp_pro_info[index].employeeId ) { %>
+                                  <%# %= slot.employeeId  %>  %>
+                                   <%= slot.slotName  %>
+                                   <%= invigilator.roomNumber  %>
+                                <% } %>       
+                                         
+                           <% } %>
+                          </span> </td>  
+                           <% } %>
+                        <% } %>
+
+
+                    
+
+                  </tr>  
+
+                <% } %>          
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>
+</section>
+      <!-- manu open close -->
+<%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>
+      
+<script>
+  // Assuming you have included the Toastify library
+
+// Function to show a toast message
+function showToast(message, isError = false) {
+  Toastify({
+    text: message,
+    duration: 500,
+    backgroundColor: isError ? "#f44336" : "",
+  }).showToast();
+}
+
+async function createDutyRosterFunction(){
+  try {
+    const response = await fetch('/Administrator/dutyRoster', {
+      method: 'POST',
+    });
+    const responseData = await response.json();
+    console.log('Response:', responseData);
+    await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+    setTimeout(() => {
+      location.reload();
+    }, 500);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+  
+</script>
+
+</body>
+</html>

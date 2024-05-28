@@ -1,0 +1,105 @@
+<%- include(`../../commonPartial/header.ejs`); %>
+  <%- include(`../../commonPartial/menu.ejs`); %>
+    </body>
+    <section class="home-section">
+      <div class="home-content">
+        <div class="manageAddRoom-container">
+          <div id="title">
+            <h2>Manage Invigilator </h2>
+          </div>
+
+          <!-- <div class="new-seatPlan-container new-room">
+            <a href="#" onclick="openInvigilatorNeed()" class="newadd">Invigilator Need</a>
+
+            <div style="display: flex">
+              <div class="searchOpen">
+                <a href="#" onclick="openInvigilatorCriteria()" class="newadd">Invigilator Criteria</a>
+                <a href="#" onclick="openRoomsCriteria()" class="newadd">Rooms Criteria</a>
+              </div>
+            </div>
+          </div> -->
+          <!-- // Invigilator_need_info -->
+
+          <div class="Invigilator_need_info info-view"  >
+            <div >
+              <div class="table_top">
+                <div class="left">
+                  <a href="/Administrator/Routine/createInvigilatorNeed" class="newadd">Create</a>
+                  <a method="delete" href="#" onclick="openExamDateDeleteModal(this)">
+                    <!-- delete -->
+                    <i class="fa-regular fa-trash-can"></i>
+                  </a>
+                </div>
+                <div class="right-edit-delte">
+                  <div class="edit-delete">
+                    <div style="display: flex">
+                        <div class="searchOpen">
+                          <a href="#" onclick="openInvigilatorCriteria()" class="newadd">Invigilator Criteria</a>
+                          <a href="#" onclick="openRoomsCriteria()" class="newadd">Rooms Criteria</a>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="info-title">
+                <span>Daffodil International University (DSC)</span>
+                <span> Department of Computer Science and Engineering (Day and Evening Program)</span>
+                <span> Invigilator Need Information, Spring 2023</span>
+              </div>
+              <!-- <div style="display: flex; justify-content: space-around; width: 100%;">
+                <a href="/Administrator/Routine/createInvigilatorNeed" onclick="" class="newadd">Create Invigilator
+                  Need</a>
+              </div> -->
+              <% if (msg.length) { %>
+                <div style="display: flex; width: 100%; justify-content: center; font-size: 2rem; margin: 50px 0px;">
+                  <span>
+                    <%= msg %>
+                  </span>
+                </div>
+              <% } %>
+
+              <% if (invigilatorNeedInfo.length) { %>
+                <!--  -->
+                <div class="invigilatorNeedInfo">
+                  <div class="invigilatorNeed-header">
+                    <div class="invigilatorNeed-header-item">Date</div>
+                    <% for(let oneSlot of slotInfo){%>
+                       <div class="invigilatorNeed-header-item slotname"><%= oneSlot.slotname %></div>
+                    <% } %>
+                    <div class="invigilatorNeed-header-item">Date Need</div>
+                    <div class="invigilatorNeed-header-item">Edit</div>
+                  </div>
+                  <div class="invigilatorNeed-body">
+                    
+                      <!-- (const [index, aggregatedItem] of selfRoutine.entries())  -->
+                      <% for(const [index, oneinvigilatorNeed]  of invigilatorNeedInfo.entries()){%>
+                        <div class="invigilatorNeed-body-row">
+                          <div class="invigilatorNeed-body-item value-date"><% const date=new Date(oneinvigilatorNeed.date); %>
+                                  <%= date.toLocaleDateString(undefined, { day: 'numeric' ,month: 'long' , year: 'numeric' }) %></div>
+                          <% for(let slot of oneinvigilatorNeed.slot){%>                         
+                              <div class="invigilatorNeed-body-item value-slot"><%= slot.slotinvigilatorNeed %> </div>
+                          <% } %>
+                          <div class="invigilatorNeed-body-item"><%= invigilatorNeedInfo.dateWise[index] %> </div>
+                          <div class="invigilatorNeed-body-item" onclick="invigilatorNeedEditHandel(this)"><i class="fa-regular fa-pen-to-square"></i> </div>
+                          <!-- invigilatorNeedInfo.dateWise -->                          
+                        </div>
+                        <% if (index==(invigilatorNeedInfo.length-1)) { %>
+                          <div class="invigilatorNeed-body-row">
+                            <div class="invigilatorNeed-body-item">Slot Wise Invigilator Need</div>
+                            <% for(let slotWise of invigilatorNeedInfo.slotWise){%>                         
+                                <div class="invigilatorNeed-body-item"><%= slotWise %> </div>
+                            <% } %>
+                            <div class="invigilatorNeed-body-item"><%= invigilatorNeedInfo.totalInvigilatorNeed %> </div>
+                            <div class="invigilatorNeed-body-item"> </div>
+                          </div>
+                         <% } %>
+                      <% } %>
+                    
+                  </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    
+  </div>
+</section>

@@ -1,0 +1,133 @@
+<div class="modal-wrapper" id="add-student-modal">
+    <div class="modal">
+      <a href="#" onclick="closeAddStudentModal()" class="modal-close">+</a>
+      <div class="modal-title">
+        <h2>Add New Room</h2>
+      </div>
+      <div class="modal-body">
+        <form id="add-student-form"
+        action="/Administrator/students"
+        enctype="multipart/form-data"
+        method="post"
+        >
+            <input type="text" placeholder="Enter Department Name" name="department" />
+            <p class="error department-add-error"></p>
+            <input type="text" placeholder="Enter Batch Name" name="batch" />
+            <p class="error batch-add-error"></p>
+            <input type="text" placeholder="Enter Section Name" name="section" />
+            <p class="error section-add-error"></p>
+            <input type="text" placeholder="Enter Course Code" name="courseCode" />
+            <p class="error courseCode-add-error"></p>
+            <input type="text" placeholder="Enter Course Title" name="courseTitle" />
+            <p class="error courseTitle-add-error"></p>
+            <input type="Number" placeholder="Enter Totall Student" name="numberOfStudent" />
+            <p class="error numberOfStudent-add-error"></p>
+          <div class="radio">
+            <span>Student status?</span> 
+            <div>
+            <input type="radio" name="studentSataus" checked="checked" value="Active"><span>Active</span> 
+            <input type="radio" name="studentSataus" value="Inactive"><span>Inactive</span>
+          </div>               
+          </div>
+             <input type="submit" value="Submit" />
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Html selectors
+    // modal open and close Selector 
+    const AddStudentModal =document.querySelector("#add-student-modal")
+    const addStuddentForm = document.querySelector("#add-student-form");
+
+
+  // success toast
+  const successToast = Toastify({
+    text: "User was added successfully! Reloading the list...",
+    duration: 1000,
+  });
+ 
+    function closeAddStudentModal() {
+        AddStudentModal.style.display = "none";
+    }
+    function openAddStudentModal() {
+        console.log("check connect")
+        AddStudentModal.style.display = "block";
+    }
+
+    addStuddentForm.onsubmit =async function(event){
+        event.preventDefault();
+
+        // error show hide Selector
+        const errorPlaceholders = document.querySelectorAll("p.error"); 
+    //    clear errors first---------------------------->>   
+            console.log("errorPlaceholders")
+            console.log(errorPlaceholders) 
+            for (let i = 0; i < errorPlaceholders.length; i++) {
+            errorPlaceholders[i].style.display = "none";
+            }
+        // clear errors red border first---------------------------->>   
+        const inputErrors = document.querySelectorAll("input.error");
+            console.log("inputErrors")
+            console.log(inputErrors)              
+            if (inputErrors.length > 0) {
+            for (let j = 0; j < inputErrors.length; j++) {
+                inputErrors[j].classList.remove("error");
+            }
+            }
+// //    send form data server and resived errors or success------------------------------------------>>
+        // select the form which submit
+       const formAddStudentData = new FormData(addStuddentForm); 
+       
+       console.log("formAddStudentData",formAddStudentData)
+            const respons = await fetch("/Administrator/students", {
+            method: "post",
+            body: formAddStudentData,
+            });
+        let result =await respons.json()
+
+      console.log("result")
+      console.log(result.errors)
+
+    // handle error and response
+    if (result.errors) {
+
+        console.log("working go")
+        // console.log(fieldName)
+        // mapping errors
+        Object.keys(result.errors).forEach((fieldName) => {
+
+        // add error class to all inputs
+        addStuddentForm[fieldName].classList.add("error");
+
+        // set all error placeholders (p tag) textContent
+        const errorPlaceholder = document.querySelector(`.${fieldName}-add-error`);
+        errorPlaceholder.innerHTML = result.errors[fieldName].msg;
+        console.log("errorPlaceholderDown");
+        console.log(errorPlaceholder);
+        console.log("fieldName");
+        console.log(fieldName);  
+
+        // make all placeholders visible
+        errorPlaceholder.style.display = "block";
+      });
+    } 
+    else {
+    // success
+    successToast.showToast();
+    //  Close modal
+    closeAddStudentModal();
+    // all errors hide
+    document.querySelector("p.error").style.display = "none";
+
+    // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
+
+    }
+
+
+  </script>

@@ -1,0 +1,88 @@
+<%- include(`../commonPartial/header.ejs`); %>
+  <%- include(`../commonPartial/menu.ejs`); %>
+  <section class="home-section">
+    <div class="home-content">
+    <div class="manageAddRoom-container">
+      <div id="title">
+        <h2>Manage Time Solt</h2>
+      </div>
+
+      <!-- <div class="new-room-container new-room">
+        <a href="#" onclick="openTimeSlotModal()">+</a>
+      </div> -->
+
+        <div id="info-view">
+          <div class="table_top">
+            <div class="left">
+              <button class="newadd" onclick="openTimeSlotModal()">Add slot time</button>
+            </div>
+            <div class="right-edit-delte">
+              <div class="edit-delete">
+                <a href="#" onclick="roomEditHandel(this,'64a75d2a8384b4770c455429')">
+                  <!-- edit -->
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </a>
+                <a method="delete" href="#" onclick="opensubjectDeleteModal(this,'64a75d2a8384b4770c455429')">
+                  <!-- delete -->
+                  <i class="fa-regular fa-trash-can"></i>
+                </a>
+              </div>
+            </div>
+            </div>
+          <div class="info-title">
+            <span>Daffodil International University (DSC)</span>
+            <span> Department of Computer Science and Engineering (Day and Evening Program)</span>
+            <span>Slot Information, Spring 2023</span>
+          </div>
+            <div id="rooms-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Solt Name</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                </tr>
+              </thead>
+              <tbody id="rooms-table">
+                <% for (const slotTime of slotTimes) { %>
+                  <tr id="">
+                    <td class="start-name">
+                      <span>
+                        <%= slotTime.slotname %>
+                      </span>
+                    </td>
+                    <td class="start-time">
+                          <% const date = new Date(slotTime.starttime); %>
+                        <span>
+                          <%= date.toLocaleString(undefined, { hour: 'numeric', minute: 'numeric', }) %>
+                        </span>
+                      </span>
+                    </td>
+                    <td class="end-time">
+                      <% const endtime = new Date(slotTime.endtime); %>
+                      <span>
+                        <%= endtime.toLocaleString(undefined, { hour: 'numeric', minute: 'numeric', }) %>
+                      </span>
+                      
+                    </td>
+                  </tr>
+                <% } %>
+                  
+
+                  
+              </tbody>
+            </table>
+            </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+
+
+    <%- include(`./addSlotTime.ejs`); %>
+    <%- include(`./editTimeSlot.ejs`); %>
+      <%- include(`./deleteTimeSlot.ejs`); %>
+        </body>
+
+        </html>

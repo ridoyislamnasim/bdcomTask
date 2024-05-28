@@ -1,0 +1,102 @@
+<%- include(`../administratorPartial/commonPartial/header.ejs`); %>
+  <%- include(`../administratorPartial/commonPartial/menu.ejs`); %>
+
+  <div class="manageAddRoom-container">
+    <div id="title">
+      <h2>Manage Time Solt</h2>
+    </div>
+
+    <div class="new-room-container new-room">
+      <a href="#" onclick="openexamscheduleModal()">+</a>
+    </div>
+
+    <div id="rooms-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Exam Date</th>
+            <th>TimeSolt</th>
+            <th>Slot Avail: Seat</th>
+            <th>Department</th>
+            <th>Batch</th>
+            <th>Section</th>
+            <th>Subject code</th>
+            <th>Room No:</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="rooms-table">
+          <% for(let examSchedule of examSchedules){ %>  
+            <tr id="">
+              <td class="examDate">
+                <span>
+                  <%= examSchedule.examDate %>
+                </span>
+              </td>
+              <td class="examSlot">
+                <span>
+                  <%= examSchedule.examSlot  %>
+                </span>
+              </td>
+              <td class="availableSeat">
+                <span>
+                  <%= examSchedule.availableSeat %>
+                </span>
+              </td>
+              <td class="departmentName">
+                <span>
+                  <%= examSchedule.departmentName %>
+                </span>
+              </td>
+              <td class="batchName">
+                <span>
+                  <%= examSchedule.batchName %>
+                </span>
+              </td>
+              <td class="sectionName">
+                <span>
+                  <%= examSchedule.sectionName %>
+                </span>
+              </td>
+              <td class="subjectCode">
+                <span>
+                  <%= examSchedule.courseCode %>
+                </span>
+              </td>
+              <td class="roomNumber">
+                <span>
+                  <%= examSchedule.roomNumber %>
+                </span>
+              </td>
+
+              <td class="examSlotStatus">
+                <span>
+                  <%=examSchedule.examSlotStatus  %>
+                </span>
+              </td>
+              <td class="manage">
+                <a href="#" onclick="openEditTimeSlotModal()">
+                  <img class="edit" src="/imges/314251_edit_document_icon.svg" alt="Edit" />
+                </a>
+
+                <br>
+                <a href="#" onclick="openExamScheduleDeleteModal( '<%=examSchedule._id  %>')">
+                  <img class="delete" src="/imges/delete.png" alt="Delete" />
+                </a>
+              </td>
+            </tr>
+
+            <%} %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <%- include(`./addModel/addModelExamSchedule.ejs`); %>
+  <%- include(`./deleteModel/deleteModelExamSchedule.ejs`); %>
+  
+ 
+
+
+
+</body>

@@ -1,0 +1,151 @@
+<div class="add-roomsCriteria-Modal-Blar" style="
+position: absolute;left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;"></div>
+
+<div id="add-RoomsCriteria-modal" style="display: none;">
+    <a href="#" onclick="closeRoomsCriteriaModal()" class="modal-close">+</a>
+    <div class="modal-title">
+        <h4>Add Rooms Criteria</h4>
+    </div>
+    <div class="modal-body">
+        <form id="add-examdate-form" action="/Administrator/Routine/createRoomsCriteria" method="post">
+            <div class="howRoomsCriteriaDiv">
+                <div class="addRowCol">
+                    <!-- <input class="houManyRoomsCriteria" type="number" placeholder="How Many Rooms Criteria ?" value="houManyRoomsCriteria" -->
+                        <!-- min="0" max="15" /> -->
+                    <!-- <p class="error roomsCriteria-error"></p>
+                    <a href="#" onclick="createRoomsCriteria()" class=" examDate newadd">add</a> -->
+                </div>
+            </div>
+            <div class="closeDivRoomsCriteria" style="display: none;">
+                <div style="display: flex;">
+                    <a href="#" onclick="closeAllRoomsCriteria()" class="openclose newrowcloumnRoomsCriteria newadd">clear</a>
+                </div>
+
+            </div>
+
+            <div class="roomsCriteriaDiv newrowscloumns">
+                <div class="subexamDatepopupDiv">
+                    <input class="inputStartLimits" type="number" min="0" placeholder="Start limits" name="roomsStartLimits"> <span><h4> Upto </h4></span>
+                    <input class="inputEndLimits" type="number" min="0" placeholder="End limits" name="roomsEndLimits">
+                    <input class="howmanyInvigilator" type="number" min="0" placeholder="How Many Invigilator" name="howmanyInvigilator">
+                    <div class="underLineDiv"></div>
+                </div>
+                <div class="subexamDatepopupDiv">
+                    <input class="inputStartLimits" type="number" min="0" placeholder="Start limits" name="roomsStartLimits">  <span><h4> Upto </h4></span>
+                    <input class="inputEndLimits" type="number" min="0" placeholder="End limits" name="roomsEndLimits">
+                    <input class="howmanyInvigilator" type="number" min="0" placeholder="How Many Invigilator" name="howmanyInvigilator">
+                    <div class="underLineDiv"></div>
+                </div>
+                <div class="subexamDatepopupDiv">
+                    <input class="inputStartLimits" type="number" min="0" placeholder="Start limits" name="roomsStartLimits"> <span><h4>  Upto  </h4></span>
+                    <input class="inputEndLimits" type="number" min="0" placeholder="End limits" name="roomsEndLimits">
+                    <input class="howmanyInvigilator" type="number" min="0" placeholder="How Many Invigilator" name="howmanyInvigilator">
+                    <div class="underLineDiv"></div>
+                </div>
+                <div class="subexamDatepopupDiv">
+                    <input class="inputStartLimits" type="number" min="0" placeholder="Start limits" name="roomsStartLimits">  <span><h4> above  </h4></span>
+                    <!-- <input class="inputEndLimits" type="number" min="0" placeholder="End limits" name="roomsEndLimits"> -->
+                    <input class="howmanyInvigilator" type="number" min="0" placeholder="How Many Invigilator" name="howmanyInvigilator">
+                    <div class="underLineDiv"></div>
+                </div>
+
+            </div>
+
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+</div>
+
+<script>
+
+    //new input box rows and colums
+    const newrowcloumnRoomsCriteria = document.querySelector(".newrowcloumnRoomsCriteria")
+
+    function removeRoomsCriteriaItem() {
+        this.parentElement.remove();
+    }
+    function closeAllRoomsCriteria() {
+        //   this.parentElement.remove();
+        // get the parent element to be removed
+        const parentElem = document.querySelector('.roomsCriteriaDiv');
+
+        // loop through each child element and remove it
+        while (parentElem.firstChild) {
+            parentElem.removeChild(parentElem.firstChild);
+        }
+
+        // remove the parent element itself
+        // parentElem.remove();
+        document.querySelector(".howRoomsCriteriaDiv").style.display = "block";
+        document.querySelector(".closeDivRoomsCriteria").style.display = "none";
+        const newrowcloumnRoomsCriteria = document.querySelector(".houManyRoomsCriteria")
+        newrowcloumnRoomsCriteria.value = '';
+    }
+
+    function oneRoomsCriteriaCol(index) {
+        const newExamDateAppend = document.querySelector(".roomsCriteriaDiv")
+        const newdiv = document.createElement("div")
+        newdiv.className = "subexamDatepopupDiv"
+        //sub div under create input fill
+        const examDateInput = document.createElement("input")
+        examDateInput.type = "number";
+        examDateInput.placeholder = "Enter End Limits"
+        examDateInput.className = "inputEndLimits"
+        examDateInput.name = "roomsEndLimits"
+
+        const howmanyInvigilator = document.createElement("input");
+        howmanyInvigilator.type = "number";
+        howmanyInvigilator.placeholder = "How Many Invigilator ?"
+        howmanyInvigilator.className = "howmanyInvigilator"
+        howmanyInvigilator.name = "HowmanyInvigilator"
+
+        // underLine Div
+        const underLineDiv = document.createElement("div")
+        underLineDiv.className = "underLineDiv"
+
+        newExamDateAppend.appendChild(newdiv)
+        newdiv.appendChild(examDateInput)
+        newdiv.appendChild(howmanyInvigilator)
+        newExamDateAppend.appendChild(underLineDiv)
+
+        document.querySelector(".howRoomsCriteriaDiv").style.display = "none";
+        document.querySelector(".closeDivRoomsCriteria").style.display = "block";
+
+    }
+
+    function createRoomsCriteria() {
+        const houManyRoomsCriteria = document.querySelector(".houManyRoomsCriteria")
+        console.log("newrowcloumnRoomsCriteria", houManyRoomsCriteria.value)
+        let howManyCol = houManyRoomsCriteria.value
+        for (let index = 0; index < howManyCol; index++) {
+            console.log(" is ", index)
+            oneRoomsCriteriaCol(index)
+        }
+    }
+    //-----------------------------------add slot related work--
+    //----------------------------------end-add slot related work--
+
+    // console.log("ridoy", rooms);
+    const addRoomsCriteriaModal = document.querySelector("#add-RoomsCriteria-modal");
+    const addRoomsCriteriaModalBlar = document.querySelector(".add-roomsCriteria-Modal-Blar");
+    // const form = document.querySelector("#add-examdate-form");
+
+    // success toast
+    const successToast = Toastify({
+        text: "User was added successfully! Reloading the list...",
+        duration: 1000,
+    });
+
+    function closeRoomsCriteriaModal() {
+        addRoomsCriteriaModal.style.display = "none";
+        addRoomsCriteriaModalBlar.style.display = "none";
+    }
+    function openRoomsCriteriaModal() {
+        addRoomsCriteriaModal.style.display = "block";
+        addRoomsCriteriaModalBlar.style.display = "block";
+
+    }
+
+
+</script>

@@ -1,0 +1,59 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+  
+    <div class="manageAddRoom-container">
+        <div id="title">
+          <h2>Manage User Information</h2>
+        </div>
+  
+        <!-- <div class="new-room-container new-room">
+            <a href="#" onclick="openAddUserInformationModal()">+</a>
+        </div> -->
+  
+        <div id="rooms-table">
+          <table>
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>User Gmail</th>
+                <th>User Designation</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="rooms-table">  
+              <% for(let usersInformation of usersInformations){%>
+              <tr id="">
+                <td class="user-name">
+                  <span><%= usersInformation.username  %></span> 
+                </td>
+                <td class="user-email">
+                  <span><%= usersInformation.useremail  %></span>
+                </td>
+                <td class="time-duration">
+                  <span><%= usersInformation.designation  %></span>
+              </td>
+  
+                  <td class="manage">
+                    <a href="#" onclick="openUserInfoEditModal('<%= usersInformation.designation %>','<%= usersInformation._id  %>')">
+                      <img class="edit" src="/imges/314251_edit_document_icon.svg" alt="Edit" />
+                    </a>
+
+                    <br>
+                    <a href="#" onclick="openUsersDeleteModal('<%= usersInformation._id  %>')">
+                      <img class="delete" src="/imges/delete.png" alt="Delete" />
+                    </a>
+                  </td>
+              </tr>
+              
+              <%} %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <%- include(`./deleteUserInformation.ejs`); %>
+      <%- include(`./editUserInformation.ejs`); %>
+
+
+    </body>
+</body>
+</html>

@@ -1,0 +1,795 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+
+    <div class="manageAddRoom-container">
+      <div id="title">
+        <h2>Manage Exam Routine</h2>
+      </div>
+      <div id="routine-info">
+        <!-- info title -->
+        <div class="info-title">
+          <span>Daffodil International University (DSC)</span>
+          <span> Department of Computer Science and Engineering (Day and Evening Program)</span>
+          <span>Final Examination Routine, Spring 2023</span>
+        </div>
+        <!-- new table -->
+        <div id="routine-table" style="text-align: center;">
+          <div id="routine-header">
+            <div class="table-head date-title">
+              Date
+            </div>
+            <% for (const slotInfo of slotInfos) { %>
+            <div class="table-head">
+              <div class="slot-name-time">
+              Slot <%= slotInfo.slotname %>:
+              <%= slotInfo.starttime.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' }).replace(/(AM|PM)/, '') %>
+              - <%= slotInfo.endtime.toLocaleString([], { hour: 'numeric', minute: 'numeric', hour12: true }) %>     
+            </div>
+              <div  class="batch">
+                Batch
+              </div>
+            </div>
+
+            <% } %>
+          </div>
+          <div id="routine-body">
+            <% for (const dateInfo of dateInfos) { %>
+
+            <div class="routine-body-item" id="routine-body-item">
+              <div class="routine-body-item-value date-item-value" id="date-item-value">
+                <%= dateInfo.examDate.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) %>
+              </div>
+              <!-- <div class="slot-div"> -->
+              <% for( let index = 0; index < slotInfos.length; index++ ) { %>
+              <% let subjectOddHas = 0 %>
+              <% let subjectEvenHas = 0 %>
+              <div class="routine-body-item-value slot" id="inputs-container">
+                <div class="item-value odd <%= index %>">
+                  <div class="subject-array odd-subject-array">
+                    <% let maxSubjectOdd = 0; %>
+                     <!-- max subject index find start -->
+                    <% for (const oneDate of Routine) { %>
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>         
+                     <% for (const oneSlot of oneDate.slotInfo) { %>
+                      <% maxSubjectOdd = Math.max(
+                        maxSubjectOdd,
+                           oneSlot.oddqurstionInfo.subjectInformation.length,
+                         ); %>
+                    <% } %>    
+                    <% } %>    
+                    <% } %>     
+                      <!-- max subject index find end -->
+                    <% for (const oneDate of Routine) { %>                                 
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>         
+                        <% for( let oneDate_index = 0; oneDate_index < oneDate.slotInfo.length; oneDate_index++ ) { %>
+                          <% if (oneDate_index == index ) { %>
+                            <% for (const subject of oneDate.slotInfo[oneDate_index].oddqurstionInfo.subjectInformation) { %>
+                              <%  subjectOddHas += 1 %>
+                              <div class="input-div">
+                                <div class="subjectLevelTerm-container">
+                                  <div class="course-info">
+                                    <div class="content">
+                                      
+                                      <%= subject.courseCode %>: <%= subject.courseName %> <br> [<%= subject.numberOfQuestion %>]
+                                    </div>
+                                    <div class="cross-btn" onclick="clearLevelTermShow(this) ">
+                                      <span>clear</span>
+                                    </div>
+                                  </div>
+                                  <div class="batch-info">
+                                    <%= subject.level %><%= subject.term %><br> <%= subject.batch %>
+                                  </div>
+                                </div>
+                                <input class="routine-input" type="text" style="display: none;"   placeholder="Find level term Information">
+                                <a  onclick="routinr-input-close(this)" class="routinr-input-close" style="display: none;">+</a>
+                                <div class="search_levelTerm"></div>
+                              </div>
+                            <% } %>                          
+                          <% } %>  
+                        <% } %>
+                      <% } %>
+                    <% } %>
+                      <% for( let index = 0; index <  (Math.max(1,maxSubjectOdd) - subjectOddHas); index++ ) { %>                     
+                      <div class="input-div">
+                        <div class="input-style">
+                          <input class="routine-input" type="text" oninput="serverSendToSearch(this)" placeholder="Find level term Information">
+                          <div class="subject-levet-term"></div>
+                        </div>
+                        <div class="search_levelTerm"></div>
+                        <!-- <a  onclick="closeModal(this)" class="routinr-input-close">+</a> -->
+                      </div>
+                      <% } %>
+
+
+                     
+                  </div>
+                  <div class="add-odd-item">
+                    <button class="newSubjectBtn" onclick="addNewOddSubject(this)">add subject</button>
+                  </div>
+                </div>
+                <div class="item-value even <%= index %>">
+                  <div class="subject-array even-subject-array">
+                    <% let maxSubjecteven = 0; %>
+                    <!-- max subject index find start -->
+                    <% for (const oneDate of Routine) { %>
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>        
+                        <% for( let oneDate_index = 0; oneDate_index < oneDate.slotInfo.length; oneDate_index++ ) { %>
+                       <% for (const oneSlot of oneDate.slotInfo) { %>
+                      <% maxSubjecteven = Math.max(
+                            maxSubjecteven,
+                            oneSlot.evenqurstionInfo.subjectInformation.length
+                          ); %>
+                    <% } %>                   
+                    <% } %>                   
+                    <% } %>                   
+                    <% } %>              
+                    <!-- max subject index find end --> 
+                    <% for (const oneDate of Routine) { %>
+                      <% if (new Date(oneDate.examDate).getTime() === new Date(dateInfo.examDate).getTime()) { %>        
+                        <% for( let oneDate_index = 0; oneDate_index < oneDate.slotInfo.length; oneDate_index++ ) { %>
+                          <% if (oneDate_index == index ) { %>
+                            <% for (const subject of oneDate.slotInfo[oneDate_index].evenqurstionInfo.subjectInformation) { %>
+                              <%  subjectEvenHas += 1 %>                  
+                              <div class="input-div">
+                                <div class="subjectLevelTerm-container">
+                                  <div class="course-info">
+                                    <div class="content">
+                                      
+                                      <%= subject.courseCode %>: <%= subject.courseName %> <br> [<%= subject.numberOfQuestion %>]
+                                    </div>
+                                    <div class="cross-btn" onclick="clearLevelTermShow(this) ">
+                                      <span>clear</span>
+                                    </div>
+                                  </div>
+                                  <div class="batch-info">
+                                    <%= subject.level %><%= subject.term %> <br> <%= subject.batch %>
+                                  </div>
+                                </div>
+                                <input class="routine-input" type="text" style="display: none;" onchange="serverSendToSearch(this)" placeholder="Find level term Information">
+                                <a  onclick="routinr-input-close(this)" style="display: none;" class="routinr-input-close" >+</a>
+                                <div class="search_levelTerm"></div>
+                              </div>
+                            <% } %>                          
+                          <% } %>  
+                        <% } %>
+                      <% } %>
+                    <% } %> 
+                    <% for( let index = 0; index < (Math.max(1,maxSubjecteven) - subjectEvenHas); index++ ) { %>                     
+                      <div class="input-div">
+                        <div class="input-style">
+                          <input class="routine-input" type="text" oninput="serverSendToSearch(this)" placeholder="Find level term Information">
+                          <div class="subject-levet-term"></div>
+                        </div>
+                        <div class="search_levelTerm"></div>
+                        <!-- <a  onclick="closeModal(this)" class="routinr-input-close">+</a> -->
+                      </div>
+                    <% } %>
+                  </div>
+                  <div class="add-even-item">
+                    <button class="newSubjectBtn" onclick="addNewOddSubject(this)">add subject</button>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+              <!-- </div> -->
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <!-- new table -->
+ 
+
+         </div>
+      </div>
+    </div>
+</section>
+<!-- manu open close -->
+<%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>
+
+<script>
+  console.log()
+  let routine_table = document.getElementById("routine-table");
+  console.log("table", routine_table)
+
+  let even_subject_max = document.getElementById("even_subject_max");
+  async function CreateExamRoutine() {
+    let response = await fetch("/Administrator/Routine/createRoutine", {
+      method: "post",
+    });
+    let result = await response.json();
+    // alert("result");
+
+    console.log("result", result);
+
+    if (result.message) {
+      // errors
+      alert(result.message);
+      console.log("working go")
+
+      // console.log(fieldName)
+
+
+      // Object.keys(result.errors).forEach((fieldName) => {
+      //   // add error class to all inputs
+      //   form[fieldName].classList.add("error");
+
+      //   // set all error placeholders (p tag) textContent
+      //   const errorPlaceholder = document.querySelector(`.${fieldName}-error`);
+
+      //   errorPlaceholder.innerHTML = result.errors[fieldName].msg;
+
+      //   // make all placeholders visible
+      //   errorPlaceholder.style.display = "block";
+      // });
+    } else {
+      // success
+      // successToast.showToast();
+      console.log("close");
+      // successToast.showToast();
+      // closeTeacherModal();
+      // document.querySelector("p.error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
+  }
+</script>
+<!-- seatch search find ans set remove  -->
+<script>
+    let t =0
+
+  function addNewOddSubject(button) {
+    t+=1
+    // Find the closest 'classname' div containing the button
+    var closestClassnameDiv = button.closest('.item-value');
+    var closestRoutineBodyItemDiv = button.closest('.routine-body-item');
+    console.log("closestRoutineBodyItemDiv----------",closestRoutineBodyItemDiv)
+    var oroutineBodyItemValueDiv = closestRoutineBodyItemDiv.querySelectorAll('.slot');
+    console.log("oroutineBodyItemValueDiv----------",oroutineBodyItemValueDiv)
+    let l =0
+    for (const oroutineBodyItemValueDivOne of oroutineBodyItemValueDiv) {
+      l+=1
+    var itemValueDiv = oroutineBodyItemValueDivOne.querySelector(`.${closestClassnameDiv.classList[1]}`);
+    console.log("itemValueDiv----------",itemValueDiv)
+      
+    // }
+    // Find the 'odd-subject-array' div within the closest 'classname' div
+    var oddSubjectArrayDiv = itemValueDiv.querySelector('.subject-array');
+    // Create the outer div element with class "input-div"
+    const inputDiv = document.createElement("div");
+    inputDiv.className = `input-div ${l} ${t}`;
+
+    // Create the input element with class "routine-input" and type "text"
+    const inputElement = document.createElement("input");
+    inputElement.className = "routine-input";
+    inputElement.type = "text";
+    inputElement.addEventListener("keyup", sendServer)
+
+    // Create the anchor (link) element with class "routinr-input-close"
+    const anchorElement = document.createElement("a");
+    anchorElement.className = "routinr-input-close";
+    anchorElement.href = "javascript:void(0)";
+    anchorElement.textContent = "+"; // Display the '+' symbol inside the link
+    // Add an onclick event to the anchor element to call the "closeModal" function
+    anchorElement.onclick = closeDiv;
+
+    // Create the search element show div
+    const searchShowDiv = document.createElement("div");
+    searchShowDiv.className = "search_levelTerm";
+
+    const searchShowDivClse = document.createElement("a");
+    searchShowDivClse.className = "routinr-input-close";
+    searchShowDivClse.href = "javascript:void(0)";
+    searchShowDivClse.textContent = "+";
+    searchShowDiv.appendChild(searchShowDivClse);
+    // Display the '+' symbol inside the link
+    // Add an onclick event to the anchor element to call the "closeModal" function
+    anchorElement.addEventListener("click", removeditem)
+    // <div class="search_levelTerm"></div>
+    // Append the input element and anchor element to the "input-div" div
+    inputDiv.appendChild(inputElement);
+    inputDiv.appendChild(searchShowDiv);
+    inputDiv.appendChild(anchorElement);
+    // Append the "input-div" div to the parent container
+    // oddSubjectArrayDiv.appendChild(inputDiv);
+
+    // test ----------------------------------------
+    let addNewSujectInputDiv = `
+
+                        <div class="input-div">
+                        <div class="input-style">
+                          <input class="routine-input" type="text" oninput="serverSendToSearch(this)" placeholder="Find level term Information">
+                          <div class="subject-levet-term"></div>
+                        </div>
+                        <div class="search_levelTerm"></div>
+                        <a  onclick="removeditem(this)" class="routinr-input-close">+</a>
+                      </div>
+    `
+    oddSubjectArrayDiv.innerHTML +=addNewSujectInputDiv
+    // test ----------------------------------------
+  }
+  }
+
+  function removeditem(value) {
+    console.log(this)
+    var closestClassnameDiv = value.closest('.item-value');
+    console.log(closestClassnameDiv)
+    console.log(closestClassnameDiv.classList[1])
+    var closestRoutineBodyItemDiv = value.closest('.routine-body-item');
+    console.log("closestRoutineBodyItemDiv----------",closestRoutineBodyItemDiv)
+    var oroutineBodyItemValueDiv = closestRoutineBodyItemDiv.querySelectorAll('.slot');
+    console.log("oroutineBodyItemValueDiv----------",oroutineBodyItemValueDiv)
+    for (const oroutineBodyItemValueDivOne of oroutineBodyItemValueDiv) {
+      console.log("oroutineBodyItemValueDivOne----------",oroutineBodyItemValueDivOne)
+    let itemValueDiv = oroutineBodyItemValueDivOne.querySelector(`.${closestClassnameDiv.classList[1]}`).querySelector('.subject-array');
+    itemValueDiv.lastElementChild.remove()
+    
+    }
+    // this.parentElement.remove();
+  }
+// seatch
+  function removedSearchItem(value) {
+    // event.target.closest('.input-div').querySelector('.search_levelTerm').
+    value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+
+  // const inputElement = document.getElementById("myInput");
+  const inputElement = document.querySelectorAll(".routine-input");
+  console.log("------------------------------------------------------------",inputElement)
+  // Add the "keyup" event listener to the input element
+  // inputElement.forEach(input => {
+  //   input.addEventListener("keyup", sendServer);
+
+  // });
+  // search level term
+  function serverSendToSearch(value){
+    console.log("server send",value)
+    sendServer(value)
+  }
+  // 
+  async function closeDiv(){
+    console.log("run this ")
+  }
+  let debounceTimeout;
+  async function sendServer(event) {
+    // event.target.nextElementSibling.style.display = "none";
+    //   const updatedValue = event.target.value;
+    // console.log("Updated value:", updatedValue);
+    //  console.log(this)
+     console.log("event",event)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(debounceTimeout);
+
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    debounceTimeout = setTimeout(async () => {
+      // --> date find
+      let date = ''
+      const closestRoutineBodyItem = event.closest('#routine-body-item');
+      if (closestRoutineBodyItem) {
+        const dateItemValue = closestRoutineBodyItem.querySelector("#date-item-value");
+        if (dateItemValue) {
+          console.log('-------------', dateItemValue.innerHTML);
+          date = dateItemValue.innerHTML.trim()
+        }
+      }
+      // --> date find
+      // -->  slot Find
+      const closestRoutineItem = event.closest('.item-value').classList[2];
+      // console.log("_=-=-=-=-",closestRoutineItem.classList)
+      // console.log("_=-=-=-=-",closestRoutineItem.classList[2])
+      console.log(document.getElementById('routine-header').querySelectorAll('.table-head'))
+      //  
+      let parentElement = document.getElementById('routine-header')
+      const index = Array.from(parentElement.children).indexOf(1);
+      // 
+
+      //  
+      // Assuming you have the parent element with ID 'routine-header'
+      // const parentElement = document.getElementById('routine-header');
+
+      // Find all child elements within the parent element
+      const childElements = parentElement.querySelectorAll('*');
+
+      // Assuming you want to access a child element by its index (e.g., index 0)
+      const indexToAccess = Number(closestRoutineItem) + 1;
+      let slotName = ''
+      if (indexToAccess >= 0 && indexToAccess < childElements.length) {
+        const elementAtIndex = childElements[indexToAccess];
+        // console.log('Child element at index ---', indexToAccess, ':', elementAtIndex);
+        // console.log('Child element at index ---', indexToAccess, ':', elementAtIndex.innerHTML);
+        const parts = elementAtIndex.innerHTML.split(':')[0];
+        slotName = parts.trim().split(' ')[1];
+
+      } else {
+        console.log('Invalid index or no child elements found at that index.');
+      }
+      console.log("slot---", slotName)
+
+      // 
+
+      console.log("Index of the child element:", index);
+      // console.log('-------------',event.target.closest('#routine-body-item').getElementById('date-item-value').innerHTML);
+      // let valueeee = event.target.closest('.routine-body-item').querySelectorAll("#date-item-value")
+      // console.log('-------------',valueeee.innerHTML);
+      console.log('-------------', event.closest('.routine-body-item').firstChild);
+      let sanitizedValue = event.value.replace(/[^a-zA-Z0-9]/g, '');
+      let uppercaseValue = sanitizedValue.toUpperCase();
+      let response = await fetch("/Administrator/Routine/seatch", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: uppercaseValue,
+          date: date,
+          slotName: slotName,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log("Routine/seatch",result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      console.log(result.levelTrem[0]); // Log the response from the server
+      // console.log("result.levelTrem.error", result.error.error)
+
+      console.log("result.levelTrem.error", !result.error)
+      console.log("result.levelTrem.error", result.levelTrem.length)
+      let careteshowSearchValue
+      if (!result.error) {
+        if (result.levelTrem.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          result.levelTrem[0].course
+          let courseInfo = ''
+          for (const course of result.levelTrem[0].course) {
+            courseInfo += `          
+        <div class="course-info-show-table-body" onclick="saveSubjectInfo(this)">
+            <div class="courseCode course-info-show-table-value">${course.courseCode}</div>
+            <div class="courseName course-info-show-table-value">${course.courseName}</div>
+            <div class="subjectAllStudent course-info-show-table-value">${course.subjectAllStudent}</div>
+            <div class="sectionlength course-info-show-table-value">${course.section.length}</div>
+          </div>
+          `
+          }
+          let gapInfo = ''
+          for (const gapDate of result.gapDateInfo) {
+            let slotInfo = ''
+            if (gapDate.slotInfo.length > 0) {
+            for (const slot of gapDate.slotInfo) {
+              // slot.slotTotalStudent - 
+              slotInfo += ` <div class="course-info-show-table-value">${ slot.slotName}   ${result.roomsShortInfo.totalroomSum - slot.slotTotalStudent }</div>`
+            }
+          }
+            gapInfo += `  
+
+        <div class="course-info-show-table-body"> 
+          <div class="course-info-show-table-value">${ new Date(gapDate.examDate).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+            <div class="course-info-show-table-value">${slotInfo}</div>
+          </div>
+          `
+          }
+
+
+          let careteshowSearchValue = `
+    <div class="serch-info-show">
+          <div class="course-info-show">        
+              <div class="course-info-show-table">
+                   <div class="course-info-show-title">
+                   ${result.levelTrem[0].level} ${result.levelTrem[0].term} Course Information
+                   </div>
+                   <div class="course-info-show-table-header">
+                        <div class="course-info-show-table-header-title">Code</div>
+                        <div class="course-info-show-table-header-title">Title</div>
+                        <div class="course-info-show-table-header-title">Reg.</div>
+                        <div class="course-info-show-table-header-title">Section</div>
+                   </div>
+                   <!-- add where course -->
+                   ${courseInfo}
+              </div>
+          </div>
+          <div class="other-info-show">
+              <div class="course-info-show-title">
+                    date and Slot available for ${result.levelTrem[0].level} ${result.levelTrem[0].term}
+              </div>
+              <div class="course-info-show-table-header">
+                    <div class="course-info-show-table-header-title">Available Date</div>
+                    <div class="course-info-show-table-header-title">Slot(available Seat)</div>
+              </div>
+              ${gapInfo}
+          </div>
+    </div>
+    <div class="slot-short-show">
+      <div class="slot-short-info">
+                    <div class="slot-short-info-item">One Slot Available Number of Odd seat :${result.roomsShortInfo.sumOdd}</div>
+                    <div class="slot-short-info-item">One Slot Available Number of Even seat :${result.roomsShortInfo.sumEven}</div>
+                    <div class="slot-short-info-item">One Slot Available total Number  seat :${result.roomsShortInfo.totalroomSum}</div>
+        </div>
+    </div>
+
+    <a  onclick="removedSearchItem(this)" class="routinr-input-close">+</a>
+    `
+          // users_placeholder.innerHTML = generatedHtml;
+          //   users_placeholder.style.display = "block";
+          event.closest('.input-div').querySelector('.search_levelTerm').innerHTML = careteshowSearchValue;
+          event.closest('.input-div').querySelector('.search_levelTerm').style.display = "block";
+// any where show test
+            const popup = event.closest('.input-div').querySelector(".search_levelTerm");
+            const button = event;
+            console.log(event)
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const buttonRect = button.getBoundingClientRect();
+            
+            if (buttonRect.left + 10 < screenWidth / 2) {
+                // Button is on the left side of the screen
+                // popup.style.left = `${buttonRect.right + 10}px`;
+                popup.style.left = '-2px';
+                // popup.style.right = "auto";
+            } else {
+                // Button is on the right side of the screen
+                // popup.style.left = "auto";
+                // popup.style.right = `${screenWidth - buttonRect.left + 10}px`;
+                popup.style.right = `0px`;
+            }
+
+            if (buttonRect.top + 10 < screenHeight / 2) {
+                // Button is on the top side of the screen
+                popup.style.top = `67px`;
+                // popup.style.top = `${buttonRect.bottom + 10}px`;
+                popup.style.bottom = "auto";
+            } else {
+                // Button is on the bottom side of the screen
+                popup.style.top = "auto";
+                popup.style.bottom = `67px`;
+                // popup.style.bottom = `${screenHeight - buttonRect.top + 10}px`;
+            }
+
+            // popup.style.display = 'block';
+// any where show test
+
+
+
+        }
+      } else {
+        console.log("error working")
+        let careteshowSearchValue = `
+         <div class="serch-info-show">
+            ${result.error.error}
+        </div>
+        <a  onclick="removedSearchItem(this)" class="routinr-input-close">+</a>
+      `
+      event.closest('.input-div').querySelector('.search_levelTerm').innerHTML = careteshowSearchValue;
+      event.closest('.input-div').querySelector('.search_levelTerm').style.display = "block";
+      }
+
+    }, 500);
+  }
+
+</script>
+<!--  -->
+<!-- subject info Server Send sujectInfoSave -->
+<script>
+  // Function to show a toast message
+function showToast(message, isError = false) {
+  Toastify({
+    text: message,
+    duration: 500,
+    backgroundColor: isError ? "#f44336" : "",
+  }).showToast();
+}
+async  function saveSubjectInfo(value) {
+  //--> server send to make value (couseName,CourseCode,TotalStudent) (start)
+    const subjectSendInfo ={}
+    console.log("saveSubjectInfo", value.querySelectorAll(".course-info-show-table-value"))
+    const subjectInfos = value.querySelectorAll(".course-info-show-table-value")
+    for (const subjectInfo of subjectInfos) {
+      const key = subjectInfo.classList[0];
+      const value = subjectInfo.innerHTML;
+      subjectSendInfo[key] = value;
+    }
+
+    // -->server send to date find (start)
+    let date = ''
+    const closestRoutineBodyItem = value.closest('#routine-body-item');
+    if (closestRoutineBodyItem) {
+      const dateItemValue = closestRoutineBodyItem.querySelector("#date-item-value");
+      if (dateItemValue) {
+        // console.log('-------------', dateItemValue.innerHTML);
+        date = dateItemValue.innerHTML.trim()
+      }
+    }
+    console.log("date date --------------------date-------------------date--------------------date--------------date---", date)
+    // --> date find (end)
+    // -->server send slot Find (start)
+    let slotName = value.closest('.item-value').classList[2];
+    const oddEven = value.closest('.item-value').classList[1];
+    // console.log("slot---", slotName)
+    // --> slot Find (end)
+    // -->server send level term (start)
+    // console.log(" value.closest('.item-value')", value.closest('.course-info-show-table'))
+     const levelTremDiv = value.closest('.course-info-show-table').firstElementChild.innerHTML
+       const level = levelTremDiv.trim().split(' ')[0];
+       const term = levelTremDiv.trim().split(' ')[1];
+       console.log("level term",levelTremDiv, level,term)
+    // --> level term (end)
+    let response = await fetch("/Administrator/Routine/sujectInfoSave", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: subjectSendInfo,
+          date: date,
+          slotName: slotName,
+          oddEven,
+          level:level,
+          term:term,
+
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log("result",result)
+      if (result.error === true) {
+        value.closest('.input-div').querySelector('input').value =''
+        value.closest('.search_levelTerm').style.display = 'none';
+        await showToast(result.msg,result.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+      } else {
+      console.log("result false",result)
+      console.log("result true",result)
+             let saveSubjectInfo = `<div class="subjectLevelTerm-container">
+                                  <div class="course-info">
+                                    <div class="content"> 
+                                      ${ result.courseCode }: ${ result.courseName } <br> [ ${ result.numberOfQuestion } ]
+                                    </div>
+                                    <div class="cross-btn" onclick="clearLevelTermShow(this) ">
+                                      <span>clear</span>
+                                    </div>
+                                  </div>  
+                                  <div class="batch-info">
+                                    ${ result.level }${ result.term } <br> ${result.batch }
+                                  </div>
+                                </div>`
+                                console.log(value.closest('.input-div'))
+        value.closest('.input-div').innerHTML =saveSubjectInfo
+        value.closest('.search_levelTerm').style.display = 'none';
+        await showToast(result.msg,result.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+        setTimeout(() => {
+        location.reload();
+      }, 1000);
+      }
+  }
+</script>
+<!-- clearLevelTermShow  removeSubject-->
+<script>
+  async function clearLevelTermShow(value){
+      // --> date, server send to date find (start)
+    let date = ''
+    const closestRoutineBodyItem = value.closest('#routine-body-item');
+    if (closestRoutineBodyItem) {
+      const dateItemValue = closestRoutineBodyItem.querySelector("#date-item-value");
+      if (dateItemValue) {
+        console.log('-------------', dateItemValue.innerHTML);
+        date = dateItemValue.innerHTML.trim()
+      }
+    }
+    // --> date find (end)
+    // -->slot , server send slot Find (start)
+    let slotName = value.closest('.item-value').classList[2];
+    const oddEven = value.closest('.item-value').classList[1];
+    console.log("slot---", slotName)
+    // --> slot Find (end)
+    // --> cousecode couseName
+    const couseName_code = value.previousElementSibling.innerHTML
+    console.log("level term",couseName_code)
+
+    const cousecode = couseName_code.split(':')[0].trim();
+    const name_total = couseName_code.split(':')[1].trim();
+    const couseName = name_total.split('<')[0].trim();
+    const numberOfQuestion = name_total.split('<')[1].split('[')[1].split(']')[0].trim();
+    console.log("level term",cousecode, couseName)
+    // --> level term
+    const levelTrem = value.closest('.subjectLevelTerm-container').lastElementChild.innerHTML
+    const level = levelTrem.trim().substring(0, 2);
+    const term = levelTrem.trim().substring(2, 4);
+    console.log("level term",level, term)
+    // --> level term (end) 
+    let response = await fetch("/Administrator/Routine/removeSubject", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          cousecode: cousecode,
+          couseName: couseName,
+          date: date,
+          slotName: slotName,
+          oddEven,
+          level:level,
+          term:term,
+          numberOfQuestion:numberOfQuestion
+
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log(result)
+      if (result.error === true) {
+        await showToast(result.msg,result.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+      } else {
+                       let removeSubjectThanAdd = `
+                       <div class="input-style">
+                          <input class="routine-input" type="text" oninput="serverSendToSearch(this)" placeholder="Find level term Information">
+                          <div class="subject-levet-term"></div>
+                        </div>
+                        <div class="search_levelTerm"></div>
+                        <a  onclick="removeditem(this)" class="routinr-input-close">+</a> 
+                                `
+                                value.closest('.input-div').innerHTML =removeSubjectThanAdd
+        await showToast(result.msg,result.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+
+      }
+    value.parentElement.style.display = "none";
+    // document.querySelector(".cross-btn").addEventListener("click", function() {
+    //   document.querySelector(".container").style.display = "none";
+    // });
+  }
+
+</script>
+<!--  -->
+<script>
+  // 
+  let typingTimer;
+  const doneTypingInterval = 500;
+  const inputs = document.querySelectorAll(".routine-input");
+
+  inputs.forEach(input => {
+    input.addEventListener("keyup", function() {
+      clearTimeout(typingTimer);
+
+      if (input.value) {
+        console.log(input.value);
+        typingTimer = setTimeout(searchUsers, doneTypingInterval); //user is "finished typing," send search request
+      }
+    });
+
+    input.addEventListener("keydown", function() {
+      clearTimeout(typingTimer);
+      console.log(input.value);
+    });
+  });
+
+  async function searchUsers() {
+    console.log("function run");
+    inputs.forEach(async (input) => {
+      // Remove spaces and special characters using regular expression
+      let sanitizedValue = input.value.replace(/[^a-zA-Z0-9]/g, '');
+
+      // Convert the sanitized value to uppercase
+      let uppercaseValue = sanitizedValue.toUpperCase();
+
+      console.log('uppercaseValue', uppercaseValue);
+      // if (input.value.trim() !== "") {
+      // let response = await fetch("/Administrator/Routine/seatch", {
+      //       method: "POST",
+      //       body: JSON.stringify({
+      //         // Use "value" as the key instead of "value"
+      //         value:`${uppercaseValue}`,
+      //         name: 'ridoy'
+      //       }),
+      //       headers: {
+      //         "Content-type": "application/json; charset=UTF-8",
+      //       },
+      //     });
+
+      //     let result = await response.json();
+      //     console.log(result); // Log the response from the server
+      //   }
+    });
+  }
+</script>

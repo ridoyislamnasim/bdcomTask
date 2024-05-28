@@ -1,0 +1,47 @@
+box
+ <div class="checkmark-subBox">
+                <div class="checkmark-Box-item">
+                  <input type="checkbox" id="page21" name="selectedPages[]" value="Exam Routine page" <%= prv_info  && prv_info.selectedPages.includes('Exam Routine page') ? 'checked="checked"' : '' %> >
+                  <label for="vehicle1"> Manage Exam Routine page</label>
+                </div>
+                <div class="checkmark-Box-item">
+                  <input type="checkbox" id="page22" name="selectedPages[]" value="Seat Plan page" <%= prv_info  && prv_info.selectedPages.includes('Seat Plan page') ? 'checked="checked"' : '' %>>
+                  <label for="vehicle2"> Manage Seat Plan page</label>
+                </div>
+  
+  
+              </div>
+              <div class="checkmark-subBox">
+                <div class="checkmark-Box-item">
+                  <input type="checkbox" id="page31" name="selectedPages[]" value="Invigilator Criteria page" <%= prv_info  && prv_info.selectedPages.includes('Invigilator Criteria page') ? 'checked="checked"' : '' %> >
+                  <label for="vehicle1"> Manage Invigilator Criteria page</label>
+                </div>
+                <div class="checkmark-Box-item">
+                  <input type="checkbox" id="page32" name="selectedPages[]" value="Reg: Invigilator page" <%= prv_info  && prv_info.selectedPages.includes('Reg: Invigilator page') ? 'checked="checked"' : '' %>>
+                  <label for="vehicle2"> Manage Reg: Invigilator page</label>
+                </div>
+                <div class="checkmark-Box-item">
+                  <input type="checkbox" id="page33" name="selectedPages[]" value="Invigilator Duty page" <%= prv_info  && prv_info.selectedPages.includes('Invigilator Duty page') ? 'checked="checked"' : '' %>>
+                  <label for="vehicle3"> Manage Invigilator Duty page</label>
+                </div>
+                <div class="checkmark-Box-item">
+                  <input type="checkbox" id="page33" name="selectedPages[]" value="Duty Roster page" <%= prv_info  && prv_info.selectedPages.includes('Duty Roster page') ? 'checked="checked"' : '' %>>
+                  <label for="vehicle3"> Manage Duty Roster page</label>
+                </div>
+              </div>
+
+
+
+              <!-- simolw -->
+              <div class="checkmark-Box-item">
+                <input type="checkbox" id="page12" name="selectedPages[]" value="Subject page" <%= prv_info  && prv_info.selectedPages.includes('Subject page') ? 'checked="checked"' : '' %> >
+                <label for="vehicle2"> Manage Subject page</label>
+              </div>
+              <div class="checkmark-Box-item">
+                <input type="checkbox" id="page13" name="selectedPages[]" value="Exam Dates page" <%= prv_info  && prv_info.selectedPages.includes('Exam Dates page') ? 'checked="checked"' : '' %> >
+                <label for="vehicle3"> Manage Exam Dates page</label>
+              </div>
+              <div class="checkmark-Box-item">
+                <input type="checkbox" id="page14" name="selectedPages[]" value="Exam Slots page" <%= prv_info  && prv_info.selectedPages.includes('Exam Slots page') ? 'checked="checked"' : '' %>>
+                <label for="vehicle3"> Manage Exam Slots page</label>
+              </div>

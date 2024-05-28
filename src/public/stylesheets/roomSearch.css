@@ -1,0 +1,134 @@
+.s002{
+  width: 100%;
+  font-size: 12px;
+}
+.s002 form legend {
+  font-size: 60px;
+  line-height: 1;
+  color: #120202;
+  margin-bottom: 60px;
+  font-weight: 400;
+  text-align: center;
+}
+.s002 form {
+  width: 100%;
+  max-width: 1190px;
+  display: flex;
+  margin-top: 5rem;
+  flex-direction: column;
+}
+.s002 form .inner-form {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.s002 form .inner-form .input-field.first-wrap {
+  -ms-flex-positive: 1;
+  flex-grow: .5;
+}
+.s002 form .inner-form .input-field.second-wrap {
+  min-width: 190px;
+  max-width: 190px;
+}
+.s002 form .inner-form .input-field.third-wrap {
+  min-width: 190px;
+  max-width: 190px;
+}
+.s002 form .inner-form .input-field.fouth-wrap {
+  min-width: 190px;
+  max-width: 190px;
+  padding-left: 10px;
+  border-right: 0;
+}
+.s002 form .inner-form .input-field.fouth-wrap .btn-search:hover {
+  background: #af7d51;
+}
+.s002 form .inner-form .input-field.fouth-wrap .btn-search {
+  height: 50px;
+  width: 100%;
+  background: #b78a62;
+  white-space: nowrap;
+  border-radius: 0.5px;
+  font-size: 16px;
+  color: #fff;
+  transition: all .2s ease-out, color .2s ease-out;
+  border: 0;
+  cursor: pointer;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 5px;
+}
+.s002 form .inner-form .input-field {
+  position: relative;
+
+}
+/* =======================drop Down ==================================== */
+.dropdown-content-size {
+  padding: 2% 2% !important;
+  width: 100% !important;
+  margin: 1% 1%;
+}
+/* =======================drop Down ==================================== */
+/* =======================room search ==================================== */
+.room-searchInfo {
+  display: none;
+  position: absolute;
+  background-color: var(--light);
+  width: 100%;
+  box-shadow: 3px 3px 10px 10px rgb(3 3 3 / 17%);
+  padding: 2% 1% 1% 1% !important;
+  margin: 0% .5%;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.room-searchInfo-value {
+  padding: 10px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  font-size: 12px;
+}
+.room-searchInfo:hover .routinr-input-close {
+  display: block;
+  display: grid;
+}
+/* =======================room search ==================================== */
+
+@media screen and (max-width: 992px){
+.s002 form .inner-form .input-field.first-wrap {
+    width: 100%;
+}}
+@media screen and (max-width: 992px){
+.s002 form .inner-form .input-field {
+    margin-bottom: 15px;
+}}
+@media screen and (max-width: 992px){
+.s002 form .inner-form {
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+field {
+  margin-bottom: 15px;
+}
+.s002 form .inner-form .input-field.second-wrap {
+  width: calc(50% - 7.5px);
+  max-width: none;
+}
+.s002 form .inner-form .input-field.third-wrap {
+  width: calc(50% - 7.5px);
+  max-width: none;
+}
+.s002 form .inner-form .input-field.fouth-wrap {
+  width: calc(100% - 7.5px);
+  max-width: none;
+  margin-bottom: 0;
+}
+}

@@ -1,0 +1,172 @@
+<div class="modal-wrapper" id="edit-timeslot-modal">
+    <div class="modal">
+        <a href="#" onclick="closeEditTimeSlotModal()" class="modal-close">+</a>
+        <div class="modal-title">
+            <h2>Edit Time Solt</h2>
+        </div>
+        <div class="modal-body">
+            <form id="edit-timeslot-form">
+                <h4><span> Exam start Time</span></h4>
+                <input type="text" id="prvslotnameSet" placeholder="Enter Start Time" name="slotname" />
+                <p class="error slotname-error"></p>
+
+                <h4><span>Exam Time duration</span></h4>
+                <input type="time" id="prvstarttimeSet" placeholder="Enter End Time" name="starttime" />
+                <p class="error starttime-error"></p>
+
+                <h4><span>Start Exam Time </span></h4>
+                <input type="text" id="prvexamtimeSet" placeholder="Enter Solt Name" name="examtime" />
+                <p class="error examtime-error"></p>
+
+                <div class="radio">
+                    <span>Section status?</span>
+                    <div>
+                        <input type="radio" id="prvTimeslotActiveSet" name="status" value="Active"><span>Active</span>
+                        <input type="radio" id="prvTimeslotInactiveSet" name="status"
+                            value="Inactive"><span>Inactive</span>
+                    </div>
+                </div>
+                <p id="editTimeSlot_id" style="display: none;">p</p>
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    console.log("document.querySelector")
+    const edittimeslotmodal = document.querySelector("#edit-timeslot-modal");
+    const edittimeslotform = document.querySelector("#edit-timeslot-form");
+
+    const prvslotnameSet = document.querySelector("#prvslotnameSet")
+    const prvstarttimeSet = document.querySelector("#prvstarttimeSet")
+    const prvexamtimeSet = document.querySelector("#prvexamtimeSet")
+
+    const prvTimeslotActiveSet = document.querySelector("#prvTimeslotActiveSet")
+    const prvTimeslotInactiveSet = document.querySelector("#prvTimeslotInactiveSet")
+    const editTimeSlotid = document.querySelector("#editTimeSlot_id")
+
+        // success toast
+   const editTimeSlotSuccessToast = Toastify({
+            text: "User was Edit successfully!",
+            duration: 5000,
+        });
+
+    function closeEditTimeSlotModal() {
+        edittimeslotmodal.style.display = "none";
+    }
+    async function openEditTimeSlotModal(prvslotname, prvstarttime, prvexamtime, prvtimeslottatus, edittimelotid, datesend) {
+
+        console.log(prvslotname, prvstarttime, prvexamtime, prvtimeslottatus)
+        console.log("typreof", typeof (prvstarttime));
+        //   HoursMinites and meridiem split
+        let startHoursMinites = prvstarttime.split(" ")[0]
+        let mreidiem = prvstarttime.split(" ")[1]
+        // minites and hours split
+        let hour = startHoursMinites.split(":")[0]
+        let minites = startHoursMinites.split(":")[1]
+        //  Post meridiem to add 12
+        if (mreidiem == "pm") {
+            hour = Number(hour) + 12;
+        }
+        prvstarttimeNow = hour + ":" + minites
+
+        //  let hour= prvstarttime.split(":")[0]
+        prvslotnameSet.value = prvslotname;
+        prvstarttimeSet.value = prvstarttimeNow;
+        prvexamtimeSet.value = prvexamtime;
+        editTimeSlotid.innerHTML = edittimelotid;
+
+        if (prvtimeslottatus == "Active") {
+            prvTimeslotActiveSet.checked = "checked"
+        } else {
+            prvTimeslotInactiveSet.checked = "checked"
+        }
+        edittimeslotmodal.style.display = "block";
+
+        console.log("riody")
+    }
+
+
+
+    // -----------------------------edit and submit____________________________________>>
+    edittimeslotform.onsubmit = async function (event) {
+        event.preventDefault();
+        console.log("event");
+        console.log(event);
+        //   const roomidis=  document.querySelector("#roomid").innerHTML;  
+        // console.log(roomidis);
+        // clear errors first---------------------------->>
+        const errorPlaceholders = document.querySelectorAll("p.error");
+        console.log("errorPlaceholders")
+        console.log(errorPlaceholders)
+
+        for (let i = 0; i < errorPlaceholders.length; i++) {
+            errorPlaceholders[i].style.display = "none";
+        }
+
+        const inputErrors = document.querySelectorAll("input.error");
+        console.log("inputErrors")
+        console.log(inputErrors)
+
+        if (inputErrors.length > 0) {
+            for (let j = 0; j < inputErrors.length; j++) {
+                inputErrors[j].classList.remove("error");
+            }
+        }
+        // // ------------------------------------------>>
+        // await function editsend(){
+        const editTimeSlotId = document.querySelector("#editTimeSlot_id").innerHTML;
+        console.log("roomidis");
+        console.log(editTimeSlotId);
+        const formData = new FormData(edittimeslotform);
+        console.log(formData);
+        // send the request to server
+        let response = await fetch(`/Administrator/timeslots/${editTimeSlotId}`, {
+            method: "post",
+            body: formData,
+        });
+        let result = await response.json()
+        console.log(result)
+        // }
+        // handle error and response
+        if (result.errors) {
+            // errors
+            console.log("working go")
+            // console.log(fieldName)
+
+
+            Object.keys(result.errors).forEach((fieldName) => {
+
+
+
+                // add error class to all inputs
+                form[fieldName].classList.add("error");
+
+
+                // set all error placeholders (p tag) textContent
+                const errorPlaceholder = document.querySelector(`.${fieldName}-edit-error`);
+                console.log("errorPlaceholderDown");
+                console.log(errorPlaceholder);
+                console.log("fieldName");
+                console.log(fieldName);
+
+                errorPlaceholder.innerHTML = result.errors[fieldName].msg;
+
+                // make all placeholders visible
+                errorPlaceholder.style.display = "block";
+            });
+        } else {
+            // success
+            
+            closeEditTimeSlotModal();
+            document.querySelector("p.error").style.display = "none";
+            editTimeSlotSuccessToast.showToast();
+            // reload the page after 1 second
+            setTimeout(() => {
+                location.reload();
+            }, 100);
+        }
+    }
+</script>

@@ -1,0 +1,280 @@
+<%- include(`../commonPartial/header.ejs`); %>
+  <%- include(`../commonPartial/menu.ejs`); %>
+  <section class="home-section">
+    <div class="home-content">
+      <!-- information show  -->
+    <div class="manageAddRoom-container">
+      <div id="title">
+        <h2>Manage Exam Date</h2>
+      </div>
+
+      <!-- <div class="new-room-container new-room">
+        <a href="#" onclick="openExamDateAndSlotmModal()" class="newadd">Add</a>
+      </div> -->
+      <div id="info-view">
+        <div class="table_top">
+          <div class="left">
+            <a href="#" onclick="openExamDateAndSlotmModal()" class="newadd">Add</a>
+          </div>
+          <div class="right-edit-delte">
+            <div class="edit-delete">
+              <a href="#" onclick="examDateEditHandel(this)">
+                <!-- edit -->
+                <i class="fa-regular fa-pen-to-square"></i>
+              </a>
+              <a method="delete" href="#" onclick="openExamDateDeleteModal(this)">
+                <!-- delete -->
+                <i class="fa-regular fa-trash-can"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="info-title">
+          <span>Daffodil International University (DSC)</span>
+          <span> Department of Computer Science and Engineering (Day and Evening Program)</span>
+          <span>Exam Date Information, Spring 2023</span>
+        </div>
+      <div id="rooms-table" class="exam-date-info">
+        <table id="dateTable">
+          <thead>
+            <tr>
+              <th>Start Exam Date</th>
+              <!-- <th >Solt A</th>
+              <th >Solt B</th>
+              <th >Solt C</th>
+              <th >Solt D</th> -->
+              <!-- <th>End Exam Date</th> -->
+            </tr>
+          </thead> 
+          <tbody id="table">
+            <% for(let examdateIndex=0; examdateIndex< examdates.length;  examdateIndex++){%>
+              <tr id="">
+                <td  class="start-examdate">
+                    <% const date = new Date(examdates[examdateIndex].examDate); %>
+                    <%= date.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })   %> 
+                          <span>-</span>( <%= date.toLocaleDateString(undefined, { weekday: 'long'}) %> )
+
+                </td>
+                </tr>
+              <%} %>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+   <!-- edit model  -->
+    <div class="edit-model-blar" style="
+    position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;">
+    </div>
+      <div class="add-examDateAndSlot-modal" id="edit-examDate-modal" style="display: none;">
+        <!-- <div class="modal"> -->
+          <a href="#" onclick="closeEditModal()" class="modal-close">+</a>
+          <div class="modal-title">
+            <h2>Edit Time Solt</h2>
+          </div>
+          <div class="modal-body">
+            <form id="edit-examdate-form">
+              <div class="howRowcloumsDiv" style="display: block;">
+                  <div class="addRowCol">
+                      <input class="houmanydate" type="number" placeholder="How many Exam Date have ?" value="howmanyDate" >
+                      <p class="error rowsnumber-error"></p>
+                      <a href="#" onclick="createExamdate(this)" class=" examDate newadd">add</a>
+                  </div>
+              </div>
+              <div class="closeDiv" style="display: none;">
+                  <div style="display: flex; justify-content: space-around;">
+                      <a href="#" onclick="closeAllExamdate(this)" class=" newrowcloumn newadd">clear</a>
+                  </div>
+  
+              </div>
+  
+              <div class="examDateDiv edit_newrowscloumns newrowscloumns"></div>
+              <p class="error dateSlot-error" style="display: block;"></p>
+              <input type="submit" onclick="editExamdateForm()" value="Submit">
+          </form>
+          </div>
+        <!-- </div> -->
+      </div>
+ <!-- delte model      -->
+      <div class="modal-wrapper" id="delete-examDate-modal">
+        <div class="modal">
+          <a href="#" onclick="closeExamdateDeleteModal()" class="modal-close">+</a>
+          <div class="modal-title">
+            <h2>Delete All Exam Date</h2>
+          </div>
+          <div class="modal-body">
+            <form id="delete-room-form">
+              <span>Are you sure delete this?</span>
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+</section>
+<%- include(`./addExamDate.ejs`); %>
+<!-- manu open close -->
+<%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>
+// edit model
+<script>
+   // room edit handel 
+   const editExamDateModel = document.querySelector("#edit-examDate-modal");
+  const edit_model_blar = document.querySelector(".edit-model-blar");
+
+  function open_EditRoomsModal() {
+    editExamDateModel.style.display = "block";
+    edit_model_blar.style.display = "block";
+  }
+
+  function closeEditModal() {
+    editExamDateModel.style.display = "none";
+    edit_model_blar.style.display = "none";
+  }
+
+ function examDateEditHandel(event) {
+    open_EditRoomsModal()  
+    const edit_examDate_modal = document.querySelector('#edit-examDate-modal')
+    const exam_date_info = document.querySelector('.exam-date-info')
+    const edit_newrowscloumns = document.querySelector('.edit_newrowscloumns')
+    const tableTr = document.querySelectorAll('#table td')
+ console.log("tr",tableTr)
+ console.log("tr",tableTr.length)
+ let prvAllExamDate =''
+ for (let index = 0; index < tableTr.length; index++) { //split(':')
+ console.log("tr-",index,tableTr[index].innerHTML.split('<')[0].trim())
+ let date = new Date(`${tableTr[index].innerHTML.split('<')[0].trim()}`);
+ // Extract the day, month, and year components
+var day = date.getDate();
+var month = date.getMonth() + 1; // Note: Months are zero-based, so we add 1
+var formattedMonth = month < 10 ? "0" + month : month;
+var year = date.getFullYear();
+
+console.log("Day: " + day);
+console.log("Month: " + month);
+console.log("Year: " + year);
+
+  let oneDate = `
+  <div class="subexamDatepopupDiv">
+    <input type="Date" placeholder="enter rows number" class="inputExamDate" value='${year}-${formattedMonth}-${day}' name="examDate">
+    <div class="underLineDiv"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+  `
+  console.log(oneDate)
+  prvAllExamDate  +=   oneDate
+ }
+ edit_newrowscloumns.innerHTML = prvAllExamDate; 
+ edit_examDate_modal.querySelector('.howRowcloumsDiv').style.display = "none";
+ edit_examDate_modal.querySelector('.closeDiv').style.display = "block";
+
+//  ------
+  }
+
+</script>
+<!-- <script>
+  $(document).ready(function() {
+    $('#dateTable').DataTable({
+      "pagingType": "full_numbers",
+      "language": {
+        "paginate": {
+          "first": "First",
+          "previous": "Previous",
+          "next": "Next",
+          "last": "Last"
+        }
+      }
+    });
+  });
+  </script> -->
+
+  //subject delete form
+<script>
+     const delete_examDate_modal = document.querySelector("#delete-examDate-modal");
+  function openExamDateDeleteModal() {
+    delete_examDate_modal.style.display = "block";
+    edit_model_blar.style.display = "block";
+  }
+
+  function closeExamdateDeleteModal() {
+    delete_examDate_modal.style.display = "none";
+    edit_model_blar.style.display = "none";
+  }
+  delteExamDateForm = document.querySelector("#delete-room-form");
+
+  delteExamDateForm.onsubmit = async function(event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    const errorPlaceholders = document.querySelectorAll("p.error");
+    console.log("errorPlaceholders");
+    console.log(errorPlaceholders);
+
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+      errorPlaceholders[i].style.display = "none";
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
+    // // ------------------------------------------>>
+
+    const formData = new FormData(delteExamDateForm);
+    console.log("formData");
+    console.log(formData);
+    // send the request to server
+    let response = await fetch("/Administrator/examdate/delete", {
+      method: "DELETE",
+    });
+    let responseData = await response.json();
+    console.log("responseData", responseData);
+    // handle error and response
+    if (responseData.errors) {
+      // errors
+      console.log("working go");
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+
+
+      Object.keys(responseData.errors).forEach((fieldName) => {
+        console.log("fieldName", fieldName);
+
+        // set all error placeholders (p tag) textContent
+        const errorPlaceholder = delteExamDateForm.querySelector(
+          `.${fieldName}-error`
+        );
+        console.log("errorPlaceholderDown");
+        console.log(errorPlaceholder);
+        console.log("fieldName");
+        console.log(responseData.errors[fieldName].msg);
+        console.log(responseData.errors[fieldName]);
+
+        errorPlaceholder.innerHTML =
+          responseData.errors[fieldName];
+
+        // make all placeholders visible
+        errorPlaceholder.style.display = "block";
+      });
+    } else {
+      // success
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+
+      console.log("close");
+      clseExamDateAndSlotmModal();
+      document.querySelector("p.error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
+  };
+    
+
+  </script>
+</body>
+      </html>
+    

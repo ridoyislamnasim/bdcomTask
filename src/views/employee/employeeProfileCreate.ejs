@@ -1,0 +1,763 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>addRoom</title>
+    <link rel="shortcut icon" href="/images/user1.png" />
+    <link rel="stylesheet" href="/stylesheets/toastify.css" />
+    <link rel="stylesheet" href="Administrator.css" />
+</head> -->
+
+<%- include(`../administratorPartial/commonPartial/header.ejs`); %>
+
+<body>
+    <!-- <img src="./img/Char 01 (1).png" alt="Slide 1"> -->
+
+    <div class="menu-container">
+        <div class="logo">
+            <img src="/imges/img/74e499e046c0b7f26dafbe8d3b3ca.png" alt="Logo">
+            <!-- <img src="" alt="profile image"> -->
+        </div>
+        <div class="menu-items">
+            <div class="menu-item">Home</div>
+            <!-- <div class="menu-item">Log In</div> -->
+            <div class="menu-item">Help Center</div>
+            <div class="menu-item">Contact</div>
+            <a href="/logOut"><div class="menu-item">Log out</div></a>
+        </div>
+    </div>
+
+    <!-- frofile of your page  -->
+   <div class="profile_employee">
+    <div class="profile_container">
+        <div class="profile_cr">
+            <p>Profile Create</p>
+        </div>
+        <div class="img_leftSide">
+            <div class="profile_pic">
+                <img style="    height: 200px; width: 200px;" src="<%= emp_id_email_img.emp_ProfileImg ? emp_id_email_img.emp_ProfileImg : '/imges/img/user1.png'  %>" alt="Profile image">
+            </div>
+            <div class="profilePis_uploader">
+                <form action="/employee/uploadProfileImages" method="post" enctype="multipart/form-data">
+                    <input type="file" name="profileImg" id="profileImg" accept=".png, .jpg, .jpeg, "onchange="this.form.submit()">
+                </form>
+            </div>
+        </div>
+        <div class="profileInfo_rightSide" style="width: 100%;">
+            <form id="emp-profile" action="/" method="post">
+            <div class="information_form"  style=" width: 100%;display: flex; flex-direction: column; align-items: center;">
+                    <div class="basic_info" style="width: 60%; ">
+                        <p class="f_heading">Basic Information</p> 
+                        <p class="label">Full Name *</p>
+                        <input  class="employeeName emp_profile_input " type="text" name="employeeName" placeholder="Enter your Name">
+                        <p class="error employeeName-error"></p>
+                        <p class="label">Email*</p> 
+                        <input  class="employeeEmail emp_profile_input " value="<%= emp_id_email_img.emp_email ? emp_id_email_img.emp_email : '' %>"   type="email" name="employeeEmail" readonly>
+                        <p class="error employeeEmail-error"></p>
+                        
+                        <p class="label">Emplyee Id *</p> 
+                        <input  class="employeeId emp_profile_input" value="<%= emp_id_email_img.emp_id ? emp_id_email_img.emp_id : '' %>" type="number" name="employeeId" readonly>
+                        <p class="error employeeId-error"></p>
+
+                        <p class="label">Initial *</p>
+                        <input  class="employeeInitial emp_profile_input "  type="text" name="employeeInitial" placeholder="Enter your Initial" autocomplete="off">
+                        <p class="error employeeInitial-error"></p>
+
+                        <p class="label">Designation *</p>
+                        <!-- <input  class="emp_profile_input "  type="text" name="employeeDesignation" placeholder="Enter your DesigNation">  -->
+                        <div class="dropdown">
+                            <input class="employeeDesignation dropdown-toggle dropdown-toggle-emp-profile " type="text" placeholder="Select Designation"  type="text"  name="employeeDesignation" readonly>
+                            <i class="bx bx-chevron-down"></i>
+                            <div class="dropdown-content dropdown-content-emp-profile"> 
+                                <div class="dropdown-option"> Professor</div>
+                                <div class="dropdown-option">Associate Professor</div>
+                                <div class="dropdown-option">Assistant Professor</div>
+                                <div class="dropdown-option">Sr. Lecturer</div>
+                                <div class="dropdown-option">Lecturer</div>
+                                <div class="dropdown-option">Part Time</div>
+                                <div class="dropdown-option">Contractual</div>
+                                <div class="dropdown-option">RA</div>
+                                <div class="dropdown-option">TA</div>
+                            </div>
+                        </div>
+                        <p class="error employeeDesignation-error"></p>
+
+                        <p class="label">Phone Number*</p>
+                        <input  class="employeePhoneNumber emp_profile_input "  name="employeePhoneNumber" placeholder="Enter your Phone Number">
+                        <p class="error employeePhoneNumber-error"></p>
+
+                        <p class="label">Program*</p>
+                        <!-- <input  class="employeeDepartment emp_profile_input " type="text" name="employeeDepartment" placeholder="Enter your Department"> -->
+                        <div class="dropdown">
+                            <input class="employeeProgram dropdown-toggle dropdown-toggle-emp-profile " type="text" placeholder="Select Department"  type="text"  name="employeeProgram" readonly>
+                            <i class="bx bx-chevron-down"></i>
+                            <div class="dropdown-content dropdown-content-emp-profile"> 
+                                <div class="dropdown-option">B.Sc. in  CSE</div>
+                            </div>
+                        </div>
+                        <p class="error employeeProgram-error"></p>
+
+                        <p class="label">Department*</p>
+                        <!-- <input  class="employeeDepartment emp_profile_input " type="text" name="employeeDepartment" placeholder="Enter your Department"> -->
+                        <div class="dropdown">
+                            <input class="employeeDepartment dropdown-toggle dropdown-toggle-emp-profile " type="text" placeholder="Select Department"  type="text"  name="employeeDepartment" readonly>
+                            <i class="bx bx-chevron-down"></i>
+                            <div class="dropdown-content dropdown-content-emp-profile"> 
+                                <div class="dropdown-option">Department of Computer Science and Engineering</div>
+                            </div>
+                        </div>
+                        <p class="error employeeDepartment-error"></p>
+
+                        <p class="label">Faculty*</p>
+                        <!-- <input  class="employeeDepartment emp_profile_input " type="text" name="employeeDepartment" placeholder="Enter your Department"> -->
+                        <div class="dropdown">
+                            <input class="employeeFaculty dropdown-toggle dropdown-toggle-emp-profile " type="text" placeholder="Select Department"  type="text"  name="employeeFaculty" readonly>
+                            <i class="bx bx-chevron-down"></i>
+                            <div class="dropdown-content dropdown-content-emp-profile"> 
+                                <div class="dropdown-option">Faculty of Science and Information Technology</div>
+                            </div>
+                        </div>
+                        <p class="error employeeFaculty-error"></p>
+                    </div>
+                    <div class="academic_info" style="width: 60%;">
+                        <p class="f_heading">Academic Information</p>
+                        <div class="sub_sec_craete">
+                        <p class="label">How many Course you taken ? *</p>
+                        <div class="sectionAdd">
+                            <input  class="howmanyCourseTaken emp_profile_input "  type="Number" min="0" id="howmanyCourseTaken" name="howmanyCourseTaken" placeholder="How many Course you taken ?"> 
+                            <a  style="    height: 39px;margin: 3.74px;" onclick="createCourseSectionInputForm()" class=" newadd">add</a>
+                        </div>
+                        <p class="error howmanyCourseTaken-error"></p>
+
+                        </div>
+                        <div class="sub_sec_craete_clear" style="display: none;">
+                            <div class="" style="display: flex; justify-content: center;">
+                                <a  style="  height: 39px;margin: 3.74px;" onclick="clearCourseSection()" class=" newadd">Clear</a>
+                            </div>
+                        </div>
+                        
+                        
+                        
+
+                    </div>
+                    <div id="couseInputDiv" style="margin-bottom: 2%;">
+
+                    </div> 
+
+                    <input type="submit" value="Submit" />
+
+            </div>
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+    <!-- frofile of your page  -->
+
+    <!--  -->
+    <!--  -->
+    <!-- footer start -->
+    <div class="footer">
+        <div class="footer_manu" style="display: flex; width: 100%;">
+            <div class="short_about_diu" style=" display: flex;   flex-direction: column; flex-basis: 40%;">
+                <div class="footer_diu_logo">
+                    <img style="width: 200px ;height: 80px;" src="/imges/img/74e499e046c0b7f26dafbe8d3b3ca.png" alt="Diu Logo">
+                </div>
+                <div class="short_diu" style="    width: 80%; font-size: 14px; ">
+                    <span>
+                        <p style="color: black;">Lörem ipsum od ohet dilogi. Bell trabel, samuligt, ohöbel utom diska.
+                            Jinesade bel när feras redorade i
+                            belogi. FAR paratyp i muvåning, och pesask vyfisat. Viktiga poddradio har un mad och inde.
+                        </p>
+                    </span>
+                </div>
+                <div class="logo_social">
+
+                </div>
+            </div>
+            <div class="footer_pages" style="display: flex;  flex-direction: column; flex-basis: 20%;">
+                <div class="pages_heading">Pages</div>
+                <div class="footer_manu_items">
+                    <div class="footer-item">Home</div>
+                    <div class="footer-item">Log In</div>
+                    <div class="footer-item">Help Center</div>
+                    <div class="footer-item">Contact</div>
+                </div>
+            </div>
+            <div class="helpful_link" style="display: flex;  flex-direction: column; flex-basis: 20%; ">
+                <div class="helpful_link_heading">Helpful Link</div>
+                <div class="helpful_link_items">
+                    <div class="helpful_link-item">Contact</div>
+                    <div class="helpful_link-item">Instruction</div>
+                    <div class="helpful_link-item">Help Center</div>
+                    <!-- <div class="helpful_link-item">Contact</div> -->
+                </div>
+            </div>
+            <div class="footer_contact" style="display: flex;  flex-direction: column; flex-basis: 20%;">
+                <div class="footer_contact_heading">Contact</div>
+                <div class="footer_contact_items">
+                    <div class="footer_contact-item">(406) 555-0120</div>
+                    <div class="footer_contact-item">cseoffice@daffodilvarsity.edu.bd</div>
+                    <div class="footer_contact-item">Daffodil Road, Ashulia, Dhaka.</div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="footer_line"></div>
+        <div class="copyright">
+            Copyright © 2023 Daffodil International University. All Rights Reserved.
+        </div>
+    </div>
+    <!-- footer End -->
+    <div id="myObjectDataEmp" data-myobject='<%- JSON.stringify(emp_prv_info) %>'></div>
+//dropdown  ----------------------------------
+<script>
+                   //dropdown=---------------------------------- 
+
+                   const dropdownToggle = document.querySelectorAll('.dropdown-toggle');
+        const dropdownContent = document.querySelectorAll('.dropdown-content');
+        const dropdownOptions = document.querySelectorAll('.dropdown-option');
+console.log(dropdownToggle)
+dropdownToggle.forEach(function (toggle) {
+    toggle.addEventListener('click', function () {
+            // dropdownContent.classList.remove('hide');
+            this.parentElement.classList.toggle('show');
+            this.parentElement.querySelector('.dropdown-content').classList.toggle('show')
+        });
+        });
+
+
+        dropdownOptions.forEach(function (option) {
+
+
+            option.addEventListener('click', function () {
+                const dropdown = this.closest('.dropdown');
+      const toggle = dropdown.querySelector('.dropdown-toggle');
+      const content = dropdown.querySelector('.dropdown-content');
+                dropdownOptions.forEach(function (opt) {
+                    opt.classList.remove('active');
+                    opt.style.backgroundColor = '';
+                });
+                this.style.backgroundColor = '#52d794';
+                this.classList.add('active');
+                toggle.value = this.textContent;
+                content.classList.remove('show');
+                dropdown.classList.remove('show');
+            });
+
+
+            option.addEventListener('mouseenter', function () {
+                if (!this.classList.contains('active')) {
+                    this.style.backgroundColor = '#01B3BD';
+                }
+            });
+
+            option.addEventListener('mouseleave', function () {
+                if (!this.classList.contains('active')) {
+                    this.style.backgroundColor = '';
+                }
+            });
+        });
+        //dropdown ----------------------
+</script>
+// manu scalling  -----------------------------------
+<script>
+        // find the value 
+        var myObjectDataElementEmp = document.getElementById('myObjectDataEmp');
+        console.log("myObjectDataElementEmp",myObjectDataElementEmp)
+        //than get data 
+    var myObject = JSON.parse(myObjectDataElementEmp.getAttribute('data-myobject'));
+    console.log("myObjectDataElementEmp",myObject)
+
+var prevScrollpos = window.pageYOffset;
+  
+  window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos || currentScrollPos === 0) {
+      document.querySelector(".menu-container").style.top = "0";
+    } else {
+      document.querySelector(".menu-container").style.top = "-" + document.querySelector(".menu-container").offsetHeight + "px";
+    }
+    prevScrollpos = currentScrollPos;
+  };
+
+</script>
+//add course name code info ----------------------------------------------------
+<script>
+//add course name code info ------------------------------------------------------start--------------------------------      
+
+
+function clearCourseSection() {
+    //   this.parentElement.remove();
+    // get the parent element to be removed
+    const parentElem = document.querySelector('#couseInputDiv');
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+        parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    // parentElem.remove();
+    
+    document.querySelector(".sub_sec_craete").style.display = "block";
+    document.querySelector(".sub_sec_craete_clear").style.display = "none";
+    const newrowcloumn = document.querySelector("#howmanyCourseTaken")
+    newrowcloumn.value = '';
+}
+
+function oneRowCol(index) {
+    const newExamDateAppend = document.querySelector("#couseInputDiv")
+    const newdiv = document.createElement("div")
+    newdiv.className = "courseInputemployeeDiv"
+
+     // Section InFo Input Table Header create
+     const emp_tableHeader = document.createElement("Div")
+        emp_tableHeader.className = "emp_tableHeader"
+
+            if (index == 0) {
+            const newExamDateAppend = document.querySelector("#couseInputDiv")
+            empCourseHeader = `
+            <div class="emp_tableHeader">
+                <p class=" "></p>
+                <span class="courseName_header">Course Code</span>
+                <span class="courseCode_header">Course Name</span>
+                <span class="courseCredit_header">Course Cradit</span>
+                <span class="batch_header">Batch</span>
+                <span class="sectionName_header">Section</span>
+            </div>
+            `
+            newExamDateAppend.innerHTML += empCourseHeader ;
+        }
+        //End Section InFo Input Table Header create
+
+    // underLine Div
+    empCourseItem = `
+     <div class="courseInputemployeeDiv">
+        <span class=" ">${index}.</span>
+       <div class="EMP for-Search">
+            <input type="text" class=" emp_courseCode[${index}] inputCourseCode emp_table" oninput= 'empCourseCodeSearch(this)'  name="emp_courseCode[]" autocomplete="off">
+            <div class="emp_courseCode-search-info"></div>
+        </div>
+       <div class="EMP for-Search">
+           <input type="text" class="emp_courseName[${index}] inputCourseName emp_table" name="emp_courseName[]" autocomplete="off">
+        </div>
+       <div class="EMP for-Search">      
+           <input type="number" class=" emp_courseCredit[${index}] inputCourseCredit emp_table" name="emp_courseCredit[]" autocomplete="off">
+        </div>
+       <div class="EMP for-Search">
+            <input type="text" class=" emp_batch_tek[${index}]  inputSection emp_table"   oninput= 'empBatchTekSearch(this)'name="emp_batch_tek[]" autocomplete="off">
+            <div class="emp_batch_tek-search-info"></div>
+        </div>
+        <div class="EMP for-Search">
+            <input type="text" class=" emp_section[${index}] inputSection emp_table"  oninput= 'empSectionSearch(this)' name="emp_section[]" autocomplete="off">
+            <div class="emp_section-search-info"></div>
+        </div>
+
+
+    </div>
+    <div class="subjectInfo-error">
+               <div class="courseName error-msg">
+                  <p class="error emp_courseCode[${index}]-error"></p>
+                </div>
+               <div class="courseCode error-msg">
+                  <p class="error emp_courseName[${index}]-error"></p>
+                </div>
+                <div class="courseCradit error-msg">
+                  <p class="error emp_courseCredit[${index}]-error"></p>
+                </div>
+                <div class="section error-msg">
+                  <p class="error emp_batch_tek[${index}]-error"></p>
+                </div>
+                <div class="teacherInit error-msg">
+                  <p class="error emp_section[${index}]-error"></p>
+                </div>
+      </div>
+     `
+    newExamDateAppend.appendChild(newdiv)
+    newExamDateAppend.innerHTML += empCourseItem
+
+    document.querySelector(".sub_sec_craete").style.display = "none";
+    document.querySelector(".sub_sec_craete_clear").style.display = "block";
+
+}
+
+function createCourseSectionInputForm() {
+    const houmanydate = document.querySelector("#howmanyCourseTaken")
+    console.log("newrowcloumn", houmanydate.value)
+    let howManyCol = houmanydate.value
+    for (let index = 0; index < howManyCol; index++) {
+        console.log(" is ", index)
+        oneRowCol(index)
+    }
+}
+</script>
+// profile inf0 send server ----------------------------------                                          
+<script>
+const form = document.querySelector("#emp-profile");
+
+    // Function to show a toast message
+function showToast(message, isError = false) {
+Toastify({
+    text: message,
+    duration: 500,
+    backgroundColor: isError ? "#f44336" : "",
+}).showToast();
+}
+
+form.onsubmit = async function (event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    const errorPlaceholders = document.querySelectorAll("p.error");
+    console.log("errorPlaceholders");
+    console.log(errorPlaceholders);
+
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+    errorPlaceholders[i].style.display = "none";
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+
+    if (inputErrors.length > 0) {
+    for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+    }
+    }
+    // // ------------------------------------------>>
+
+    const formData = new FormData(form);
+    console.log("formData");
+    console.log("formData",form);
+    console.log(formData);
+    // send the request to server
+    let response = await fetch("/employee/editEmployeeProfile", {
+    method: "post",
+    body: formData,
+    });
+    
+    let responseData = await response.json();
+    console.log("responseData",responseData);
+    console.log("responseData.error",responseData.errors);
+
+    // handle error and response
+    if (responseData.errors) {
+    // errors
+    console.log("working go");
+    await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+    // console.log(fieldName)
+
+
+    Object.keys(responseData.errors).forEach((fieldName) => {
+        // add error class to all inputs
+        console.log("fieldName",fieldName);
+        const escapedFieldName = fieldName.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
+        console.log("escapedFieldName",escapedFieldName);  
+    //  console.log("escapedFieldName",form[courseName]);
+    //  console.log("escapedFieldName",form[inputCourseName]);
+        const errorPlace = document.querySelector(`.${escapedFieldName}`);
+        errorPlace.classList.add("error");
+        // if (!(fieldName == "rowCol")) {stu_courseName[0]
+        // form[escapedFieldName].classList.add("error");
+        // }
+
+        // set all error placeholders (p tag) textContent
+        const errorPlaceholder = document.querySelector(`.${escapedFieldName}-error`);
+        console.log("errorPlaceholderDown");
+        console.log(errorPlaceholder);
+        console.log();
+        
+        console.log("---------------------",fieldName)
+        errorPlaceholder.innerHTML = responseData.errors[fieldName];
+
+        // make all placeholders visible
+        errorPlaceholder.style.display = "block";
+    });
+    } else {
+    // success
+    // await showToast(responseData.msg ); 
+    console.log("close");
+    // successToast.showToast();
+    // closeModal();
+    document.querySelector("p.error").style.display = "none";
+    await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+    window.location.href = "/Administrator/dashboard";
+    // reload the page after 1 second
+    // setTimeout(() => {
+    //     location.reload();
+    // }, 5000);
+    }
+};
+
+</script>
+<!-- course Code search -->
+<script>
+    let courseCodeTimeout;
+  async function empCourseCodeSearch(event) {
+    //  console.log(this)
+     console.log("event",event)
+     console.log("event",event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(courseCodeTimeout);
+  
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    courseCodeTimeout = setTimeout(async () => {
+      let response = await fetch("/Employee/courseCode/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        }, 
+      });
+      let result = await response.json();
+      console.log("Routine/seatch",result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseCodeInfo = ''
+          for (const courseInfo of result.searchResult) {
+            courseCodeInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="studentBath-searchInfo-body">
+                <div class="courseCode studentBath-searchInfo-value">${courseInfo.subjectCode}</div>
+                <div class="subjectName" style ='display:none'>${courseInfo.subjectName}</div>
+                <div class="subjectCreadit" style ='display:none'>${courseInfo.subjectCreadit}</div>
+              </div>
+          `
+          }
+          courseCodeInfo += ` <a onclick="removedstudentCourseCodeSearchItem(this)" class="routinr-input-close">+</a> `
+         // users_placeholder.innerHTML = generatedHtml;
+         event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseCodeInfo;
+          // search Value any side
+            
+            // popup.style.display = 'block';
+  // any where show test
+  const studentBathSearchInfoItem = document.querySelectorAll('.studentBath-searchInfo-body');
+  console.log('studentBathSearchInfoItem',studentBathSearchInfoItem)
+  studentBathSearchInfoItem.forEach(function (option) {
+    option.addEventListener('click', function () {
+      const dropdown = this.closest('.emp_courseCode-search-info');
+      const emp_courseName = this.closest('.courseInputemployeeDiv').querySelector('.inputCourseName ')
+      const emp_courseCredit = this.closest('.courseInputemployeeDiv').querySelector('.inputCourseCredit ')
+      console.log('-------------',emp_courseName)
+  
+      studentBathSearchInfoItem.forEach(function (opt) {
+        opt.classList.remove('active');
+        opt.style.backgroundColor = '';
+      });
+      dropdown.previousElementSibling.value = this.querySelector('.studentBath-searchInfo-value').textContent.trim();
+      emp_courseName.value = this.querySelector('.subjectName').textContent.trim();
+      emp_courseCredit.value = this.querySelector('.subjectCreadit').textContent.trim();
+      dropdown.style.display = 'none';
+    });
+  
+    option.addEventListener('mouseenter', function () {
+        if (!this.classList.contains('active')) {
+            this.style.backgroundColor = '#01B3BD';
+        }
+    });
+    option.addEventListener('mouseleave', function () {
+        if (!this.classList.contains('active')) {
+            this.style.backgroundColor = '';
+        }
+    });
+  });
+  
+        }
+      } else {
+        console.log("error working")
+      }
+  
+    }, 500);
+  }
+  async function removedstudentCourseCodeSearchItem(value){
+  value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+  
+  </script>
+  <!-- emp Batch Tek Search search -->
+<script>
+    let empBatchTekTimeout;
+  async function empBatchTekSearch(event) {
+    //  console.log(this)
+     console.log("event",event)
+     console.log("event",event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(empBatchTekTimeout);
+  
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    empBatchTekTimeout = setTimeout(async () => {
+      let response = await fetch("/Employee/courseBatch/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        }, 
+      });
+      let result = await response.json();
+      console.log("Routine/seatch",result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseCodeInfo = ''
+          for (const batchInfo of result.searchResult) {
+            courseCodeInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="studentBath-searchInfo-body">
+                <div class="courseCode studentBath-searchInfo-value">${batchInfo.batch}</div>
+              </div>
+          `
+          }
+          courseCodeInfo += ` <a onclick="removedstudentCourseCodeSearchItem(this)" class="routinr-input-close">+</a> `
+         // users_placeholder.innerHTML = generatedHtml;
+         event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseCodeInfo;
+          // search Value any side
+            
+            // popup.style.display = 'block';
+  // any where show test
+  const studentBathSearchInfoItem = document.querySelectorAll('.studentBath-searchInfo-body');
+  console.log('studentBathSearchInfoItem',studentBathSearchInfoItem)
+  studentBathSearchInfoItem.forEach(function (option) {
+    option.addEventListener('click', function () {
+      const dropdown = this.closest('.emp_batch_tek-search-info');
+      studentBathSearchInfoItem.forEach(function (opt) {
+        opt.classList.remove('active');
+        opt.style.backgroundColor = '';
+      });
+      dropdown.previousElementSibling.value = this.querySelector('.studentBath-searchInfo-value').textContent.trim();
+      dropdown.style.display = 'none';
+    });
+  
+    option.addEventListener('mouseenter', function () {
+        if (!this.classList.contains('active')) {
+            this.style.backgroundColor = '#01B3BD';
+        }
+    });
+    option.addEventListener('mouseleave', function () {
+        if (!this.classList.contains('active')) {
+            this.style.backgroundColor = '';
+        }
+    });
+  });
+  
+        }
+      } else {
+        console.log("error working")
+      }
+  
+    }, 500);
+  }
+  async function removedstudentCourseCodeSearchItem(value){
+  value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+  
+  </script>
+  <!-- emp Section Search search -->
+<script>
+    let empSectionTimeout;
+  async function empSectionSearch(event) {
+    //  console.log(this)
+     console.log("event",event)
+     console.log("event",event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(empSectionTimeout);
+  
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    empSectionTimeout = setTimeout(async () => {
+      let response = await fetch("/Employee/Section/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        }, 
+      });
+      let result = await response.json();
+      console.log("Routine/seatch",result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseCodeInfo = ''
+          for (const sectionInfo of result.searchResult) {
+            courseCodeInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="studentBath-searchInfo-body">
+                <div class="courseCode studentBath-searchInfo-value">${sectionInfo.sectionNames}</div>
+              </div>
+          `
+          }
+          courseCodeInfo += ` <a onclick="removedstudentCourseCodeSearchItem(this)" class="routinr-input-close">+</a> `
+         // users_placeholder.innerHTML = generatedHtml;
+         event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseCodeInfo;
+          // search Value any side
+            
+            // popup.style.display = 'block';
+  // any where show test
+  const studentBathSearchInfoItem = document.querySelectorAll('.studentBath-searchInfo-body');
+  console.log('studentBathSearchInfoItem',studentBathSearchInfoItem)
+  studentBathSearchInfoItem.forEach(function (option) {
+    option.addEventListener('click', function () {
+      const dropdown = this.closest('.emp_section-search-info');
+      studentBathSearchInfoItem.forEach(function (opt) {
+        opt.classList.remove('active');
+        opt.style.backgroundColor = '';
+      });
+      dropdown.previousElementSibling.value = this.querySelector('.studentBath-searchInfo-value').textContent.trim();
+      dropdown.style.display = 'none';
+    });
+  
+    option.addEventListener('mouseenter', function () {
+        if (!this.classList.contains('active')) {
+            this.style.backgroundColor = '#01B3BD';
+        }
+    });
+    option.addEventListener('mouseleave', function () {
+        if (!this.classList.contains('active')) {
+            this.style.backgroundColor = '';
+        }
+    });
+  });
+  
+        }
+      } else {
+        console.log("error working")
+      }
+  
+    }, 500);
+  }
+  async function removedstudentCourseCodeSearchItem(value){
+  value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+  
+  </script>
+</body>
+
+
+</html>

@@ -1,0 +1,264 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+
+
+  <div class="manageAddRoom-container">
+    <div id="title">
+      <h2>Manage Exam Routine</h2>
+    </div>
+
+    <div class="new-room-container new-room">
+      <a href="#" onclick="CreateExamRoutine()">+</a>
+    </div>
+    <div id="rooms-table">
+      <table id="routine-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+          </tr>
+        </thead>
+
+        <tbody id="">
+          <span id="odd_subject_max"><%= odd_subject_max %></span>
+          <span id="even_subject_max"><%= even_subject_max %></span>
+          <!-- create coloum -->
+          <!-- "DATE" -->
+          <% for(var i=0; i < Routine.length ; i++){%>
+              <tr 
+              <% if (i % 2===0) { %>
+                class="odd"
+                <% } else { %>
+                  class="even"
+                  <% } %>
+              >
+                <!-- //if part arry more than one than rowspan work ,bacouse arry start 0 ,on the otherhand rowspan didnot work 0; -->
+
+                <!-- array loop visite -->
+                <!-- "Slot" -->
+                <% for (var j=0; j < Routine[i].slotInfo.length ; j++) { %>
+                  <%= Routine[i].examDate %>
+                  <!-- if array size more than 2 than run this if estedment ,only print array < [1] part -->
+                  <% if (j>0) { %>
+                   <tr 
+                   <% if (i % 2===0) { %>
+                    class="odd"
+                    <% } else { %>
+                      class="even"
+                      <% } %>
+                   >
+                    <% for (var k=0; k < Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length ; k++) { %>
+                      <td rowspan="" class="exam-date">
+                        <span>
+                          <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].courseCode %> :
+                          <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].couseName %>
+                        </span>
+                      </td>
+                      <td rowspan="" class="exam-date">
+                        <span>
+                          <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].level %> /
+                          <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].term %> (
+                          <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].numberOfQuestion %> )
+                          <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].roomsUse %>
+                        </span>
+                      </td>
+                      <% } %>
+                      <% for (var n=Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length; n < odd_subject_max ; n++) { %>
+                        <td><span></span></td>
+                        <td><span></span></td>
+                        <% } %>
+                        <!-- odd end -->
+                        <!-- even start -->
+                      <% for (var m=0; m < Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length ; m++) { %>
+                        <td rowspan="" class="exam-date">
+                          <span>
+                            <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].courseCode %> :
+                            <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].couseName %>
+                          </span>
+                        </td>
+                        <td rowspan="" class="exam-date">
+                          <span>
+                            <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].level %> /
+                            <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].term %> (
+                            <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].numberOfQuestion %> )
+                            <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].roomsUse %>
+                          </span>
+                        </td>
+                        <% } %>
+                        <% for (var n= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length; n < even_subject_max ; n++) { %>
+                          <td><span></span></td>
+                          <td><span></span></td>
+                          <% } %>
+                          <!-- even end -->
+                          <!--totalinfo  start -->
+                          <td class="totalinfo">
+                            <span><%= Routine[i].slotInfo[j].oddqurstionInfo.oddQuestionRequired %></span>
+                          </td>
+                          <td class="totalinfo">
+                            <span><%= Routine[i].slotInfo[j].evenqurstionInfo.evenQuestionRequired %></span>
+                          </td>
+                          <td class="totalinfo">
+                            <span><%= Routine[i].slotInfo[j].slotTotalStudent %></span>
+                          </td>
+
+                  <% } %>
+                <!-- if array size only 0 than run this if estedment , -->
+                <% if (j==0 ) { %>
+                  <td rowspan="<%= Routine[i].slotInfo.length  %>" class="exam-date">
+                    <span>
+                      <%= Routine[i].dateWise %>
+                    </span>
+                  </td>
+
+                  <% for (var k=0; k < Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length ; k++) { %>
+                  <td rowspan="" class="exam-date">
+                    <span>
+                      <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].courseCode %> :
+                      <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].couseName %>
+                    </span>
+                  </td>
+                  <td rowspan="" class="exam-date">
+                    <span>
+                      <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].level %> /
+                      <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].term %> (
+                      <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].numberOfQuestion %> )
+                      <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[k].roomsUse %>
+                    </span>
+                  </td>
+                  <% } %>
+                  <% for (var n=Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length; n < odd_subject_max ; n++) { %>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <% } %>
+                    <!-- odd end -->
+                    <!-- even start -->
+
+                  <% for (var m=0; m < Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length ; m++) { %>
+                    <td rowspan="" class="exam-date">
+                      <span>
+                        <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].courseCode %> :
+                        <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].couseName %>
+                      </span>
+                    </td>
+                    <td rowspan="" class="exam-date">
+                      <span>
+                        <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].level %> /
+                        <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].term %> (
+                        <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].numberOfQuestion %> )
+                        <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[m].roomsUse %>
+                      </span>
+                    </td>
+                    <% for (var n= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length; n < even_subject_max ; n++) { %>
+                      <td><span></span></td>
+                      <td><span></span></td>
+                      <% } %>
+                      <!-- even end -->
+                      <!--totalinfo  start -->
+                    
+                    <% } %>
+                    
+                    <td class="totalinfo">
+                      <span><%= Routine[i].slotInfo[j].oddqurstionInfo.oddQuestionRequired %></span>
+                    </td>
+                    <td class="totalinfo">
+                      <span><%= Routine[i].slotInfo[j].evenqurstionInfo.evenQuestionRequired %></span>
+                    </td>
+                    <td class="totalinfo">
+                      <span><%= Routine[i].slotInfo[j].slotTotalStudent %></span>
+                    </td>
+
+                  <% } %>
+
+
+
+                    <% } %>
+                      <!-- array loop visite end -->
+                      </tr>
+                   
+            <%} %>
+              <!-- create coloum end -->
+
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+
+<script>
+      let routine_table = document.getElementById("routine-table");
+      console.log("table", routine_table)
+      let odd_subject_max = document.getElementById("odd_subject_max");
+      let even_subject_max = document.getElementById("even_subject_max");
+      // console.log("tablcoloumsmaxe,", typeof (coloumsmax.innerHTML))
+      let oddsubject_max = Number(odd_subject_max.innerHTML);
+      let evensubject_max = Number(even_subject_max.innerHTML);
+      console.log("table ---", odd_subject_max,even_subject_max)
+      console.log("table -", oddsubject_max,evensubject_max)
+      let j =1
+      for (let i = 0; i < oddsubject_max; i++) {
+        console.log(i);
+        let headerRow = routine_table.rows[0];
+        console.log("headerRow", headerRow)
+        let newHeaderCell = headerRow.insertCell(i+j );
+        j +=1
+        let newHeaderCell2nd = headerRow.insertCell(i+j );
+        newHeaderCell.innerHTML = `odd subject`;
+        newHeaderCell2nd.innerHTML = `Batch info`;
+      }
+      console.log("j",j+oddsubject_max)
+      let l = j+oddsubject_max
+      for (let k = 0; k < evensubject_max; k++) {
+        console.log(k);
+        let headerRow = routine_table.rows[0];
+        console.log("headerRow", headerRow)
+        let newHeaderCell = headerRow.insertCell(k+l );
+        l +=1
+        let newHeaderCell2nd = headerRow.insertCell(k+l );
+        newHeaderCell.innerHTML = `even subject`;
+        newHeaderCell2nd.innerHTML = `Batch info 1`;
+      }
+
+ async function CreateExamRoutine(){
+    let response = await fetch("/Administrator/Routine/createRoutine", {
+        method: "post",
+      });
+      let result = await response.json();
+      // alert("result");
+      
+      console.log("result",result);
+
+      if (result.message) { 
+          // errors
+          alert( result.message );
+      console.log("working go")
+      
+      // console.log(fieldName)
+    
+    
+          // Object.keys(result.errors).forEach((fieldName) => {
+          //   // add error class to all inputs
+          //   form[fieldName].classList.add("error");
+    
+          //   // set all error placeholders (p tag) textContent
+          //   const errorPlaceholder = document.querySelector(`.${fieldName}-error`);
+    
+          //   errorPlaceholder.innerHTML = result.errors[fieldName].msg;
+    
+          //   // make all placeholders visible
+          //   errorPlaceholder.style.display = "block";
+          // });
+        } else {
+          // success
+          // successToast.showToast();
+          console.log("close");
+          // successToast.showToast();
+          // closeTeacherModal();
+          // document.querySelector("p.error").style.display = "none";
+    
+          // reload the page after 1 second
+          setTimeout(() => {
+            location.reload();
+          }, 100);
+        }
+  } 
+</script>

@@ -1,0 +1,84 @@
+<script>
+
+
+      // date to slot find =================================================
+      const inputExamSlot = document.querySelector("input#examSlot");
+      let examSlot_placeholder = document.querySelector(".search_examSlot");
+
+
+ 
+   
+
+     async function sendTimeslotRequestExamSchedule() {
+            // examSlot_placeholder.style.display = "block";
+            console.log("Ridoy sendTimeslotRequestExamSchedule");
+
+            const examSlotValue = document.querySelector(".examSlotValue");
+            const result = examSlotValue.value
+            // console.log("Ridoy value", examSlotValue.value);
+            // console.log("Ridoy length", result.refTimeSlot.length);
+
+            let response = await fetch(
+        "/Administrator/ExamSchedule/examschedule/examSlot",
+        {
+          method: "post",
+          body: JSON.stringify({
+            // send input value
+            // sclectDepartmentName: inputDepartmentName.value,
+            // sclectBatchName: inputBatchName.value,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      console.log("resultCourseCode");
+      let resultslot = await response.json();
+
+            if (!result) {
+                  console.log("is error reslut")
+
+            } else {
+                  console.log("No error reslut")
+                  if (result.refTimeSlot.length > 0) {
+                        let generatedHtml = "<ul>";
+                        result.refTimeSlot.forEach((TimeSloName, index) => {
+                              // const avatar = departmentName.avatar
+                              //   ? "./uploads/avatars/" + departmentName.avatar
+                              //   : "./images/nophoto.png";
+
+                              generatedHtml += `<li onclick="createSlotInput('${TimeSloName.slotname}', '${TimeSloName.slotSeatCapacity}')">
+                <div class="departmentName">
+                  <div class="username">${TimeSloName.slotname} ${TimeSloName.slotSeatCapacity}</div>
+                </div>
+              </li>`;
+                        });
+                        generatedHtml += "</ul>";
+                        // created html push popupOption
+                        examSlot_placeholder.innerHTML = generatedHtml;
+                        // popUpOption show
+                        examSlot_placeholder.style.display = "block";
+                        examSlot_placeholder.style.top = "152px";
+                  }
+            }
+      }
+
+      async function createSlotInput(slotname, slotSeatCapacity) {
+            console.log("No error reslut")
+            
+            // input value set 
+            inputExamSlot.value = `${slotname} - ${slotSeatCapacity}`;
+            // popoup option hide 
+            examSlot_placeholder.style.display = "none";
+            // show the tost
+            successToast.showToast();
+      }
+      // success toast
+      const successToast = Toastify({
+            text: "User was added successfully! Reloading the list...",
+            duration: 1000,
+      });
+
+
+
+</script>

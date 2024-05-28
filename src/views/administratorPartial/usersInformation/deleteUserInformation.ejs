@@ -1,0 +1,55 @@
+<div class="modal-wrapper" id="delete-user-modal">
+    <div class="modal">
+      <a href="#" onclick="closeuserDeleteModal()" class="modal-close">+</a>
+      <div class="modal-title">
+        <h2>Delete Solt</h2>
+      </div>
+      <div class="modal-body">
+        <form id="delete-user-form">
+            <span>Are you sure delete this?</span>
+            <p id="deleteUserId" style="display: none;">p</p>
+          <input type="submit" value="Submit" onclick="deleteUserInformationSend()" />
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+  <script>
+    const deleteUserModal = document.querySelector("#delete-user-modal");
+
+    const deleteToast = Toastify({
+        text: "User was deleted successfully!",
+        duration: 3000,
+    });
+
+    function closeuserDeleteModal() {
+      deleteUserModal.style.display = "none";
+    }
+    function openUsersDeleteModal(userDeleteId) {     
+      const ddeleteUserIdSet=document.querySelector("#deleteUserId")
+      ddeleteUserIdSet.innerHTML = userDeleteId;
+      deleteUserModal.style.display = "block";
+        
+    }
+
+
+
+    
+    async function deleteUserInformationSend(){
+      const deleteUser_Id= document.querySelector("#deleteUserId").innerHTML;
+          let response =await  fetch(`/Administrator/userInformation/delete/${deleteUser_Id}`, {
+            method: "DELETE",
+        });
+        deleteToast.showToast();
+        closeuserDeleteModal()
+        setTimeout(() => {
+    location.reload();
+  }, 100);}
+      
+        
+</script>
+
+
+
+ 

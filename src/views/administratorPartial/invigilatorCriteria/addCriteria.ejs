@@ -1,0 +1,164 @@
+<div class="add-InvigilatorCriteria-Modal-Blar" style="
+position: absolute;left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;"></div>
+
+
+<div class="add-examDateAndSlot-modal" style="display: none;">
+    <a href="#" onclick="closeInvigilatorCriteriaModal()" class="modal-close">+</a>
+    <div class="modal-title">
+        <h2>Add Invigilator Critrria</h2>
+    </div>
+    <div class="modal-body">
+        <form id="add-examdate-form" action="/Administrator/Routine/createInvigilatorCriteria" method="post">
+          <div class="invigilator-critrria">
+            <p  class="table-tr-input-style-none"  style="color: #52d794; font-size: 14px; font-weight: 600;">Designation</p>
+            <p  class="table-tr-input-style-none"  style="color: #52d794; font-size: 14px; font-weight: 600; ">Duty</p>  
+          </div>
+          <div class="underLineDiv" style="background-color: #52d794;"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="Professor"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[0] ? criteriaInfo.prv[0] : "" %>" name="DesignationHowmanyDuty[]"     name="">
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="Associate Professor"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[1] ? criteriaInfo.prv[1] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="Assistant Professor"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[2] ? criteriaInfo.prv[2] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="Sr. Lecturer"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[3] ? criteriaInfo.prv[3] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="Lecturer"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[4] ? criteriaInfo.prv[4] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="Part Time"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[5] ? criteriaInfo.prv[5] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="Contractual"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[6] ? criteriaInfo.prv[6] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="RA"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[7] ? criteriaInfo.prv[7] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <div class="invigilator-critrria">
+                <input  class="table-tr-input-style-none" value="TA"  name="designationName[]" readonly>
+                <input  class="table-tr-input-style-none" type="number" value="<%= criteriaInfo.prv[8] ? criteriaInfo.prv[8] : "" %>" name="DesignationHowmanyDuty[]"     >
+              </div>
+              <div class="underLineDiv"></div>
+              <% if (criteriaInfo.error.DesignationHowmanyDuty) { %>
+                <p class="error" style="display: block;"><%=  criteriaInfo.error.DesignationHowmanyDuty %></p>
+                <script>
+                  window.onload = function() {
+                    openInvigilatorCriteriaModal();
+                  };
+                </script>
+              <% } %>
+              <div class="underLineDiv"></div>
+
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+</div>
+
+<script>
+        //new input box rows and colums add criteria
+        const newrowcloumn = document.querySelector(".newrowcloumn")
+
+function removeditem() {
+    this.parentElement.remove();
+}
+function closeAllExamdate() {
+    //   this.parentElement.remove();
+    // get the parent element to be removed
+    const parentElem = document.querySelector('.examDateDiv');
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+        parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    // parentElem.remove();
+    document.querySelector(".howRowcloumsDiv").style.display = "block";
+    document.querySelector(".closeDiv").style.display = "none";
+    const newrowcloumn = document.querySelector(".houmanydate")
+    newrowcloumn.value = '';
+}
+
+function oneRowCol(index) {
+    const newExamDateAppend = document.querySelector(".examDateDiv")
+    const newdiv = document.createElement("div")
+    newdiv.className = "subexamDatepopupDiv"
+    //sub div under create input fill
+    const examDateInput = document.createElement("input")
+    examDateInput.type = "text";
+    examDateInput.placeholder = "Enter Designation"
+    examDateInput.className = "inputDesignationName"
+    examDateInput.name = "designationName"
+
+    const howmanyDuty = document.createElement("input");
+    howmanyDuty.type = "number";
+    howmanyDuty.placeholder = "How Many Duty ?"
+    howmanyDuty.className = "howmanyDuty"
+    howmanyDuty.name = "DesignationHowmanyDuty"
+
+    // underLine Div
+    const underLineDiv = document.createElement("div")
+    underLineDiv.className = "underLineDiv"
+
+    newExamDateAppend.appendChild(newdiv)
+    newdiv.appendChild(examDateInput)
+    newdiv.appendChild(howmanyDuty)
+    newExamDateAppend.appendChild(underLineDiv)
+
+    document.querySelector(".howRowcloumsDiv").style.display = "none";
+    document.querySelector(".closeDiv").style.display = "block";
+
+}
+
+function createExamdate() {
+    const houmanydate = document.querySelector(".houmanydate")
+    console.log("newrowcloumn", houmanydate.value)
+    let howManyCol = houmanydate.value
+    for (let index = 0; index < howManyCol; index++) {
+        console.log(" is ", index)
+        oneRowCol(index)
+    }
+}
+//-----------------------------------add slot related work--
+//----------------------------------end-add slot related work--
+
+// console.log("ridoy", rooms);
+const addInvigilatorCriteriaModal = document.querySelector(".add-examDateAndSlot-modal");
+const addInvigilatorCriteriaModalBlar = document.querySelector(".add-InvigilatorCriteria-Modal-Blar");
+const form = document.querySelector("#add-examdate-form");
+
+// success toast
+
+
+function closeInvigilatorCriteriaModal() {
+    addInvigilatorCriteriaModal.style.display = "none";
+    addInvigilatorCriteriaModalBlar.style.display = "none";
+}
+function openInvigilatorCriteriaModal() {
+    addInvigilatorCriteriaModal.style.display = "block";
+    addInvigilatorCriteriaModalBlar.style.display = "block";
+
+}
+
+</script>

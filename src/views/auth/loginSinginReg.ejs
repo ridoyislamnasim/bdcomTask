@@ -1,0 +1,50 @@
+
+<%- include(`../common/landingHeader.ejs`); %>
+<body>
+
+  
+    <!-- slider login of your page  -->
+    <div class="section-container log-reg">
+      <div class="slider-container">
+        <div class="slide active">
+          <img src="/imges/img/Char 9.png" alt="Slide 1">
+        </div>
+        <div class="slider-indicators"></div>
+      </div>
+      <!-- // login singin section -->
+      <div class="login-section" style="align-items: center;text-align: center;">
+        <div class="welcome" >
+          <span>
+            <p class="heading">Welcome </p>
+          </span>
+        </div>
+        <div class="login-form-teacher"> 
+          <div id="employee_logi" ">
+            <form action="/api/auth/login" method="post">
+                <div class="for_login_input" style="display: flex;align-items: center;flex-direction: column;">
+                  <input  type="text" class="houmanyCol logInput" placeholder="User Email" name="email" 
+                  value = "<%= emp_return_value.emp_log_emailOrId  ?  emp_return_value.emp_log_emailOrId :"" %>" />
+                  <input class="houmanyCol logInput" type="password" placeholder="Password" name="password" min="0"
+                    max="15" />
+                    <div class="error_show">
+                      <p class="error_P"><%= errors.emp_log_emailOrId || errors.emp_log_password %></p>  
+                    </div>
+                </div>
+                <div class="student_foroet">
+                  <!-- <span>Forgot password</span> -->
+                </div>
+                <div class="loginSubmitStudent">
+                  <button class=" submit " style="border: none;">Log In</button>
+                  </div>
+            </form>
+          </div>
+        </div>
+
+  
+      </div>
+    </div>
+  
+
+  </body>
+  
+  </html>

@@ -1,0 +1,90 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/studentMenu.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+
+    <div class="manageAddRoom-container">
+      <div id="title">
+        <h2>Routine</h2>
+      </div>
+      <div id="routine-info">
+        <!-- info title -->
+        <div class="info-title">
+          <span>Daffodil International University (DSC)</span>
+          <span> Department of Computer Science and Engineering (Day and Evening Program)</span>
+          <span>Final Examination Routine, Spring 2023</span>
+        </div>
+        <!-- new table -->
+        <div id="routine-table" style="text-align: center;">
+        <% for (const [index, aggregatedItem] of selfRoutine.entries()) { %>
+            
+            <% for (const item of aggregatedItem) { %>
+                <% if (index == 0) { %>
+                    <div class="selfRoutine-header">
+                        <div class="selfRoutine-header-item">Date</div>
+                        <div class="selfRoutine-header-item">Slot</div>
+                        <div class="selfRoutine-header-item">Suject</div>
+                        <div class="selfRoutine-header-item">Section</div>
+                        <div class="selfRoutine-header-item">TC Initial</div>
+                        <div class="selfRoutine-header-item">Room No</div>
+                        <div class="selfRoutine-header-item">Seat</div>
+                    </div>
+                <% } %>
+                <div class="selfRoutine-course">
+                    <div class="selfRoutine-course-value">
+                        <% const date = item.date;
+                        const day = date.getDate();
+                        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                        const month = monthNames[date.getMonth()];
+                        const year = date.getFullYear();               
+                        const formattedDate = `${day} ${month} ${year}`;
+                        %> 
+                        <%= formattedDate %> <br>
+                        <%= item.date.toLocaleDateString(undefined, {  weekday: 'long' }) %>
+                    </div>
+                    <div class="selfRoutine-course-value">
+                        <%= item.slot %>
+                    </div>
+                    <div class="selfRoutine-course-value">
+                        <%= item.subjectCode %>:<%= item.subjectName %>
+                    </div>
+                    <div class="selfRoutine-course-value">
+                        <%= item.sectionName %>
+                    </div>
+                    <div class="selfRoutine-course-value">
+                        <%= item.teacherInnitial %>
+                    </div>
+                    <div class="selfRoutine-course-value">
+                        <% for (const roominfo of item.roominfo) { %>
+                        <div class="roominfo roomNo">
+                            <%= roominfo.roomNumber %>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div class="selfRoutine-course-value">
+                        <% for (const roominfo of item.roominfo) { %>
+                            <div class="roominfo roomSeat">
+                                <%= roominfo.roomSeat %>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+        
+           <% } %>
+
+        <% } %>
+        </div>
+        <!-- for (const aggregatedItem of selfRoutine) {
+            for (const item of aggregatedItem) {
+              console.log('roominfo', item.roominfo);
+            }
+          } -->
+        <!-- new table -->
+ 
+
+         </div>
+      </div>
+    </div>
+</section>
+<!-- manu open close -->
+<%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>

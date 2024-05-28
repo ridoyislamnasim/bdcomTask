@@ -1,0 +1,105 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/studentMenu.ejs`); %>
+
+<body>
+  <!-- <img src="./img/Char 01 (1).png" alt="Slide 1"> -->
+
+  <section class="home-section">
+    <div class="home-content">
+      <div class="student-main-container">
+        <div id="title">
+          <h2>Student Profile</h2>
+        </div>
+      <div class="student-sub-container">
+
+        <div class="short-bio">
+
+          <div class="profile-short">
+            <div class="student-img">
+            <img src="<%= stuProfileInfo[0].studentProfileImg ? stuProfileInfo[0].studentProfileImg : '/uploads/user1.png'  %>" alt="profileImg">
+           </div>
+            <div class="profile-short-info">
+              <span class="student-short-item"><%= stuProfileInfo[0].studentName %></span>
+              <span class="student-short-item"><%= stuProfileInfo[0].studentId %></span>
+              <span class="student-short-item"><%= stuProfileInfo[0].studentEmail %></span>
+            </div>
+            <div class="profile-edit">
+                <a class="profile-edit_link" id="profile-edit" href="/Student/UpdateProfile">Prodile Edit</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="basicInformation">
+            <div class="basicInformation-title">
+                Basic Information
+            </div>
+            <div class="basicInformation-all-value">
+              <div class="basicInformation-item fullName">
+                <p class="title">Full Name :</p>
+                <p class="value"><%= stuProfileInfo[0].studentName ? stuProfileInfo[0].studentName : '- -' %></p>
+              </div>
+              <div class="basicInformation-item fullName">
+                <p class="title">Student ID:</p>
+                <p class="value"><%= stuProfileInfo[0].studentId ?  stuProfileInfo[0].studentId : '- -' %></p>
+              </div>
+              <div class="basicInformation-item fullName">
+                <p class="title">Email :</p>
+                <p class="value"><%= stuProfileInfo[0].studentEmail ? stuProfileInfo[0].studentEmail : '- -' %></p>
+              </div>
+              <div class="basicInformation-item fullName">
+                <p class="title">Mobile :</p>
+                <p class="value"><%= stuProfileInfo[0].studentPhoneNumber ? stuProfileInfo[0].studentPhoneNumber : '- -' %></p>
+              </div>
+              <div class="basicInformation-item fullName">
+                <p class="title">Batch :</p>
+                <p class="value"><%= stuProfileInfo[0].studentBatch ?  stuProfileInfo[0].studentBatch : '- -'%></p>
+              </div>
+              <div class="basicInformation-item fullName">
+                <p class="title">Program :</p>
+                <p class="value"><%= stuProfileInfo[0].studentProgram ? stuProfileInfo[0].studentProgram :'- -' %></p>
+              </div>
+              <div class="basicInformation-item fullName">
+                <p class="title">Department :</p>
+                <p class="value"><%= stuProfileInfo[0].studentDepartment ? stuProfileInfo[0].studentDepartment :'- -' %></p>
+              </div>
+              <div class="basicInformation-item fullName">
+                <p class="title">Faculty :</p>
+                <p class="value" class="value"><%= stuProfileInfo[0].studentFaculty ? stuProfileInfo[0].studentFaculty :'- -' %></p>
+              </div>
+            </div>
+          </div>
+
+        <div class="academics_info">
+            <div class="academics_info-title">Academics Information</div>
+            <div class="academics_info-table">
+            <% for (const [index, stu_courseInfo] of stuProfileInfo[0].stu_courseInfo.entries()) { %>
+                <% if (index == 0) { %>
+                    <div class="academics_info-header">
+                          <div class="academics_info-header-title">Course Title</div>
+                          <div class="academics_info-header-title">Course Code</div>
+                          <div class="academics_info-header-title">Course Cradit</div>
+                          <div class="academics_info-header-title">Course Section</div>
+                          <div class="academics_info-header-title">Course TC Initial</div>
+                      </div>
+                 
+                <% } %>
+                <div class="academics_info-item">             
+                      <div class="academics_info-value"><%= stu_courseInfo.stu_courseName %></div>
+                      <div class="academics_info-value"><%= stu_courseInfo.stu_courseCode %></div>
+                      <div class="academics_info-value"><%= stu_courseInfo.stu_courseCredit %></div>               
+                      <div class="academics_info-value"><%= stu_courseInfo.stu_section %></div>               
+                      <div class="academics_info-value"><%= stu_courseInfo.stu_sub_tc_initial %></div>               
+                   </div>
+              <% } %>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- frofile of your page  -->
+  <!-- frofile of your page  -->
+
+  <!-- manu open close -->
+  <%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>

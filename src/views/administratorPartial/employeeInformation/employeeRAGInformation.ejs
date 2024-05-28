@@ -1,0 +1,631 @@
+
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+  
+<section class="home-section">
+  <div class="home-content"> 
+    <div class="manageAddRoom-container">
+        <div id="title">
+          <h2> Manage Teachers</h2>
+        </div>
+  
+        <div class="table invilator_info" id="rooms-table">
+          <table id="emp-rag-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Name</th>
+                <th>Id</th>
+                <th>Designation</th>
+                <th>Contact number</th>
+                <th>Email</th>
+                <th>EMS Rollplay</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody class="table_body">
+              <% if (emp_pro_info) { %>
+                <% for( let index = 0; index < emp_pro_info.length; index++ ) { %>
+                  <tr id="row-<%= index %>" >
+                    <td class="emp_img">
+                      <div class="pro_img"  >
+                        <img   src="<%= emp_pro_info[index].emp_ProfileImg ? emp_pro_info[index].emp_ProfileImg : '/uploads/user1.png'   %>" alt="Profile image">
+                      </div>
+                      
+                      <!--  -->
+                    </td>
+                    <td class="emp_name">
+                      <%= emp_pro_info[index].employeeName  %>
+                    </td>
+                    <td class="emp_id">
+                      <%= emp_pro_info[index].employeeId  %>
+                    </td>
+                    <td class="emp_Designation">
+                      <%= emp_pro_info[index].employeeDesignation  %>
+                    </td>
+                    <td class="emp_contact">
+                      <%= emp_pro_info[index].employeePhoneNumber  %>
+                    </td>
+                    <td class="emp_email">
+                      <%= emp_pro_info[index].employeeEmail  %>
+                      <!-- <input class="idd" type="text" onchange="updateData(this)"> -->
+                    </td>
+                    <td class="emp_rollplay">
+                      <input class=" emp_rollplay dropdown-toggle" value="<%= emp_pro_info[index].emp_rollplay%>" type="text"  name="employeeDesignation" onchange="handleRowChange(this)" onclick="toggleDropdown(this)">
+                      <span class="arrow">&#x25BC;  </span>    
+                      <div class="dropdown-content hide"> 
+                                <div class="dropdown-option"><span>Invigilator</span></div>
+                                <div class="dropdown-option"><span>Co-administrator</span></div>
+                                <div class="dropdown-option"><span>Viewer</span></div>                              
+                            </div>
+                    </td>
+                    <td class="emp_action">
+                      <input style="display: none;" class=" emp_action toggle-button-input" value="<%= emp_pro_info[index].action%>" type="number"  name="emp_action"  onchange="handleRowChange(this)">
+                      <div class="toggle-button <%= emp_pro_info[index].action === 1 ? 'on' : 'off' %>" onclick="toggleButton(this)" style="display: flex;">
+
+                        <div class="toggle-button-inner"></div>
+                        <span class="toggle-button-label toggle-button-label-off">Inactive</span>
+                        <span class="toggle-button-label toggle-button-label-on">Active</span>
+                      </div>
+                    </td>
+                                     
+                  </tr>          
+                <% } %>          
+              <% } %>
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+</section>
+<script>
+  // Assuming you have included the Toastify library
+
+// Function to show a toast message
+function showToast(message, isError = false) {
+  Toastify({
+    text: message,
+    duration: 3000,
+    // backgroundColor: isError ? "#f44336" : "#4caf50",
+  }).showToast();
+}
+  
+  function handleRowChange(input) {
+    // console.log(input)
+    // const tds =input.closest('tr');
+    // console.log( input.closest('tr'))
+    // console.log( input.closest('tr').id)
+    // console.log( input.closest('tr').tr)
+    const rowIndex = input.closest('tr').id.split('-')[1];
+    const value = input.value;
+    console.log('Row:', rowIndex, 'Value:', value);
+
+    const row = input.closest('tr');
+    const rowData = {};
+  if (row) {
+    const tdElements = row.querySelectorAll('td');
+    tdElements.forEach(td => {
+      const textContent = td.textContent.trim();
+      const key = td.classList[0];
+      rowData[key] = textContent;
+      const span = td.querySelector('span');
+      console.log("td",td.textContent)
+      console.log("span",td)
+     
+      console.log(key)
+      if (span) {
+        const value = span.textContent;
+        console.log(value);
+        // Do something with the value
+        rowData[key] = value;
+      }
+    });
+    console.log(rowData)
+  }
+
+  if (row) {
+    const tdInputElements = row.querySelectorAll('input');
+    tdInputElements.forEach(inputElement => {
+      const key = inputElement.classList[0];
+      const value = inputElement.value;
+      console.log("input value",key,value);
+      rowData[key] = value;
+      // Do something with the value
+    });
+  }
+  console.log("rowData---",rowData)
+  if (rowData) {
+    console.log("rowData")
+    // Send the updated data to the server
+  fetch('/Administrator/invigilator', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(rowData)
+  })
+    .then(response => response.json())
+    .then(responseData => {
+      // Handle the response from the server, if needed
+      console.log('Response:', responseData);
+      showToast(responseData.msg);
+    })
+    .catch(error => {
+      // Handle any errors that occurred during the data submission
+      console.error('Error:', error);
+    });
+    
+  }
+
+    // Perform operations with the updated value as needed
+    // ...
+  }
+
+
+
+  
+  //table data send server ------------------------
+
+  // toggle-button active inactive------------active inactive start---------------------------
+  function toggleButton(button) {
+    var inputElement = button.previousElementSibling;
+    var inputElementclose =button.closest('input');
+
+    // var inputElement =document.querySelector('.toggle-button-input');
+    console.log(button)
+    console.log(inputElementclose)
+  var isActive = button.classList.contains('on');
+
+  if (isActive) {
+    inputElement.value = '0';
+  } else {
+    inputElement.value = '1';
+  }
+  inputElement.dispatchEvent(new Event('change')); // Trigger onchange event
+
+      button.classList.toggle('on');
+      button.classList.toggle('off');
+
+    }
+  // toggle-button active inactive------------active inactive End---------------------------
+
+
+  //dropdown valu set -----------------------------------
+  
+  // Get all the dropdown toggles, dropdown contents, and dropdown options
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  const dropdownContents = document.querySelectorAll('.dropdown-content');
+
+  // Loop through each dropdown toggle
+  dropdownToggles.forEach(function (toggle, index) {
+    const dropdownContent = dropdownContents[index];
+    const options = dropdownContent.querySelectorAll('.dropdown-option');
+
+    toggle.addEventListener('click', function () {
+      dropdownContent.classList.remove('hide');
+      dropdownContent.classList.toggle('show');
+    });
+
+    options.forEach(function (option) {
+      option.addEventListener('click', function () {
+        const currentOptions = this.parentNode.querySelectorAll('.dropdown-option');
+
+        currentOptions.forEach(function (opt) {
+          opt.classList.remove('active');
+          opt.style.backgroundColor = '';
+        });
+
+        this.classList.add('active');
+        this.style.backgroundColor = '#52d794';
+        toggle.value = this.textContent;
+        dropdownContent.classList.remove('show');
+        toggle.dispatchEvent(new Event('change')); // Trigger onchange event
+      });
+
+      option.addEventListener('mouseenter', function () {
+        if (!this.classList.contains('active')) {
+          this.style.backgroundColor = '#01B3BD';
+        }
+      });
+
+      option.addEventListener('mouseleave', function () {
+        if (!this.classList.contains('active')) {
+          this.style.backgroundColor = '';
+        }
+      });
+    });
+  });
+  //dropdown valu set -------------end----------------------
+  
+  // arrow is ------------------------------------
+//   function toggleDropdown(input) {
+//     console.log("input",input)
+//   const dropdownContent = input.nextElementSibling;
+//   console.log("dropdownContent",dropdownContent)
+
+//   const options = dropdownContent.querySelectorAll('.dropdown-option');
+//   console.log("options",options)
+
+//   const selectedIndex = Array.from(options).findIndex(option => option.textContent === input.value);
+//   console.log("selectedIndex",selectedIndex)
+
+//   dropdownContent.classList.toggle('hide');
+
+//   // Add event listeners for up and down arrow keys
+//   document.addEventListener('keydown', handleArrowKeys);
+//   dropdownContent.classList.toggle('show');
+
+//   // Set initial selected option
+//   if (selectedIndex >= 0) {
+//     options[selectedIndex].classList.add('active');
+//   }
+
+//   function handleArrowKeys(event) {
+//     const key = event.key;
+//     const activeOption = dropdownContent.querySelector('.dropdown-option.active');
+
+//     if (key === 'ArrowUp') {
+//       event.preventDefault();
+//       if (activeOption) {
+//         const previousOption = activeOption.previousElementSibling;
+//         if (previousOption) {
+//           activeOption.classList.remove('active');
+//           previousOption.classList.add('active');
+//         }
+//       } else {
+//         const lastOption = options[options.length - 1];
+//         lastOption.classList.add('active');
+//       }
+//     } else if (key === 'ArrowDown') {
+//       event.preventDefault();
+//       if (activeOption) {
+//         const nextOption = activeOption.nextElementSibling;
+//         if (nextOption) {
+//           activeOption.classList.remove('active');
+//           nextOption.classList.add('active');
+//         }
+//       } else {
+//         const firstOption = options[0];
+//         firstOption.classList.add('active');
+//       }
+//     } else if (key === 'Enter' && activeOption) {
+//       event.preventDefault();
+//       input.value = activeOption.textContent;
+//       dropdownContent.classList.remove('show');
+//       input.dispatchEvent(new Event('change'));
+//     }
+//   }
+// }
+
+</script>
+<!-- manu open close -->
+<%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>
+<!-- dataTable pdf csv  -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+<!-- dataTable aearch -->
+<script src="https://cdn.datatables.net/searchpanes/2.2.0/js/dataTables.searchPanes.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+
+
+<script>
+// $(document).ready(function() {
+//     $('#emp-rag-table').DataTable({
+//         dom: 'Plfrtip',
+//         searchPanes: {
+//             initCollapsed: true
+//         }
+//     });
+// });
+
+// $(document).ready(function() {
+//     $('#emp-rag-table').DataTable( {
+//         dom: 'Bfrtip',
+//         buttons: [
+//             {
+//                 extend: 'collection',
+//                 className: 'custom-html-collection',
+//                 buttons: [
+//                     {
+//                         extend: 'pdf',
+//                         exportOptions: {
+//                         columns: ':visible'
+//                         },
+//                          download: 'open',
+//                         title: 'Registered employee data'
+//                     },
+//                     {
+//                         extend: 'csv',
+//                         exportOptions: {
+//                             columns: ':visible'
+//                         },
+//                         title: 'Registered employee data'
+//                     },
+//                     {
+//                         extend: 'excel',
+//                         exportOptions: {
+//                             columns: ':visible'
+//                         },
+//                         title: 'Registered employee data'
+//                     },
+//                     '<h3 class="not-top-heading">Column Visibility</h3>',
+//                     'columnsToggle'
+//                 ]
+//             }
+//         ]
+   
+//       } );
+// } );
+
+
+
+
+
+//  $(document).ready(function() {
+//     $('#emp-rag-table').DataTable( {
+//       dom: 'Bfrtip',
+//         buttons: [
+//             {
+//                 extend: 'collection',
+//                 className: 'custom-html-collection',
+//                 buttons: [
+//                     {
+//                         extend: 'pdf',
+//                         exportOptions: {
+//                         columns: ':visible'
+//                         },
+//                          download: 'open',
+//                         title: 'Registered employee data'
+//                     },
+//                     {
+//                         extend: 'csv',
+//                         exportOptions: {
+//                             columns: ':visible'
+//                         },
+//                         title: 'Registered employee data'
+//                     },
+//                     {
+//                         extend: 'excel',
+//                         exportOptions: {
+//                             columns: ':visible'
+//                         },
+//                         title: 'Registered employee data'
+//                     },
+//                     '<h3 class="not-top-heading">Column Visibility</h3>',
+//                     'columnsToggle'
+//                 ]
+//             }
+//         ],
+   
+//         // search related
+//         // searchPanes: {
+//         //     cascadePanes: true,
+//         //     viewTotal: true
+//         // },
+
+//         // how many coll created
+//         searchPanes: {
+//             layout: 'columns-6'
+//         },
+//                 // first time search option collaps
+//                 searchPanes: {
+//             initCollapsed: true
+//         },
+//         columnDefs: [
+            
+//               {
+//                 searchPanes: {
+//                   // how many value has and how many selct
+//                   initCollapsed: true,
+//                   show: true,
+//                 },
+//                 targets: [1,2,3,4,5]
+//             },
+            
+//         ],
+//         searchPanes: {
+//             cascadePanes: true,
+//             viewTotal: true,
+//             layout: 'columns-6'
+
+//         },
+//         dom: 'Plfrtip',
+   
+//       } );
+// } );
+  
+
+// $(document).ready(function() {
+//     $('#emp-rag-table').DataTable({
+//       dom: 'Plfrtip', // Combined DOM configuration for search panes and buttons
+  
+//         searchPanes: {
+//             layout: 'columns-6', // Search panes layout with 6 columns
+//             initCollapsed: true, // Search panes initially collapsed
+//             cascadePanes: true, // Cascade search panes
+//             viewTotal: true // Display the total number of items in each search pane
+//         },
+//         columnDefs: [
+//             {
+//                 searchPanes: {
+//                     initCollapsed: true, // Search pane initially collapsed
+//                     show: true // Show the search pane
+//                 },
+//                 targets: [1, 2, 3, 4, 5] // Apply the search pane to columns 1, 2, 3, 4, and 5
+//             }
+//         ],
+//         // dom: 'Plfrtip', // DOM configuration for search panes
+//         // dom: 'Bfrtip', // DOM configuration for buttons
+//         buttons: [
+//             {
+//                 extend: 'collection', // Button collection
+//                 className: 'custom-html-collection', // Custom CSS class for the collection
+//                 buttons: [
+//                     {
+//                         extend: 'pdf', // PDF export button
+//                         exportOptions: {
+//                             columns: ':visible' // Export only visible columns
+//                         },
+//                         download: 'open', // Open the PDF in a new tab
+//                         title: 'Registered employee data' // Title of the exported PDF
+//                     },
+//                     {
+//                         extend: 'csv', // CSV export button
+//                         exportOptions: {
+//                             columns: ':visible' // Export only visible columns
+//                         },
+//                         title: 'Registered employee data' // Title of the exported CSV
+//                     },
+//                     {
+//                         extend: 'excel', // Excel export button
+//                         exportOptions: {
+//                             columns: ':visible' // Export only visible columns
+//                         },
+//                         title: 'Registered employee data' // Title of the exported Excel file
+//                     },
+//                     '<h3 class="not-top-heading">Column Visibility</h3>', // Custom heading
+//                     'columnsToggle' // Column visibility toggle button
+//                 ]
+//             }
+//         ],
+//     });
+// });
+
+$(document).ready(function() {
+    $('#emp-rag-table').DataTable({
+        // dom: 'PlfrtipB buttons-collection r', // 'PlfrtipB' Combined DOM configuration for search panes, buttons, and other components
+        // dom: 'BIfplrtip', // 'BIfplrtip' Combined DOM configuration for search panes, buttons, and other components
+        // 
+        "dom": 'PBlfrtip',
+        // 
+        buttons: [
+            {
+                extend: 'collection',
+                className: 'custom-html-collection',
+                buttons: [
+                    {
+                        extend: 'pdf',                       
+                        exportOptions: {
+                            columns: ':visible',
+                            columns: [1,2, 3, 4, 5] // Include only the visible columns (except index 4)
+                        },
+                        download: 'open',
+                        title: 'Registered employee data',
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        title: 'Registered employee data'
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        title: 'Registered employee data'
+                    },
+                    '<h3 class="not-top-heading">Column Visibility</h3>',
+                    'columnsToggle'
+                ]
+            }
+        ],
+        "pagingType": "full_numbers",
+    //     "oLanguage": {
+    //   "oPaginate": {
+    //     "sFirst": "First",
+    //     "sPrevious": "Previous",
+    //     "sNext": "Next",
+    //     "sLast": "Last"
+    //   }
+    // },
+        searchPanes: {
+            layout: 'columns-6',
+            cascadePanes: true,
+            viewTotal: true,
+            panes: [
+        {
+          header: 'Action',
+          options: [
+            { label: 'Option 1', value: 'Inactive' },
+            { label: 'Option 2', value: 'Active' },
+            // { label: 'Option 3', value: 'option3' }
+          ]
+        },]
+        },
+        columnDefs: [
+            {
+                searchPanes: {
+                    initCollapsed: true,
+                    show: true,
+                },
+                targets: [1, 2, 3, 4, 5,7]
+            }
+        ],
+       
+    });
+});
+
+// $(document).ready(function() {
+//     $('#emp-rag-table').DataTable({
+//         dom: 'Plfrtip', // Combined DOM configuration for search panes and buttons
+//         buttons: [
+//             {
+//                 extend: 'collection',
+//                 className: 'custom-html-collection',
+//                 buttons: [
+//                     {
+//                         extend: 'pdf',
+//                         exportOptions: {
+//                             columns: ':visible'
+//                         },
+//                         download: 'open',
+//                         title: 'Registered employee data'
+//                     },
+//                     {
+//                         extend: 'csv',
+//                         exportOptions: {
+//                             columns: ':visible'
+//                         },
+//                         title: 'Registered employee data'
+//                     },
+//                     {
+//                         extend: 'excel',
+//                         exportOptions: {
+//                             columns: ':visible'
+//                         },
+//                         title: 'Registered employee data'
+//                     },
+//                     '<h3 class="not-top-heading">Column Visibility</h3>',
+//                     'columnsToggle'
+//                 ]
+//             }
+//         ],
+//         searchPanes: {
+//             layout: 'columns-6',
+//             initCollapsed: true,
+//             cascadePanes: true,
+//             viewTotal: true
+//         },
+//         columnDefs: [
+//             {
+//                 searchPanes: {
+//                     initCollapsed: true,
+//                     show: true,
+//                 },
+//                 targets: [1, 2, 3, 4, 5]
+//             }
+//         ]
+//     });
+// });
+
+  </script>
+</body> 
+</html>

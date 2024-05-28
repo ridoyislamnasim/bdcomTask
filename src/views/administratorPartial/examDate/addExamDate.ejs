@@ -1,0 +1,343 @@
+<div class="modal-blar" style="position: absolute;left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;">
+</div>
+
+<div class="add-examDateAndSlot-modal" id="popup-model" style="display: none;">
+  <a href="#" onclick="clseExamDateAndSlotmModal()" class="modal-close">+</a>
+  <div class="modal-title">
+    <h2>Add Examnination Date</h2>
+  </div>
+  <div class="modal-body">
+    <form id="add-examdate-form">
+      <div class="howRowcloumsDiv">
+        <div class="addRowCol">
+          <input class="houmanydate" type="number" placeholder="How many Exam Date have ?" value="howmanyDate" />
+          <p class="error rowsnumber-error"></p>
+          <a href="#" onclick="createExamdate(this)" class=" examDate newadd">add</a>
+        </div>
+      </div>
+      <div class="closeDiv" style="display: none;">
+        <div style="display: flex; justify-content: space-around;">
+          <a href="#" onclick="closeAllExamdate(this)" class=" newrowcloumn newadd">clear</a>
+        </div>
+
+      </div>
+
+      <div class="examDateDiv newrowscloumns">
+
+      </div>
+      <p class="error dateSlot-error" style="display: block;"></p>
+      <input type="submit" onclick="addExamdateForm()" value="Submit" />
+    </form>
+  </div>
+
+</div>
+<script>
+  //new input box rows and colums
+  const newrowcloumn = document.querySelector(".newrowcloumn")
+
+  function removeditem() {
+    this.parentElement.remove();
+  }
+
+  function closeAllExamdate(event) {
+    //   this.parentElement.remove();
+    // get the parent element to be removed
+    const parentElem = event.closest('.modal-body').querySelector('.examDateDiv');
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+      parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    // parentElem.remove();
+    event.closest('.modal-body').querySelector(".howRowcloumsDiv").style.display = "block";
+    event.closest('.modal-body').querySelector(".closeDiv").style.display = "none";
+    event.closest('.modal-body').querySelector(".dateSlot-error").style.display = "none";
+    const newrowcloumn = event.closest('.modal-body').querySelector(".houmanydate")
+    newrowcloumn.value = '';
+  }
+
+  function oneRowCol(index, event) {
+    const newExamDateAppend = event.closest('.modal-body').querySelector(".newrowscloumns")
+    const newdiv = document.createElement("div")
+    newdiv.className = "subexamDatepopupDiv"
+    //sub div under create input fill
+    const examDateInput = document.createElement("input")
+    examDateInput.type = "Date";
+    examDateInput.placeholder = "enter rows number"
+    examDateInput.className = "inputExamDate"
+    examDateInput.name = "examDate"
+
+
+    const slotInput = document.createElement("div")
+    slotInput.className = "slotInput"
+
+    const howmanySlot = document.createElement("input");
+    howmanySlot.type = "number";
+    howmanySlot.placeholder = "How Many Slot Have ?"
+    howmanySlot.className = "howmanySlot" + index
+    howmanySlot.name = "DateHowmanySlot"
+    howmanySlot.min = 1
+    howmanySlot.max = 4
+
+    const addBtn = document.createElement("span");
+    addBtn.className = "newadd"
+    addBtn.innerHTML = "add"
+    const ridoy = index
+    addBtn.addEventListener("click", function() {
+      createslot(ridoy)
+    })
+
+    // `slotCreateDiv${index}subslotDiv  subslotDiv`
+    const slotCreateDiv = document.createElement("div");
+    slotCreateDiv.className = `slotCreateDiv${index} slotCreate `
+
+    // underLine Div
+    const underLineDiv = document.createElement("div")
+    underLineDiv.className = "underLineDiv"
+
+    newExamDateAppend.appendChild(newdiv)
+    //   newdiv.appendChild(cloumnsname)
+    newdiv.appendChild(examDateInput)
+
+
+    // addSlot.appendChild(slotInput)
+    // slotInput.appendChild(howmanySlot)
+    // slotInput.appendChild(addBtn)
+    // slotDiv.appendChild(slotCreateDiv)
+
+    newdiv.appendChild(underLineDiv)
+
+    event.closest('.modal-body').querySelector(".howRowcloumsDiv").style.display = "none";
+    event.closest('.modal-body').querySelector(".closeDiv").style.display = "block";
+
+  }
+
+  function createExamdate(event) {
+    const houmanydate = event.closest('.addRowCol').querySelector(".houmanydate")
+    console.log("newrowcloumn", houmanydate.value)
+    let howManyCol = houmanydate.value
+    for (let index = 0; index < howManyCol; index++) {
+      console.log(" is ", index)
+      oneRowCol(index, event)
+    }
+  }
+  //-----------------------------------add slot related work--
+
+  function removeslotditem() {
+    this.parentElement.remove();
+  }
+
+  function closeAllslot(value) {
+    // console.log(value+" - closeAllslot")
+    // //   this.parentElement.remove(); slotCreateDiv0
+    // // get the parent element to be removed
+    // const slotClearDiv = `slotCreateDiv${value}`
+    // console.log(slotClearDiv)
+
+    const parentElem = document.querySelector(`.slotCreateDiv${value}subslotDiv`);
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+      parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    parentElem.remove();
+
+
+
+    const slotInputBoxindex = `.slotInputBox${value}`
+    document.querySelector(slotInputBoxindex).style.display = "block";
+    // document.querySelector(`.slotClearFlexDiv${value}`).style.display = "none";
+    const slotinput = document.querySelector(`.howmanySlot${value}`)
+    console.log("slotinput", slotinput, slotinput.value)
+    slotinput.value = '';
+  }
+
+  function oneNewSlot(index, index2, howManyCol) {
+    const val = `.slotCreateDiv${index}`
+    const newExamDateAppend = document.querySelector(val)
+
+    const newslot = document.createElement("div")
+    // "subslotDiv"
+    newslot.className = `slotCreateDiv${index}subslotDiv  subslotDiv`
+    //sub div under create input fill
+    const examSlotInput = document.createElement("input")
+    examSlotInput.type = "text";
+    examSlotInput.placeholder = "enter slot name"
+    examSlotInput.className = "inputSlotName"
+    examSlotInput.name = "slotName[]"
+
+    if (index2 == 0) {
+      newExamDateAppend.appendChild(newslot)
+      newslot.appendChild(examSlotInput)
+    } else {
+      const val2 = `.slotCreateDiv${index}subslotDiv`
+      const newExamDateAppend = document.querySelector(val2)
+      console.log("newExamDateAppend", index, newExamDateAppend)
+      newExamDateAppend.appendChild(examSlotInput)
+
+    }
+    console.log(index2, howManyCol)
+    if (index2 == (howManyCol - 1)) {
+      console.log(index2, howManyCol)
+
+      // slot claer div
+      const val = `.slotCreateDiv${index}subslotDiv`
+      const slotAppendClear = document.querySelector(val)
+
+      // const val = `.slotCreateDiv${index}`
+      // console.log(val)
+      // const newExamDateAppend = document.querySelector(val)
+
+      const slotClearDiv = document.createElement("div")
+      slotClearDiv.className = "slotClearDiv";
+      const slotClearFlexDiv = document.createElement("div")
+      slotClearFlexDiv.className = `slotClearFlexDiv${index}`;
+      const slotClear = document.createElement("span")
+      slotClear.innerHTML = "clear"
+      slotClear.className = "newadd"
+
+      slotClear.addEventListener("click", function() {
+        closeAllslot(index)
+      })
+      slotAppendClear.appendChild(slotClearDiv)
+      slotClearDiv.appendChild(slotClearFlexDiv)
+      slotClearFlexDiv.appendChild(slotClear)
+
+      //end slot claer div
+
+    } else {
+
+    }
+
+
+    const slotInputBoxindex = `.slotInputBox${index}`
+    document.querySelector(slotInputBoxindex).style.display = "none";
+    document.querySelector(".closeDiv").style.display = "block";
+
+
+
+  }
+  //----------------------------------end-add slot related work--
+
+  // console.log("ridoy", rooms); id="popup-model"
+  const popupModel = document.querySelector("#popup-model");
+  const addExamDateAndSlotmModalBlar = document.querySelector(".modal-blar");
+
+
+
+
+  function clseExamDateAndSlotmModal() {
+    popupModel.style.display = "none";
+    addExamDateAndSlotmModalBlar.style.display = "none";
+  }
+
+  function openExamDateAndSlotmModal() {
+    popupModel.style.display = "block";
+    addExamDateAndSlotmModalBlar.style.display = "block";
+
+  }
+
+  // Function to show a toast message
+  function showToast(message, isError = false) {
+    Toastify({
+      text: message,
+      duration: 500,
+      backgroundColor: isError ? "#f44336" : "",
+    }).showToast();
+  }
+</script>
+//subject edit and add form
+<script>
+  let form;
+
+  function addExamdateForm() {
+    form = document.querySelector("#add-examdate-form");
+    attachSubmitHandler();
+  }
+
+  function editExamdateForm() {
+    form = document.querySelector("#edit-examdate-form");
+    attachSubmitHandler();
+  }
+  console.log("form send server ")
+  function attachSubmitHandler() {
+    if (form) {
+  form.onsubmit = async function(event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    const errorPlaceholders = document.querySelectorAll("p.error");
+    console.log("errorPlaceholders");
+    console.log(errorPlaceholders);
+
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+      errorPlaceholders[i].style.display = "none";
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
+    // // ------------------------------------------>>
+
+    const formData = new FormData(form);
+    console.log("formData");
+    console.log(formData);
+    // send the request to server
+    let response = await fetch("/Administrator/examdate", {
+      method: "post",
+      body: formData,
+    });
+    let responseData = await response.json();
+    console.log("responseData", responseData);
+    // handle error and response
+    if (responseData.errors) {
+      // errors
+      console.log("working go");
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+
+
+      Object.keys(responseData.errors).forEach((fieldName) => {
+        console.log("fieldName", fieldName);
+
+        // set all error placeholders (p tag) textContent
+        const errorPlaceholder = form.querySelector(
+          `.${fieldName}-error`
+        );
+        console.log("errorPlaceholderDown");
+        console.log(errorPlaceholder);
+        console.log("fieldName");
+        console.log(responseData.errors[fieldName].msg);
+        console.log(responseData.errors[fieldName]);
+
+        errorPlaceholder.innerHTML =
+          responseData.errors[fieldName];
+
+        // make all placeholders visible
+        errorPlaceholder.style.display = "block";
+      });
+    } else {
+      // success
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+
+      console.log("close");
+      clseExamDateAndSlotmModal();
+      document.querySelector("p.error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
+  };
+    }
+}
+  </script>

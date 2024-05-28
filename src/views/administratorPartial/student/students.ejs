@@ -1,0 +1,78 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+
+    <div class="manageAddRoom-container">
+        <div id="title">
+          <h2>Manage Student</h2>
+        </div>
+  
+        <div class="new-room-container new-room">
+            <a href="#" onclick="openAddStudentModal()">+</a>
+        </div>
+  
+        <div id="rooms-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Department Name</th>
+                <th>Batch Name</th>
+                <th>Section</th>
+                <th>Course Code</th>
+                <th>Course Title</th>
+                <th>totall Student</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="rooms-table">
+              <% for(let student of students){%>
+              <tr id="">
+                <td class="department-name">
+                  <span><%= student.department  %></span>
+                </td>
+                <td class="batch-name">
+                  <span><%= student.batch  %></span>
+                </td>
+                <td class="section-name">
+                  <span><%= student.section  %></span>
+                </td>
+                <td class="totall-student">
+                  <span><%= student.courseCode%></span>
+                </td>
+                <td class="totall-student">
+                  <span><%= student.courseTitle%></span>
+                </td>
+                <td class="totall-student">
+                  <span><%= student.numberOfStudent  %></span>
+                </td>
+                <td class="Status">
+                  <span><%= student.studentSataus  %></span>
+                  </td>
+                  <td class="manage">
+                    <a href="#" onclick="openStudentEditModal('<%=student.department%>','<%=student.batch%>','<%=student.section%>','<%=student.numberOfStudent%>','<%=student.studentSataus%>','<%= student._id%>',)">
+                      <img class="edit" src="/imges/314251_edit_document_icon.svg" alt="Edit" />
+                    </a>
+
+                    <br>
+                    <a href="#" onclick="openDeleteStudentModal('<%= student._id  %>')">
+                      <img class="delete" src="/imges/delete.png" alt="Delete" />
+                    </a>
+                  </td>
+                 
+              </tr>
+              
+              <%} %>  
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <%- include(`./addStudents.ejs`); %>
+      <%- include(`./deleteStudents.ejs`); %>
+      <%- include(`./editStudents.ejs`); %>
+ 
+
+    </body>
+</body>
+</html>

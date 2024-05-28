@@ -1,0 +1,93 @@
+<div class="modal-wrapper" id="add-examschedule-modal">
+      <div class="modal">
+            <a onclick="closeexamscheduleModal()" class="modal-close">+</a>
+            <div class="modal-title">
+                  <h2>Create Exam Schedule</h2>
+            </div>
+            <div class="modal-body">
+                  <form id="add-examschedule-form">
+                        <!-- date -->
+                        <input type="date" placeholder="Enter Date of exam" name="examDate" id="examDate"
+                              onchange="sendServerRequestExamSchedule()" />
+                        <p class="error"></p>
+                        <div id="popUpSearchOption" class="search_examDate"></div>
+                        <span class="first" style="display: none">
+                              <% for(let getexamFirstDate of examFirstDate){%>
+                                    <span class="getExamFirstFullYear"><%= getexamFirstDate.examdate.getFullYear()%></span><span class="getExamFirstMonth"><%= getexamFirstDate.examdate.getMonth()+1 %></span>
+                                    <span class="getExamFirstDate"><%= getexamFirstDate.examdate.getDate() %></span>
+                                    <%} %>
+                        </span>
+                        <span class="last" style="display: none">
+                              <% for(let getexamLastDate of examLastDate){%>
+                                    <span class="getExamLastFullYear"><%= getexamLastDate.examdate.getFullYear() %></span>
+                                    <span class="getExamLastMonth"><%= getexamLastDate.examdate.getMonth()+1 %></span>
+                                    <span class="getExamLastDate"><%= getexamLastDate.examdate.getDate() %></span>
+                                    <%} %>
+                        </span>
+                        <!-- time slot -->
+                        <input type="text" placeholder="Enter Time slot" name="examSlot" id="examSlot"
+                              autocomplete="off" onclick="sendTimeslotRequestExamSchedule()" />
+                        <p class="examSlotValue" ></p>
+                        <div id="popUpSearchOption" class="search_examSlot"></div>
+                        <!-- department -->
+                        <input type="text" placeholder="Enter Department Name" name="departmentName" id="departmentName"
+                              autocomplete="off" onclick="sendDepartmentRequestServer()" />
+                        <p class="error"></p>
+                        <div id="popUpSearchOption" class="search_departmentName"></div>
+                        <!-- batch -->
+                        <input type="text" placeholder="search Batch Name" name="batchName" id="batchName"
+                              autocomplete="off" onclick="sendBatchRequestServer()"/> 
+                        <p class="error"></p>
+                        <div id="popUpSearchOption" class="search_batchs"></div>
+                        <!-- CourseCode -->
+                        <input type="text" placeholder="search Course Code" name="courseCode" id="courseCode"
+                              autocomplete="off" onclick="sendCourseCodeRequestServer()"/> 
+                        <p class="error"></p>
+                        <div id="popUpSearchOption" class="search_CourseCode"></div>
+                        <!-- Section -->
+                        <input type="text" placeholder="search Section Name" name="sectionName" id="sectionName"
+                              autocomplete="off" onclick="sendSectionNameRequestServer()"/> 
+                        <p class="error"></p>
+                        <div id="popUpSearchOption" class="search_section"></div>
+                        <!--  -->
+                        <input type="text" placeholder="search room Number" name="roomNumber" id="roomNumber"
+                              autocomplete="off" />
+                        <p class="error"></p>
+                        <!--  -->
+                        <input type="number" placeholder="room Number of Student" name="studentNumber" id="studentNumber"
+                              autocomplete="off" />
+                        <p class="error"></p>
+                        <div id="popUpSearchOption" class="search_roomNumber"></div>
+                        <input type="submit" value="Submit" class="hide" />
+                  </form>
+            </div>
+      </div>
+</div>
+
+<%- include(`./examdate_JS.ejs`); %>
+<%- include(`./slot_JS.ejs`); %>
+<%- include(`./department_JS.ejs`); %>
+<%- include(`./batch_JS.ejs`); %>
+<%- include(`./courseCode_JS.ejs`); %>
+<%- include(`./section_JS.ejs`); %>
+<%- include(`./addModelSubmit_JS.ejs`); %>
+
+<script>
+       function closeAllSelect() {
+    console.log("this is work closeAllSelect")
+   
+           departmentName_placeholder.style.display = "none";
+           batchs_placeholder.style.display = "none";
+           CourseCode_placeholder.style.display = "none";
+           sectionName_placeholder.style.display = "none";
+           examSlot_placeholder.style.display = "none";
+           
+   }
+   document.addEventListener("click", closeAllSelect);
+
+ 
+
+
+ 
+
+</script>

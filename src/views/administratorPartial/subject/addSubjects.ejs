@@ -1,0 +1,787 @@
+<div class="model-blar" style="position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;">
+</div>
+
+<div class="subject-add-modal" id="popup-model">
+
+
+  <div style="    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-right: -10px;">
+    <a href="#" onclick="closeSubjectAddModal()" class="modal-subject-close">+</a>
+  </div>
+
+  <div class="modal-title">
+    <h2>Add Batch And Subject Information</h2>
+  </div>
+  <div class="modal-body">
+    <form id="add-subjectInfo-form">
+
+
+
+      <div class=" levalTermDiv newrowscloumns">
+        <div class="sublevalTermDiv">
+          <!-- <input class="inputLevel" type="text" placeholder="Enter Level" name="level" /> -->
+          <div class="dropdown">
+            <input class="level dropdown-toggle dropdown-toggle-subject " type="text" placeholder="Select Level" type="text" name="level" readonly>
+            <i class="bx bx-chevron-down"></i>
+            <div class="dropdown-content dropdown-content-emp-profile">
+              <div class="dropdown-option">L1</div>
+              <div class="dropdown-option">L2</div>
+              <div class="dropdown-option">L3</div>
+              <div class="dropdown-option">L4</div>
+            </div>
+          </div>
+          <p class="error level-error"></p>
+          <!-- <input class="inputTerm" type="text" placeholder="Enter Term" name="term" /> -->
+          <div class="dropdown">
+            <input class="term dropdown-toggle dropdown-toggle-subject " type="text" placeholder="Select Level" type="text" name="term" readonly>
+            <i class="bx bx-chevron-down"></i>
+            <div class="dropdown-content dropdown-content-emp-profile">
+              <div class="dropdown-option">T1</div>
+              <div class="dropdown-option">T2</div>
+            </div>
+          </div>
+          <p class="error term-error"></p>
+
+          <input class="batch dropdown-toggle-subject" oninput='BatchSearch(this)' type="text" name="batch" placeholder="Enter Batch (Batch-53)" value="" autocomplete="off">
+          <div class="subjectBath-searchInfo"></div>
+          <p class="error batch-error"></p>
+
+        </div>
+      </div>
+      <div class="howRowcloumsDiv">
+        <div class="addRowCol">
+          <div class="sectionNumber">
+            <input class="howmanySection" type="number" placeholder="How many Section have ?" value="howmanySection" name="howmanySection" />
+            <p class="error howmanySection-error"></p>
+          </div>
+          <div class="courseNumber">
+            <input class="howmanyCourse" type="number" placeholder="How many Course have ?" value="howmanyCourse" name="howmanyCourse" />
+            <p class="error howmanyCourse-error"></p>
+          </div>
+          <div class="sectionAdd">
+            <a href="#" onclick="createCourseSectionInputFild()" class=" newadd">add</a>
+          </div>
+          <div class="closeDiv" style="display: none;">
+            <div style="display: flex;">
+              <a href="#" onclick="closeAll_CourseSectionInputFild()" class=" newrowcloumn newadd">clear</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="examDateDiv newrowscloumns">
+
+      </div>
+
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+
+</div>
+
+
+<!-- </div> -->
+<!-- </div>
+</div> -->
+
+//dropdown - this whorking to help edit script---------------------------------
+<!-- <script>
+  //dropdown=---------------------------------- 
+
+  const dropdownToggle = document.querySelectorAll('.dropdown-toggle');
+  const dropdownContent = document.querySelectorAll('.dropdown-content');
+  const dropdownOptions = document.querySelectorAll('.dropdown-option');
+  console.log(dropdownToggle.length ,"dropdownToggle.length")
+  dropdownToggle.forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      // dropdownContent.classList.remove('hide');
+      this.parentElement.classList.toggle('show');
+      this.parentElement.querySelector('.dropdown-content').classList.toggle('show')
+    });
+  });
+
+
+  dropdownOptions.forEach(function(option) {
+
+
+    option.addEventListener('click', function() {
+      const dropdown = this.closest('.dropdown');
+      const toggle = dropdown.querySelector('.dropdown-toggle');
+      const content = dropdown.querySelector('.dropdown-content');
+      dropdownOptions.forEach(function(opt) {
+        opt.classList.remove('active');
+        opt.style.backgroundColor = '';
+      });
+      this.style.backgroundColor = '#52d794';
+      this.classList.add('active');
+      toggle.value = this.textContent;
+      content.classList.remove('show');
+      dropdown.classList.remove('show');
+    });
+
+
+    option.addEventListener('mouseenter', function() {
+      if (!this.classList.contains('active')) {
+        this.style.backgroundColor = '#01B3BD';
+      }
+    });
+
+    option.addEventListener('mouseleave', function() {
+      if (!this.classList.contains('active')) {
+        this.style.backgroundColor = '';
+      }
+    });
+  });
+  //dropdown ----------------------
+</script> -->
+<!-- batch Search  -->
+<script>
+  let debounceTimeout;
+  async function BatchSearch(event) {
+    //  console.log(this)
+    console.log("event", event)
+    console.log("event", event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(debounceTimeout);
+
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    debounceTimeout = setTimeout(async () => {
+      let response = await fetch("/Employee/courseBatch/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log("Routine/seatch", result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseInfo = ''
+          for (const Batch of result.searchResult) {
+            courseInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="subjectBath-searchInfo-body">
+                <div class="courseCode subjectBath-searchInfo-value">${Batch.batch}</div>
+              </div>
+          `
+          }
+          courseInfo += ` <a onclick="removedBathSearchItem(this)" class="routinr-input-close">+</a> `
+          // users_placeholder.innerHTML = generatedHtml;
+          event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseInfo;
+          // search Value any side
+
+          // popup.style.display = 'block';
+          // any where show test
+          const BathSearchInfoItem = document.querySelectorAll('.subjectBath-searchInfo-body');
+          console.log('BathSearchInfoItem', BathSearchInfoItem)
+          BathSearchInfoItem.forEach(function(option) {
+            option.addEventListener('click', function() {
+              console.log('-------------', this)
+              const dropdown = this.closest('.subjectBath-searchInfo');
+              const toggleInput = dropdown.previousElementSibling;
+              // const content = dropdown.querySelector('.stu-p-dropdown-content');
+              BathSearchInfoItem.forEach(function(opt) {
+                opt.classList.remove('active');
+                opt.style.backgroundColor = '';
+              });
+              toggleInput.value = this.querySelector('.subjectBath-searchInfo-value').textContent.trim();
+              dropdown.style.display = 'none';
+            });
+
+            option.addEventListener('mouseenter', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '#01B3BD';
+              }
+            });
+            option.addEventListener('mouseleave', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '';
+              }
+            });
+          });
+
+        }
+      } else {
+        console.log("error working")
+      }
+
+    }, 500);
+  }
+  async function removedBathSearchItem(value) {
+    value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+</script>
+<!-- course Code search -->
+<script>
+  let courseCodeTimeout;
+  async function CourseCodeSearch(event) {
+    //  console.log(this)
+    console.log("event", event)
+    console.log("event", event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(courseCodeTimeout);
+
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    courseCodeTimeout = setTimeout(async () => {
+      let response = await fetch("/Employee/courseCode/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log("Routine/seatch", result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseCodeInfo = ''
+          for (const courseInfo of result.searchResult) {
+            courseCodeInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="Bath-searchInfo-body">
+                <div class="courseCode searchInfo-value">${courseInfo.subjectCode}</div>
+                <div class="subjectName" style ='display:none'>${courseInfo.subjectName}</div>
+              </div>
+          `
+          }
+          courseCodeInfo += ` <a onclick="removedstudentCourseCodeSearchItem(this)" class="routinr-input-close">+</a> `
+          // users_placeholder.innerHTML = generatedHtml;
+          event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseCodeInfo;
+          // search Value any side
+
+          // popup.style.display = 'block';
+          // any where show test
+          const BathSearchInfoItem = document.querySelectorAll('.Bath-searchInfo-body');
+          console.log('BathSearchInfoItem', BathSearchInfoItem)
+          BathSearchInfoItem.forEach(function(option) {
+            option.addEventListener('click', function() {
+              const dropdown = this.closest('.courseCode-searchInfo');
+              const emp_courseName = this.closest('.courseInputDiv').querySelector('.inputCourseName ')
+              console.log('-------------', emp_courseName)
+
+              BathSearchInfoItem.forEach(function(opt) {
+                opt.classList.remove('active');
+                opt.style.backgroundColor = '';
+              });
+              dropdown.previousElementSibling.value = this.querySelector('.searchInfo-value').textContent.trim();
+              emp_courseName.value = this.querySelector('.subjectName').textContent.trim();
+              dropdown.style.display = 'none';
+            });
+
+            option.addEventListener('mouseenter', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '#01B3BD';
+              }
+            });
+            option.addEventListener('mouseleave', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '';
+              }
+            });
+          });
+
+        }
+      } else {
+        console.log("error working")
+      }
+
+    }, 500);
+  }
+  async function removedstudentCourseCodeSearchItem(value) {
+    value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+</script>
+<!-- Section Search search -->
+<script>
+  let empSectionTimeout;
+  async function sectionNameSearch(event) {
+    //  console.log(this)
+    console.log("event", event)
+    console.log("event", event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(empSectionTimeout);
+
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    empSectionTimeout = setTimeout(async () => {
+      let response = await fetch("/Employee/Section/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log("Routine/seatch", result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseCodeInfo = ''
+          for (const sectionInfo of result.searchResult) {
+            courseCodeInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="section-searchInfo-body">
+                <div class="courseCode searchInfo-value">${sectionInfo.sectionNames}</div>
+              </div>
+          `
+          }
+          courseCodeInfo += ` <a onclick="removedstudentCourseCodeSearchItem(this)" class="routinr-input-close">+</a> `
+          // users_placeholder.innerHTML = generatedHtml;
+          event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseCodeInfo;
+          // search Value any side
+
+          // popup.style.display = 'block';
+          // any where show test
+          const studentBathSearchInfoItem = document.querySelectorAll('.section-searchInfo-body');
+          console.log('studentBathSearchInfoItem', studentBathSearchInfoItem)
+          studentBathSearchInfoItem.forEach(function(option) {
+            option.addEventListener('click', function() {
+              const dropdown = this.closest('.sectionName-searchInfo');
+              studentBathSearchInfoItem.forEach(function(opt) {
+                opt.classList.remove('active');
+                opt.style.backgroundColor = '';
+              });
+              dropdown.previousElementSibling.value = this.querySelector('.searchInfo-value').textContent.trim();
+              dropdown.style.display = 'none';
+            });
+
+            option.addEventListener('mouseenter', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '#01B3BD';
+              }
+            });
+            option.addEventListener('mouseleave', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '';
+              }
+            });
+          });
+
+        }
+      } else {
+        console.log("error working")
+      }
+
+    }, 500);
+  }
+  async function removedstudentCourseCodeSearchItem(value) {
+    // value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+</script>
+<!-- InitialSearch Search  -->
+<script>
+  let tcInitialTimeout;
+  async function tcInitialSearch(event) {
+    //  console.log(this)
+    console.log("event", event)
+    console.log("event", event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(tcInitialTimeout);
+
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    tcInitialTimeout = setTimeout(async () => {
+      let response = await fetch("/Student/tcInitial/search", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let result = await response.json();
+      console.log("Routine/seatch", result); // Log the response from the server
+      console.log(typeof result); // Log the response from the server
+      if (!result.error) {
+        if (result.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseInfo = ''
+          for (const tcInitial of result.searchResult) {
+            courseInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="TcIn-searchInfo-body">
+                <div class=" searchInfo-value">${tcInitial.employeeInitial}</div>
+              </div>
+          `
+          }
+          courseInfo += ` <a onclick="removedstudentBathSearchItem(this)" class="routinr-input-close">+</a> `
+          // users_placeholder.innerHTML = generatedHtml;
+          event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseInfo;
+          // search Value any side
+
+          // popup.style.display = 'block';
+          // any where show test stu_section-search-info
+          const studentBathSearchInfoItem = document.querySelectorAll('.TcIn-searchInfo-body');
+          console.log('studentBathSearchInfoItem', studentBathSearchInfoItem)
+          studentBathSearchInfoItem.forEach(function(option) {
+            option.addEventListener('click', function() {
+              console.log('-------------', this)
+              const dropdown = this.closest('.teacherInitial-searchInfo');
+              // const content = dropdown.querySelector('.stu-p-dropdown-content');
+              studentBathSearchInfoItem.forEach(function(opt) {
+                opt.classList.remove('active');
+                opt.style.backgroundColor = '';
+              });
+              dropdown.previousElementSibling.value = this.querySelector('.searchInfo-value').textContent.trim();
+              dropdown.style.display = 'none';
+            });
+
+            option.addEventListener('mouseenter', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '#01B3BD';
+              }
+            });
+            option.addEventListener('mouseleave', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '';
+              }
+            });
+          });
+
+        }
+      } else {
+        console.log("error working")
+      }
+
+    }, 500);
+  }
+  async function removedstudentBathSearchItem(value) {
+    value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+</script>
+<!-- create course section fild -->
+<script>
+  // close all section Input 
+  function closeAll_CourseSectionInputFild() {
+    //   this.parentElement.remove();
+    // get the parent element to be removed
+    const parentElem = document.querySelector('.examDateDiv');
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+      parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    // parentElem.remove();
+    document.querySelector(".sectionAdd").style.display = "block";
+    document.querySelector(".closeDiv").style.display = "none";
+    document.querySelector(".sectionNumber").style.display = "block";
+    document.querySelector(".courseNumber").style.display = "block";
+    const howmanySection = document.querySelector(".howmanySection")
+    howmanySection.value = '';
+    const newrowcloumn = document.querySelector(".howmanyCourse")
+    newrowcloumn.value = '';
+    // newrowcloumn.style.display = "block";
+    // howmanySection.style.display = "block";
+
+  }
+  //create course section fild
+  function createCourseSectionInputFild(index) {
+    const newExamDateAppend = document.querySelector(".examDateDiv")
+    let newSectionHeader = `
+    <div class="tableHeader">
+        <span class="sectionNameHeader">Section</span>
+        <span class="rg_studentHeader">Rg. Student</span>
+        <span class="teacherInitailHeader">Teacher Initial</span>
+    </div>
+    `
+    const howmanySection = document.querySelector(".howmanySection").value
+    console.log('-----', howmanySection)
+    // course Input create
+    let sectionIndex = 0;
+    const newrowcloumn = document.querySelector(".howmanyCourse").value
+    for (let index = 0; index < newrowcloumn; index++) {
+      // ---setion create
+      let newAllSection = ''
+      for (let index = 0; index < howmanySection; index++) {
+        let newSection = `
+            <div class="one_SectionInputDiv">
+                <div class="SectionInfo">
+                    <input type="text" class="sectionName[${sectionIndex}] sectionNameInput[${index}] inputTable" oninput='sectionNameSearch(this)' name='sectionName[]' autocomplete="off">
+                    <div class="sectionName-searchInfo"></div>
+                    <p class="error sectionName[${sectionIndex}]-error"></p>
+                </div>
+                <div class="SectionInfo">
+                    <input type="number" class="rg_student[${sectionIndex}] rg_studentInput[${index}] inputTable"  name="rg_student[]" autocomplete="off">
+                    <p class="error rg_student[${sectionIndex}]-error"></p>
+                </div>
+                <div class="SectionInfo">
+                    <input type="text" class="teacherInitial[${sectionIndex}] teacherInitialInput[${index}] inputTable" oninput='tcInitialSearch(this)' name="teacherInitial[]" autocomplete="off">
+                    <div class="teacherInitial-searchInfo"></div>
+                    <p class="error teacherInitial[${sectionIndex}]-error"></p>
+                </div>
+            </div>
+            `
+
+        newAllSection += newSection
+        sectionIndex += 1
+        if (sectionIndex == howmanySection) {
+          newAllSection += `
+          <div class="sectionNameRgStudenSame">
+             <div class="sectionNameSame">
+                Every Course Section Name are Same ?
+                  <input type="checkbox" id='Samecheckbox' class ='sameSectionName'  value='same'>           
+             </div>
+             <div class="sectionNameSame">
+                Every Course Section Name are Same ?
+                  <input type="checkbox" id='Samecheckbox' class ='RgStudentSame'  value="Simple Room">           
+             </div>
+             <div class="sectionNameSame">
+                <a href="javascript:void(0)" onclick="allSectionRgStudentSame(this)" class=" newrowcloumn newadd">Add</a>
+            </div>
+          </div>          
+             `
+        }
+      }
+      newAllSection += `<div class="underLineSubject"></div>`
+      // ---setion create
+      let newCourseNameCode = `
+                <div class="courseSectionInputDiv">
+                    <div class="courseInputMainDiv">
+                        <div class="courseInputDiv">
+                            <div class="course">                            
+                                <input type="text" placeholder="Enter Course Code" class="courseCode[${index}] inputCourseCode" oninput ='CourseCodeSearch(this)' name="courseCode[]" autocomplete="off">
+                                <div class="courseCode-searchInfo"></div>
+                                <p class="error courseCode[${index}]-error"></p>
+                            </div>
+                            <div class="course">
+                                <input type="text" placeholder="Enter Course Name" class="CourseName[${index}] inputCourseName" id="CourseName[0]" name="CourseName[]" autocomplete="off">
+                                <p class="error CourseName[${index}]-error"></p>
+                            </div>
+                        </div>
+                        <div class="courseInputDiv">
+                        </div>
+                    </div>
+                    ${newSectionHeader}
+                    ${newAllSection}
+                </div>
+    `
+      newExamDateAppend.innerHTML += newCourseNameCode
+
+    }
+    // newExamDateAppend.innerHTML += newSectionHeader
+    // End course Input create
+
+    document.querySelector(".sectionAdd").style.display = "none";
+    document.querySelector(".closeDiv").style.display = "block";
+    document.querySelector(".sectionNumber").style.display = "none";
+    document.querySelector(".courseNumber").style.display = "none";
+
+  }
+
+  const popupModel = document.querySelector("#popup-model");
+  const model_blar = document.querySelector(".model-blar");
+  const form = document.querySelector("#add-subjectInfo-form");
+
+  function closeSubjectAddModal() {
+    popupModel.style.display = "none";
+    model_blar.style.display = "none";
+  }
+
+  function openAddSubjectModal() {
+    popupModel.style.display = "block";
+    model_blar.style.display = "block";
+
+  }
+
+  // Function to show a toast message
+  function showToast(message, isError = false) {
+    Toastify({
+      text: message,
+      duration: 500,
+      backgroundColor: isError ? "#f44336" : "",
+    }).showToast();
+  }
+
+  form.onsubmit = async function(event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    const errorPlaceholders = document.querySelectorAll("p.error");
+    console.log("errorPlaceholders");
+    console.log(errorPlaceholders);
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+      errorPlaceholders[i].style.display = "none";
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
+    // // ------------------------------------------>>
+
+    const formData = new FormData(form);
+    console.log("formData");
+    // send the request to server
+    let response = await fetch("/Administrator/subjects", {
+      method: "post",
+      body: formData,
+    });
+    let responseData = await response.json();
+    console.log("responseData", responseData);
+    // handle error and response
+    if (responseData.errors) {
+      // errors
+      console.log("working go");
+      // console.log(fieldName)
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+
+      Object.keys(responseData.errors).forEach((fieldName) => {
+        // add error class to all inputs
+        // add error class to all inputs
+        console.log("fieldName", fieldName);
+        const escapedFieldName = fieldName.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
+        console.log("escapedFieldName", escapedFieldName);
+        //  console.log("escapedFieldName",form[courseName]);
+        //  console.log("escapedFieldName",form[inputCourseName]);
+        const errorPlace = document.querySelector(`.${escapedFieldName}`);
+        errorPlace.classList.add("error");
+        // if (!(fieldName == "rowCol")) {stu_courseName[0]
+        // form[escapedFieldName].classList.add("error");
+        // }
+
+        // set all error placeholders (p tag) textContent
+        const errorPlaceholder = document.querySelector(`.${escapedFieldName}-error`);
+        console.log("errorPlaceholderDown");
+        console.log(errorPlaceholder);
+        console.log();
+        console.log("---------------------", fieldName)
+        errorPlaceholder.innerHTML = responseData.errors[fieldName];
+
+        // make all placeholders visible
+        errorPlaceholder.style.display = "block";
+        // ------------------------
+
+        // console.log(fieldName)
+        // console.log("form", form)
+        // let fied = fieldName.split('[')[0];
+        // const notInclude = ['error_sectionName', 'error_rg_student', 'error_teacherInitial']
+        // if (!notInclude.includes(fied)) {
+        //   form[fieldName].classList.add("error");
+        // }
+        // const formErrorMsgFiels = ["level", 'batch', "term", "howmanySection", "howmanyCourse", "CourseName", "courseCode", "error_sectionName", "error_rg_student", "error_teacherInitial"];
+
+        // if (formErrorMsgFiels.includes(fied)) {
+        //   console.log(fied)
+        //   console.log("fieldName-", fieldName)
+        //   // }
+        //   // if (!(fieldName.includes("["))) {
+        //   console.log("fieldName contains [0]", fieldName);
+
+        //   //         const field = form.querySelector(".CourseName[0]-error");
+        //   //         field.classList.add("error");
+        //   // console.log("============================",field)
+        //   // set all error placeholders (p tag) textContent
+        //   const escapedFieldName = fieldName.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
+        //   const errorPlaceholder = document.querySelector(
+        //     `.${escapedFieldName}-error`
+        //   );
+        //   console.log("errorPlaceholderDown");
+        //   // console.log(errorPlaceholder);
+        //   console.log("fieldName");
+        //   console.log(fieldName);
+        //   errorPlaceholder.innerHTML = responseData.errors[fieldName];
+        //   // make all placeholders visible
+        //   errorPlaceholder.style.display = "block";
+        // }
+
+      });
+    } else {
+      await showToast(responseData.msg, responseData.error); // Show the toast message for 9000 milliseconds (9 seconds)
+      console.log("close");
+      // successToast.showToast();
+      closeSubjectAddModal();
+      document.querySelector("p.error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
+  };
+</script>
+<!-- same section and rag student number  -->
+<script>
+  async function allSectionRgStudentSame(value) {
+    const mainDiv = value.closest('.sectionNameRgStudenSame')
+    console.log('mainDiv', mainDiv)
+    const sameSectionName = mainDiv.querySelector('.sameSectionName')
+    mainDiv.querySelector('.RgStudentSame')
+    console.log(mainDiv.querySelector('.sameSectionName').checked, mainDiv.querySelector('.RgStudentSame').checked)
+    if (mainDiv.querySelector('.sameSectionName').checked) {
+      console.log(true)
+      const courseSectionInputDiv = value.closest('.courseSectionInputDiv').querySelectorAll('.one_SectionInputDiv')
+      console.log(courseSectionInputDiv)
+      for (let index = 0; index < courseSectionInputDiv.length; index++) {
+        let escapedFieldName = `sectionNameInput\\[${index}\\]`;
+        let errorPlaceholder = courseSectionInputDiv[index].querySelector(`.${escapedFieldName}`);
+        console.log('[[][---[][-[][][][][]]]]', errorPlaceholder.value)
+        const allcourseSectionInputDiv = document.querySelectorAll('.courseSectionInputDiv')
+        console.log('allcourseSectionInputDiv', allcourseSectionInputDiv)
+        console.log('allcourseSectionInputDiv', allcourseSectionInputDiv.length)
+
+        for (let index = 0; index < allcourseSectionInputDiv.length; index++) {
+          let setValue = allcourseSectionInputDiv[index].querySelector(`.${escapedFieldName}`);
+          console.log('setValue', setValue)
+          setValue.value = errorPlaceholder.value
+        }
+      }
+    }
+    // rag student 
+    if (mainDiv.querySelector('.RgStudentSame').checked) {
+      console.log(true)
+      const courseSectionInputDiv = value.closest('.courseSectionInputDiv').querySelectorAll('.one_SectionInputDiv')
+      console.log(courseSectionInputDiv)
+      for (let index = 0; index < courseSectionInputDiv.length; index++) {
+        let escapedFieldName = `rg_studentInput\\[${index}\\]`;
+        let errorPlaceholder = courseSectionInputDiv[index].querySelector(`.${escapedFieldName}`);
+        console.log('[[][---[][-[][][][][]]]]', errorPlaceholder.value)
+        const allcourseSectionInputDiv = document.querySelectorAll('.courseSectionInputDiv')
+        console.log('allcourseSectionInputDiv', allcourseSectionInputDiv)
+        console.log('allcourseSectionInputDiv', allcourseSectionInputDiv.length)
+
+        for (let index = 0; index < allcourseSectionInputDiv.length; index++) {
+          let setValue = allcourseSectionInputDiv[index].querySelector(`.${escapedFieldName}`);
+          console.log('setValue', setValue)
+          setValue.value = errorPlaceholder.value
+        }
+      }
+    }
+  }
+</script>

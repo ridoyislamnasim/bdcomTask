@@ -1,0 +1,456 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+
+
+  <div class="manageAddRoom-container">
+    <div id="title">
+      <h2>Manage Exam Routine</h2>
+    </div>
+
+    <div class="new-room-container new-room">
+      <a href="#" onclick="CreateExamRoutine()">+</a>
+    </div>
+    <div id="rooms-table">
+      <table id="routine-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Slot A</th>
+            <th>Slot B</th>
+            <th>Slot C</th>
+            <th>Slot D</th>
+          </tr>
+        </thead>
+
+        <tbody id="">
+         
+          
+          <span id="even_subject_max"><%= solt_max_oddEven_subject %></span>
+          <span id="slot_max"><%= slot_max %></span>
+          <!-- create coloum -->
+          <!-- "DATE" -->
+          <% for(var i=0; i < Routine.length ; i++){%> <!-- Date-->
+            
+              <span> 
+                <% let pmaxmax =0 %>
+                <% for (var a=0; a < Routine[i].slotInfo.length  ; a++) { %>  <!-- Slot -->
+                  <% let pp = Routine[i].slotInfo[a].oddqurstionInfo.subjectInformation.length  ;
+                  let p2 = Routine[i].slotInfo[a].evenqurstionInfo.subjectInformation.length;
+                  let pmax =0;
+                  if (pp>p2) {
+                    pmax = pp
+                    if ((pp+p2) > pmaxmax) {
+                      pmaxmax = (pp+p2)
+                    }
+                  }else{
+                    pmax =p2
+                    if ((pp+p2) > pmaxmax) {
+                      pmaxmax = (pp+p2)
+                    }
+                  }
+                  %>
+                  
+                  <%  } %>  
+              </span> 
+            
+                <!-- //if part arry more than one than rowspan work ,bacouse arry start 0 ,on the otherhand rowspan didnot work 0; -->
+
+                <!-- array loop visite -->
+
+                <!-- "Slot" -->
+                
+                
+                <% let k = 0; %>
+                <% let kB = 0; %>
+                <% let kC = 0; %>
+                <% let kD = 0; %>
+                
+                <% let lA = 0; %>
+                <% let lB = 0; %>
+                <% let lC = 0; %>
+                <% let lD = 0; %>
+               
+                <% let m = 0; %>
+                <tr>
+                  <% if (pmaxmax ==0) { %>
+                    <% pmaxmax =1   %>
+                   <% } %>
+                     <td rowspan="<%= pmaxmax   %>">
+                       <span> <%= Routine[i].examDate  %> </span>
+                     </td>
+          
+                  <% for (var x=0; x < pmaxmax  ; x++) { %>  <!--  Slot loop control -->
+                    <!-- //<tr> privious tr -->
+
+                    <% let Slotmatch = 0; %>
+                    
+                      
+                  <% for (var j=0; j < solt_max_oddEven_subject  ; j++) { %>  <!-- Slot -->
+                   
+   
+                  
+                    <!-- if array size more than 2 than run this if estedment ,only print array < [1] part -->
+                    
+                     
+                       
+                      <% if (j < Routine[i].slotInfo.length ) { %>
+                        
+                        <% if (Routine[i].slotInfo[j].slotName == "A") { %> 
+                          <% Slotmatch +=1 %>
+                          <% for( let a_slotMatch = 0; a_slotMatch < (0-Slotmatch); a_slotMatch++ ) { %>
+                            <td>
+                             <span> * </span>
+                             <span><%= a_slotMatch %></span>
+                            </td>
+                           <% } %>
+                          <td rowspan="" class="course_code_name">
+                          <span> Slotmatch A:<%= Slotmatch %></span>
+                          <span> <%= Routine[i].slotInfo[j].slotName  %> </span> 
+                          <span> <%= i  %> </span> 
+                          <span> <%= j  %> </span> 
+                          
+                            <% let vh = 0; %>
+                          <% for (var s= k; s < Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length ; s++) { %>
+                            <% if ( vh== 0) { %>
+                              <span>
+                                <span> <%= s  %> </span>
+                                <%= Routine[i].slotInfo[j].slotName %> 
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseCode %> :
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseName %>
+                              </span>
+                              <span>
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].level %> /
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].term %> (
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].roomsUse %>
+                              </span>
+                                <% k+=1; %>
+                                <% vh=1; %>
+                             <% } %>  
+                           <% } %>  
+                            <% for (var s= lA; s < Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length ; s++) { %>
+                              <% if ( vh== 0) { %>
+                                <span>
+                                  <span> <%= s  %> </span>
+                                  <%= Routine[i].slotInfo[j].slotName %> 
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseCode %> :
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseName %>
+                                </span>
+                                <span>
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].level %> /
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].term %> (
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].roomsUse %>
+                                </span>
+                              
+                              <% vh=1; %>
+                              <% lA+=1; %>
+                              <% } %> 
+                            <% }  %> 
+                          </td> 
+                          <% } else{ %>
+                               
+
+                          <% } %>                 
+                          <% }  %> 
+                      
+  
+                      <% if (j <Routine[i].slotInfo.length ) { %>      
+                        <%  if (Routine[i].slotInfo[j].slotName == "B") { %>
+                          <% Slotmatch +=1 %>
+                          <% for( let b_slotMatch = 0; b_slotMatch < (2-Slotmatch); b_slotMatch++ ) { %>
+                           <td>
+                            <span> *</span>
+                            <span><%= b_slotMatch %></span>
+                           </td>
+                          <% } %>
+                          <% Slotmatch =2 %> 
+                          <td rowspan="" class="course_code_name">
+                            <% Slotmatch +=1 %>
+                            <span> Slotmatch: B<%= Slotmatch %></span>
+                            <span> <%= Routine[i].slotInfo[j].slotName  %> </span> 
+                          <span> <%= i  %> </span> 
+                          <span> <%= j  %> </span>
+                            <% let vh = 0; %>
+                            <%= vh  %> 
+  
+                          <% for (var s= kB; s < Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length ; s++) { %>
+                            <% if ( vh== 0) { %>
+                              <span>
+                                <p>ridoy</p>
+                                <%= Routine[i].slotInfo[j].slotName %> 
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseCode %> :
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseName %>
+                              </span>
+                              <span>
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].level %> /
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].term %> (
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].roomsUse %>
+                              </span>
+                                <% kB+=1; %>
+                                <% vh=1; %>
+                             <% } %>  
+                           <% } %>  
+                            <% for (var s= lB; s < Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length ; s++) { %>
+                             <% if ( vh== 0) { %>
+  
+                                <span>
+                                  <p>ridoy</p>
+                                  <%= Routine[i].slotInfo[j].slotName %> 
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseCode %> :
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseName %>
+                                </span>
+                                <span>
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].level %> /
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].term %> (
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].roomsUse %>
+                                </span>
+                              <% lB+=1; %>
+                              <% vh=1; %>
+                              <% } %> 
+                            <% }  %> 
+                          </td>
+                          <% } else { %>
+                                                  
+                         <% } %>                 
+                         <% }  %> 
+                         <% let Slot =1 %>          
+                      <% if (j <Routine[i].slotInfo.length ) { %>                       
+                        <%  if (Routine[i].slotInfo[j].slotName == "C") { %>
+                          <% Slotmatch +=1 %>
+                          <%  Slot =0 %>
+                          <% for( let c_slotMatch = 0; c_slotMatch < (3-Slotmatch); c_slotMatch++ ) { %>
+                           <td>
+                            <span> *</span>
+                            <span><%= c_slotMatch %></span>
+                           </td>
+                          <% } %>
+                          <% Slotmatch =3 %>         
+                          <td rowspan="" class="course_code_name">
+                            
+                            <span> Slotmatch C:<%= Slotmatch %></span>
+                            <span> <%= Routine[i].slotInfo[j].slotName  %> </span> 
+                          <span> <%= i  %> </span> 
+                          <span> <%= j  %> </span>
+                            <% let vh = 0; %>
+                            <%= vh  %> 
+  
+                          <% for (var s= kC; s < Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length ; s++) { %>
+                            <% if ( vh== 0) { %>
+                              <span>
+                                <p>ridoy</p>
+                                <%= Routine[i].slotInfo[j].slotName %> 
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseCode %> :
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseName %>
+                              </span>
+                              <span>
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].level %> /
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].term %> (
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].roomsUse %>
+                              </span>
+                                <% kC+=1; %>
+                                <% vh=1; %>
+                             <% } %>  
+                           <% } %>  
+                            
+                          <% for (var s= lC; s < Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length ; s++) { %>
+                                <% if ( vh== 0) { %>
+                                <span>
+                                  <p>ridoy</p>
+                                  <%= Routine[i].slotInfo[j].slotName %> 
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseCode %> :
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseName %>
+                                </span>
+                                <span>
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].level %> /
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].term %> (
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].roomsUse %>
+                                </span>
+                              <% lC+=1; %>
+                              <% vh=1; %>
+                              <% } %> 
+                            <% }  %> 
+                          </td> 
+                          <% } else  { %>
+                                
+                         <% } %>                 
+                         <% }else{  %> 
+                          
+                         <% } %>                 
+  
+                         <% let SlotD =1 %>          
+                      <% if (j <Routine[i].slotInfo.length ) { %>  
+                        <% if (Routine[i].slotInfo[j].slotName == "D") { %>
+                          <% Slotmatch +=1 %>
+                          <%  SlotD =0 %>                                  
+                          <% for( let d_slotMatch = 0; d_slotMatch < (4-Slotmatch); d_slotMatch++ ) { %>
+                           <td>
+                            <span> *</span>
+                            <span><%= d_slotMatch %></span>
+                           </td>
+                          <% } %>
+                          <% Slotmatch =4 %>
+                          <td rowspan="" class="course_code_name">
+                           
+                            <span> Slotmatch D:<%= Slotmatch %></span>
+                            <%= Routine[i].slotInfo[j].slotName  %> 
+                            <% let vh = 0; %>
+                            <%= vh  %> 
+  
+                          <% for (var s= kD; s < Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation.length ; s++) { %>
+                            <% if ( vh== 0) { %>
+                              <span>
+                                <p>ridoy</p>
+                                <%= Routine[i].slotInfo[j].slotName %> 
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseCode %> :
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].courseName %>
+                              </span>
+                              <span>
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].level %> /
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].term %> (
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                <%= Routine[i].slotInfo[j].oddqurstionInfo.subjectInformation[s].roomsUse %>
+                              </span>
+                                <% kD+=1; %>
+                                <% vh=1; %>
+                             <% } %>  
+                           <% } %>  
+                            
+                            <% for (var s= lD; s < Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation.length ; s++) { %>
+                                <% if ( vh== 0) { %>
+                                <span>
+                                  <p>ridoy</p>
+                                  <%= Routine[i].slotInfo[j].slotName %> 
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseCode %> :
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].courseName %>
+                                </span>
+                                <span>
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].level %> /
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].term %> (
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].numberOfQuestion %> )
+                                  <%= Routine[i].slotInfo[j].evenqurstionInfo.subjectInformation[s].roomsUse %>
+                                </span>
+                              <% lD+=1; %>
+                              <% vh=1; %>
+                              <% } %> 
+                            <% }  %> 
+                          </td>  
+                          <% } else{ %>
+                            <% if (Slot==0 && SlotD == 0) { %>
+                             <td><span> MMMMMMMMMMMMMMMMMMMMMMMMMMM</span></td>
+                            <% } %>
+                            
+                          <% } %>                                  
+                        <% } else{ %>
+                          
+                        <% } %> 
+                    
+                          <!-- odd end -->
+                          <!-- even start -->
+                          
+                   
+                  <!-- if array size only 0 than run this if estedment , -->
+  
+  
+  
+  
+                  <% } %>   <!-- Slot -->
+                        <!-- array loop visite end -->
+                    </tr>
+                  <% } %>   <!-- Slot loop control -->
+                 
+     
+ 
+                   
+          <%} %> <!-- Date-->
+
+              <!-- create coloum end -->
+
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+
+<script>
+      let routine_table = document.getElementById("routine-table");
+      console.log("table", routine_table)
+
+      let slot_max = document.getElementById("slot_max"); 
+      // console.log("tablcoloumsmaxe,", typeof (coloumsmax.innerHTML))
+      
+      
+      let slotmax = Number(slot_max.innerHTML);
+      console.log("table -", oddsubject_max,evensubject_max)
+      slotName_Array =['A','B','C','D']
+      let j =1
+      for (let i = 0; i < slotmax; i++) {
+        console.log(i);
+        let headerRow = routine_table.rows[0];
+        console.log("headerRow", headerRow)
+        //new table header td created kortesa
+        let newHeaderCell = headerRow.insertCell(i+j );
+        newHeaderCell.innerHTML = `Slot ${slotName_Array[i]}`;
+      }
+      console.log("j",j+oddsubject_max)
+      let l = j+oddsubject_max
+      // for (let k = 0; k < evensubject_max; k++) {
+      //   console.log(k);
+      //   let headerRow = routine_table.rows[0];
+      //   console.log("headerRow", headerRow)
+      //   let newHeaderCell = headerRow.insertCell(k+l );
+      //   l +=1
+      //   let newHeaderCell2nd = headerRow.insertCell(k+l );
+      //   newHeaderCell.innerHTML = `even subject`;
+      //   newHeaderCell2nd.innerHTML = `Batch info 1`;
+      // }
+
+ async function CreateExamRoutine(){
+    let response = await fetch("/Administrator/Routine/createRoutine", {
+        method: "post",
+      });
+      let result = await response.json();
+      // alert("result");
+      
+      console.log("result",result);
+
+      if (result.message) { 
+          // errors
+          alert( result.message );
+      console.log("working go")
+      
+      // console.log(fieldName)
+    
+    
+          // Object.keys(result.errors).forEach((fieldName) => {
+          //   // add error class to all inputs
+          //   form[fieldName].classList.add("error");
+    
+          //   // set all error placeholders (p tag) textContent
+          //   const errorPlaceholder = document.querySelector(`.${fieldName}-error`);
+    
+          //   errorPlaceholder.innerHTML = result.errors[fieldName].msg;
+    
+          //   // make all placeholders visible
+          //   errorPlaceholder.style.display = "block";
+          // });
+        } else {
+          // success
+          // successToast.showToast();
+          console.log("close");
+          // successToast.showToast();
+          // closeTeacherModal();
+          // document.querySelector("p.error").style.display = "none";
+    
+          // reload the page after 1 second
+          setTimeout(() => {
+            location.reload();
+          }, 100);
+        }
+  } 
+</script>

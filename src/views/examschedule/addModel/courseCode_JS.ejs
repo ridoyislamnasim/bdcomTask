@@ -1,0 +1,63 @@
+<script>
+    // sendCourseCodeRequestServer CourseCode search_CourseCode
+    const inputCourseCode = document.querySelector("input#courseCode");
+    let CourseCode_placeholder = document.querySelector(".search_CourseCode");
+  
+    async function sendCourseCodeRequestServer() {
+      console.log("Ridoy islam");
+      // send the request to server
+      let response = await fetch(
+        "/Administrator/ExamSchedule/examschedule/courseCode",
+        {
+          method: "post",
+          body: JSON.stringify({
+            // send input value
+            sclectDepartmentName: inputDepartmentName.value,
+            sclectBatchName: inputBatchName.value,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      console.log("resultCourseCode");
+      let resultCourseCode = await response.json();
+      console.log("resultCourseCode", resultCourseCode);
+  
+      // const examSlotValue = document.querySelector(".examSlotValue");
+      // const result = examSlotValue.value
+      // console.log("Ridoy islam", examSlotValue.value);
+      // console.log("Ridoy islam", result.refTimeSlot.length);
+  
+      if (resultCourseCode.length > 0) {
+        let generatedHtml = "<ul>";
+            resultCourseCode.forEach((CourseCode, index) => {
+          // const avatar = departmentName.avatar
+          //   ? "./uploads/avatars/" + departmentName.avatar
+          //   : "./images/nophoto.png";
+  
+          generatedHtml += `<li onclick="createCourseCodeInput('${CourseCode._id}')">
+                  <div class="departmentName">
+                    <div class="username">${CourseCode._id}</div>
+                  </div>
+                </li>`;
+        });
+        generatedHtml += "</ul>";
+        // created html push popupOption
+        CourseCode_placeholder.innerHTML = generatedHtml;
+        // popUpOption show
+        CourseCode_placeholder.style.display = "block";
+        CourseCode_placeholder.style.top = "312px";
+      }
+    }
+  
+    async function createCourseCodeInput(CourseCode) {
+      // input value set 
+      inputCourseCode.value = `${CourseCode}`;
+      // popoup option hide 
+      CourseCode_placeholder.style.display = "none";
+      // show the tost
+      successToast.showToast();
+    }
+  
+  </script> 

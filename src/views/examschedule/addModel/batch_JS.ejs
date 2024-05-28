@@ -1,0 +1,62 @@
+<script>
+    // sendBatchRequestServer batchName 
+    const inputBatchName = document.querySelector("input#batchName");
+    let batchs_placeholder = document.querySelector(".search_batchs");
+  
+    async function sendBatchRequestServer() {
+      console.log("Ridoy islam");
+      // send the request to server
+      let response = await fetch(
+        "/Administrator/ExamSchedule/examschedule/batch",
+        {
+          method: "post",
+          body: JSON.stringify({
+            // send input value
+            sclectDepartmentName: inputDepartmentName.value,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      console.log("resultBatch");
+      let resultBatch = await response.json();
+      console.log("resultBatch", resultBatch);
+  
+      // const examSlotValue = document.querySelector(".examSlotValue");
+      // const result = examSlotValue.value
+      // console.log("Ridoy islam", examSlotValue.value);
+      // console.log("Ridoy islam", result.refTimeSlot.length);
+  
+      if (resultBatch.length > 0) {
+        let generatedHtml = "<ul>";
+            resultBatch.forEach((batchName, index) => {
+          // const avatar = departmentName.avatar
+          //   ? "./uploads/avatars/" + departmentName.avatar
+          //   : "./images/nophoto.png";
+  
+          generatedHtml += `<li onclick="createBatchInput('${batchName._id}')">
+                  <div class="departmentName">
+                    <div class="username">${batchName._id}</div>
+                  </div>
+                </li>`;
+        });
+        generatedHtml += "</ul>";
+        // created html push popupOption
+        batchs_placeholder.innerHTML = generatedHtml;
+        // popUpOption show
+        batchs_placeholder.style.display = "block";
+        batchs_placeholder.style.top = "262px";
+      }
+    }
+  
+    async function createBatchInput(batchName) {
+      // input value set 
+      inputBatchName.value = `${batchName}`;
+      // popoup option hide 
+      batchs_placeholder.style.display = "none";
+      // show the tost
+      successToast.showToast();
+    }
+  
+  </script> 

@@ -1,0 +1,249 @@
+<%- include(`../../administratorPartial/commonPartial/header.ejs`); %>
+<%- include(`../common/invigilatorMenu.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+    <!--  -->
+    <div class="s002">
+        <form id="exam-room-search-form">
+          <fieldset>
+            <legend>SEARCH ROOM</legend>
+          </fieldset>
+          <div class="inner-form">
+            <div class="input-field first-wrap">
+                <input type="date" name="date">
+            </div>
+            <div class="input-field second-wrap">
+              <div class="dropdown">
+                <input
+                    class="employeeDepartment dropdown-toggle dropdown-toggle-emp-profile "
+                    type="text" placeholder="Select Department"
+                    type="text" name="Slot" readonly>
+                <i class="bx bx-chevron-down"></i>
+                <div class="dropdown-content dropdown-content-size">
+                    <div class="dropdown-option">Slot A </div>
+                    <div class="dropdown-option">Slot B </div>
+                    <div class="dropdown-option">Slot C </div>
+                    <div class="dropdown-option">Slot D </div>
+                </div>
+            </div>
+            </div>
+            <div class="input-field third-wrap">
+              <input type="text" oninput='roomSearch(this)' name="room" placeholder="Enter Room Number !">
+              <div class="room-searchInfo"></div>
+            </div>
+            <div class="input-field fouth-wrap">
+              <button class="btn-search" type="submit">SEARCH</button>
+            </div>
+          </div>
+        </form>
+      </div>
+  </div>
+  <!-- show room info  -->
+  <div id="showData"></div>
+</section>
+<script>
+    flatpickr(".datepicker",
+    {});
+
+  </script>
+  <script>
+    const choices = new Choices('[data-trigger]',
+    {
+      searchEnabled: false,
+      itemSelectText: '',
+    });
+
+  </script>
+<!-- room Number search -->
+<script>
+  let debounceTimeout;
+  async function roomSearch(event) {
+    //  console.log(this)
+    console.log("event", event)
+    console.log("event", event.value)
+    // Clear the previous timeout to reset the delay
+    clearTimeout(debounceTimeout);
+
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+    debounceTimeout = setTimeout(async () => {
+      let response = await fetch("/Invigilator/roomNumber", {
+        method: "POST",
+        body: JSON.stringify({
+          // Use "value" as the key instead of "value"
+          value: event.value,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let responseData = await response.json();
+      console.log("Routine/seatch", responseData); // Log the response from the server
+      console.log(typeof responseData); // Log the response from the server
+      if (!responseData.error) {
+        if (responseData.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+          let courseInfo = ''
+          for (const room of responseData.searchResult) {
+            courseInfo += `       
+               <!--onclick="saveSubjectInfo(this)  -->
+              <div class="room-searchInfo-body">
+                <div class="courseCode room-searchInfo-value">${room.roomnumber}</div>
+              </div>
+          `
+          }
+          courseInfo += ` <a onclick="removedBathSearchItem(this)" class="routinr-input-close">+</a> `
+          // users_placeholder.innerHTML = generatedHtml;
+          event.nextElementSibling.style.display = "block";
+          event.nextElementSibling.innerHTML = courseInfo;
+          // search Value any side
+
+          // popup.style.display = 'block';
+          // any where show test
+          const BathSearchInfoItem = document.querySelectorAll('.room-searchInfo-body');
+          console.log('BathSearchInfoItem', BathSearchInfoItem)
+          BathSearchInfoItem.forEach(function(option) {
+            option.addEventListener('click', function() {
+              console.log('-------------', this)
+              const dropdown = this.closest('.room-searchInfo');
+              const toggleInput = dropdown.previousElementSibling;
+              // const content = dropdown.querySelector('.stu-p-dropdown-content');
+              BathSearchInfoItem.forEach(function(opt) {
+                opt.classList.remove('active');
+                opt.style.backgroundColor = '';
+              });
+              toggleInput.value = this.querySelector('.room-searchInfo-value').textContent.trim();
+              dropdown.style.display = 'none';
+            });
+
+            option.addEventListener('mouseenter', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '#01B3BD';
+              }
+            });
+            option.addEventListener('mouseleave', function() {
+              if (!this.classList.contains('active')) {
+                this.style.backgroundColor = '';
+              }
+            });
+          });
+
+        }
+      } else {
+        console.log("error working")
+      }
+
+    }, 500);
+  }
+  async function removedBathSearchItem(value) {
+    // value.parentElement.previousElementSibling.value = ''
+    value.previousElementSibling.remove()
+    value.parentElement.style.display = "none"
+  }
+</script>
+
+
+<!-- room Number search -->
+<script>
+  function showToast(message, isError = false) {
+  Toastify({
+    text: message,
+    duration: 500,
+    backgroundColor: isError ? "#f44336" : "",
+  }).showToast();
+}
+    const form = document.querySelector("#exam-room-search-form");
+  form.onsubmit = async function (event) {
+    event.preventDefault();
+    //  console.log(this)
+    console.log("event", event)
+    console.log("event", event.value)
+    // Clear the previous timeout to reset the delay
+    const formData = new FormData(form);
+    console.log("================",formData)
+    // Set a new timeout to execute after the delay (e.g., 500ms)
+      let response = await fetch("/Invigilator/roomInformation", {
+        method: "POST",
+        body: formData,
+      });
+      let responseData = await response.json();
+      console.log("Routine/seatch", responseData); // Log the response from the server
+      console.log(typeof responseData); // Log the response from the server
+      if (!responseData.error) {
+        if (responseData.searchResult.length > 0) {
+          console.log(' event.target.nextSibling', event.nextElementSibling)
+
+          let header =`
+          <div class="seatPlan-header">
+                <div class="seatPlan-roomInfo seatPlan-date">
+                  Date : ${responseData.searchResult[0].Date} 
+                </div>
+                <div class="seatPlan-roomInfo seatPlan-slot">
+                  slot :${responseData.searchResult[0].slot} 
+                </div>
+                <div class="seatPlan-roomInfo seatPlan-roomNumber">
+                  Room Number :${responseData.searchResult[0].roomNumber} 
+                </div>
+              </div>
+              `
+console.log("=====================",header)
+
+          let columnNameRow = ''
+          for (const columnInfo of responseData.searchResult[0].columnInfo) {
+            columnNameRow += `       
+            <div class="cloumn_info-item">${columnInfo.columnName}</div>
+          `
+          }
+console.log("=====================columnNameRow",columnNameRow)
+
+          fullColumnNameRow = ` 
+               <div class="cloumn_info-show">
+                    ${columnNameRow}                
+               </div>
+           `
+console.log("=====================fullColumnNameRow",fullColumnNameRow)
+       let courseInfo = ''
+           for (const columnInfo of responseData.searchResult[0].columnInfo) {
+                let oneCourse =''
+                for (const subjectInfo of columnInfo.subjectInfo) {
+                  oneCourse += `${subjectInfo.subjectCode} : ${subjectInfo.subjectName} <br>
+                   ${ subjectInfo.batch} ${subjectInfo.teacherInnitial} (${subjectInfo.sectionName}) <br>`
+               }
+                courseInfo += `
+               <div class="course-info-item">
+                    ${oneCourse}
+               </div>
+              `
+           }
+console.log("=====================courseInfo",courseInfo)
+
+
+           AllcourseInfo =`
+           <div class="seatplan-coloum-row-info">  
+                   ${fullColumnNameRow}                          
+                   <div class="course-info">  
+                           ${courseInfo}
+                  </div>
+                </div>
+                `
+         let seatplan = `
+            ${header}   
+            ${AllcourseInfo}   
+          `
+          const showData = document.querySelector("#showData");
+          showData.innerHTML =seatplan
+
+        }
+      } else {
+        console.log("error working")
+        await showToast(responseData.msg ); 
+      }
+
+   
+  }
+</script>
+
+
+<!--  -->
+<!-- dropdown button -->
+<%- include(`../../common/js/dropDownJS.ejs`); %>
+<%- include(`../../administratorPartial/commonPartial/manuOpenCloseScript.ejs`); %>

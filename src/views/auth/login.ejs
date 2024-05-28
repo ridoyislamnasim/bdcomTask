@@ -1,0 +1,37 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Sumit Saha" />
+    <meta name="owner" content="learnwithsumit.com" />
+    <title>Login</title>
+    <link rel="stylesheet"  href="/stylesheets/login.css">
+  </head>
+  <body> -->
+    <%- include(`../common/landingHeader.ejs`); %>
+    <div id="login-container">
+      <div id="left-column">
+      </div>
+      <div id="branding">
+        <img src="/imges/daffodil-international-university-logo.png" alt="">
+        <h1>User Login</h1>
+      </div>
+      <div id="login-form">
+        <form method="post" action="/login">
+          <input type="text" name="useremail" placeholder="enter email" value="<%= value.useremail ? value.useremail : "" %>"/>
+          <input type="password" name="password" placeholder="enter password" />
+
+          <% if (value.useremail || value.password) { %>
+            <p class="erroe-msg"> <%= errr.useremail || errr.password %></p>
+          <% } %>
+          
+          <a href=""> <span class="forgetpwd">Forget password</span> </a>
+          <input type="submit" value="Login" />
+         <p><span class="dontAC">Don't have account?</span> <a href="/singin"> Sing Up</a> </p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

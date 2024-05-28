@@ -1,0 +1,76 @@
+/*======================
+    404 page
+=======================*/
+
+
+.page_404 {
+    padding: 40px 0;
+    background: #fff;
+    font-family: 'Arvo', serif;
+}
+img{
+    height: 500px;
+}
+/* .page_404  img{ width:100%;} */
+/* 
+.four_zero_four_bg{
+ background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+    height: 400px;
+    background-position: center;
+ } */
+.gift-container {
+    display: contents;
+}
+
+/* .four_zero_four_bg */
+h1 {
+    font-size: 80px;
+    margin-bottom: -6px;
+    padding: 0;
+    text-align: center;
+    z-index: 5;
+    position: absolute;
+    left: 45%;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.contant_box_404 {
+    margin-top: -100px;
+    position: absolute;
+    top: 89%;
+    left: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contant_box_404 h3,
+.contant_box_404 p {
+    /* font-size:80px; */
+    text-align: center;
+    margin: 5px;
+}
+.contant_box_404 a{
+    display: flex;
+}
+
+.link_404 {
+    color: #fff !important;
+    padding: 10px 20px;
+    background: #39ac31;
+    margin: 20px 0;
+    display: inline-block;
+}
+
+
+
+
+/* @media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+      max-width: none;
+    }
+  } */

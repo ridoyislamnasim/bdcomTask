@@ -1,0 +1,268 @@
+<!-- --------------------------add -->
+<div class="model-blar" style="position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;">
+</div>
+<div class="subject-add-modal"  id="popup-model" >
+  <!-- <div class="modal"> -->
+  <a href="#" onclick="closeModal()" class="modal-close">+</a>
+  <div class="modal-title">
+    <h2>Add New Room</h2>
+  </div>
+  <div class="modal-body"> 
+    <form id="add-room-form" >
+      <!-- <p><span> Enter Room Number </span> </p> -->
+      <input type="text" placeholder="enter room number" name="roomnumber" />
+      <p class="error roomnumber-error"></p>
+
+      <div class="howRowcloumsDiv">
+        <div class="addRowCol ">
+          <input class="houmanyCol " type="number" placeholder="How many columns have ?" min="0" max="15" />
+          <p class="error rowsnumber-error"></p>
+          <a href="#" onclick="createRowCol()" class=" newrowcloumn newadd">add</a>
+        </div>
+      </div>
+      <!-- <input type="text" name="rowCol"> -->
+
+      <div class="clearAllRowcloumsDiv" style="display: none; margin-top: 5px;">
+        <div class="clear" >
+          <a href="#" onclick="clearAllRowCol()" class=" clearAllRowCol newadd">Clear</a>
+        </div>
+      </div>
+
+      <!-- klbkjbl -->
+      <div class="rowcloumsDiv newrowscloumns">
+
+      </div>
+      <p class="error rowCol-error"></p>
+      <div class="radio">
+        <span>Student status?</span> 
+        <div>
+        <input type="radio" name="roomstatus" checked="checked" value="Simple Room"><span>Simple Room</span> 
+        <input type="radio" name="roomstatus" value="Big Room"><span>Big Room</span>
+        <input type="radio" name="roomstatus" value="Lab Room"><span>Lab Room</span>
+      </div>  
+      <!-- bgkuik -->
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+
+<!-- </div> -->
+</div>
+</div>
+
+
+<script>
+    console.log("formData");
+  function clearAllRowCol() {
+    // get the parent element to be removed
+    const parentElem = document.querySelector('.rowcloumsDiv');
+
+    // loop through each child element and remove it
+    while (parentElem.firstChild) {
+      parentElem.removeChild(parentElem.firstChild);
+    }
+
+    // remove the parent element itself
+    // parentElem.remove();
+
+    document.querySelector(".howRowcloumsDiv").style.display = "block";
+    const vv = document.querySelector(".howRowcloumsDiv>input");
+    console.log("vv", vv)
+    document.querySelector(".clearAllRowcloumsDiv").style.display = "none";
+    const newrowcloumn = document.querySelector(".houmanyCol")
+    newrowcloumn.value = '';
+  }
+  function removeditem() {
+    this.parentElement.remove();
+    const closebox = document.querySelectorAll(".subrowcloumsDiv")
+    closebox.forEach((item, index, arr) => {
+      console.log("item", item)
+      item.firstElementChild.value = "col " + (index + 1)
+      console.log("index", index)
+      console.log("arr", arr)
+    })
+  }
+
+  function oneRowCol() {
+    const newrowscloumnappend = document.querySelector(".newrowscloumns")
+    console.log("index---")
+
+    const div = document.createElement("div")
+    div.className = "subrowcloumsDiv"
+
+    const cloumnsname = document.createElement("input")
+    cloumnsname.type = "text";
+    cloumnsname.placeholder = "afghgf"
+    cloumnsname.className = "rowcloumns columnname"
+    cloumnsname.name = "columnname[]"
+
+    const rowsname = document.createElement("input")
+    rowsname.type = "number";
+    rowsname.placeholder = "enter rows number"
+    rowsname.className = "rowcloumns rowsname"
+    rowsname.name = "rowsNumber[]"
+
+
+    const closerowscloumn = document.createElement("a")
+    closerowscloumn.className = "openclose close "
+    closerowscloumn.innerHTML = '-';
+
+    closerowscloumn.addEventListener("click", function() {
+    removeditem(this); // Pass 'this' context to the removeditem function
+    });
+
+    newrowscloumnappend.appendChild(div)
+    div.appendChild(cloumnsname)
+    div.appendChild(rowsname)
+    div.appendChild(closerowscloumn)
+
+    const closebox = document.querySelectorAll(".subrowcloumsDiv")
+    for (var gg of closebox) {
+      console.log("gg", gg)
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+    // clear errors red border first---------------------------->>
+    // if (inputErrors.length > 0) {
+    //   for (let j = 0; j < inputErrors.length; j++) {
+    //     inputErrors[j].classList.remove("error");
+    //   }
+    // }
+
+    closebox.forEach((item, index, arr) => {
+      console.log("item", item)
+      item.firstElementChild.value = "col " + (index + 1)
+      console.log("index", index)
+      console.log("arr", arr)
+    })
+
+    document.querySelector(".howRowcloumsDiv").style.display = "none";
+    document.querySelector(".clearAllRowcloumsDiv").style.display = "block";
+
+  }
+
+  function createRowCol() {
+    const newrowcloumn = document.querySelector(".houmanyCol")
+    console.log("newrowcloumn", newrowcloumn.value)
+    let howManyCol = newrowcloumn.value
+    for (let index = 0; index < howManyCol; index++) {
+      console.log(" is ", index)
+      oneRowCol()
+    }
+  }
+
+  // newrowcloumn.addEventListener("click", addnewinputbox)
+  //-------------------------------------
+
+  // console.log("ridoy", rooms);
+  const popupModel = document.querySelector("#popup-model");
+
+  console.log("popupModel",popupModel )
+  const form = document.querySelector("#add-room-form");
+  const model_blar = document.querySelector(".model-blar");
+  function closeModal() {
+    popupModel.style.display = "none";
+    model_blar.style.display = "none";
+
+  }
+  function openAddRoomsModal() {
+    popupModel.style.display = "block";
+    model_blar.style.display = "block";
+  }
+
+// Function to show a toast message
+function showToast(message, isError = false) {
+  Toastify({
+    text: message,
+    duration: 500,
+    backgroundColor: isError ? "#f44336" : "",
+  }).showToast();
+}
+
+
+
+  form.onsubmit = async function (event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    const errorPlaceholders = document.querySelectorAll("p.error");
+    console.log("errorPlaceholders");
+    console.log(errorPlaceholders);
+
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+      errorPlaceholders[i].style.display = "none";
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
+    // // ------------------------------------------>>
+ 
+    const formData = new FormData(form);
+    console.log("formData");
+    console.log("formData",form);
+    console.log(formData);
+    // send the request to server
+    let response = await fetch("/Administrator/rooms", {
+      method: "post",
+      body: formData,
+    });
+    
+    let responseData = await response.json();
+    console.log("responseData",responseData);
+    console.log("responseData.error",responseData.errors);
+
+    // handle error and response
+    if (responseData.errors) {
+      // errors
+      console.log("working go");
+      await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+      // console.log(fieldName)
+
+
+      Object.keys(responseData.errors).forEach((fieldName) => {
+        // add error class to all inputs
+        console.log("fieldName",fieldName);
+        if (!(fieldName == "rowCol")) {
+          form[fieldName].classList.add("error");
+        }
+        // set all error placeholders (p tag) textContent
+        const errorPlaceholder = document.querySelector(
+          `.${fieldName}-error`
+        );
+        console.log("errorPlaceholderDown");
+        console.log(errorPlaceholder);
+        console.log(responseData.errors.columnname);
+        
+       console.log("---------------------",responseData.errors.rowCol)
+        errorPlaceholder.innerHTML =
+          responseData.errors[fieldName];
+
+        // make all placeholders visible
+        errorPlaceholder.style.display = "block";
+      });
+    } else {
+      // success
+      await showToast(responseData.msg ); 
+      console.log("close");
+      // successToast.showToast();
+      closeModal();
+      document.querySelector("p.error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    }
+  };
+  
+</script>
+
+
+

@@ -1,0 +1,245 @@
+<%- include(`../commonPartial/header.ejs`); %>
+<%- include(`../commonPartial/menu.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+
+    <div class="manageAddRoom-container">
+      <div id="title">
+        <h2>Manage Subject wise room</h2>
+      </div>
+      <div id="table">
+        <div class="info-title">
+          <span>Daffodil International University (DSC)</span>
+          <span> Department of Computer Science and Engineering (Day and Evening Program)</span>
+          <span>Short Seat Plan, Spring 2023</span>
+        </div>
+                <!-- < pagination records per page > -->
+                <div class="records_per_page">
+                  Records per page
+                  <select class="form-select" id="records_size" style="max-width: 80px;">
+                    <option  value="1" selected >1</option>
+                    <option  value="2">2</option>
+                    <option  value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+                <!-- < pagination records per page > -->
+                <!-- < pagination records where show, id="showData" > -->
+                <div id="showData" >
+                    <% for(let subjectWiseRooms of subjectWiseRoomsInfo){%>
+                      <% for(let slotInfo of subjectWiseRooms.slotInfo){%>
+                                <!-- < pagination each records , class="pagination-data" ,end-> where each records end > -->
+                  <div class="pagination-data" style="display: block;">
+                      <div class="dateSlot-title">
+                        <div class="exam-type">
+                          Final Examination, Spring-2023
+                        </div>
+                        <div class="dateSlot">
+                          <div class="date">
+                            Date:  <%= subjectWiseRooms.date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' }) %>
+                          </div>
+
+                          <div class="slot">Slot: <%=slotInfo.slotName  %></div>
+                        </div>
+                        <div class="slot-totaloSeat">
+                          Total Seat: 
+                        <% let slotTotalSeat =0
+                        for(let subjectInfo of slotInfo.subjectInfo){
+                          for(let sectionInfo of subjectInfo.sectionInfo){
+                            slotTotalSeat += sectionInfo.numberOfStudent
+                          }
+                        }
+                        %>
+                        <%= slotTotalSeat %>                         
+                        </div>
+                      </div>
+                      <div class="subjecWiseRoom-view-header">
+
+                        <div class="subjecWiseRoom-view-header-codeTitle">
+                          <div class="subjecWiseRoom-view-header-title">Course Code</div>
+                          <div class="subjecWiseRoom-view-header-title">Course Title</div>
+                        </div>
+                        <div class="subjecWiseRoom-view-header-other">
+                            <div class="subjecWiseRoom-view-header-title">Teacher Int.</div>
+                            <div class="subjecWiseRoom-view-header-title">Section</div>
+                            <div class="subjecWiseRoom-view-header-title">
+                                <div class="subjecWiseRoom-view-header-roomSeat"> Room No</div>
+                                <div class="subjecWiseRoom-view-header-seatRoom">Seat(s)</div>
+                            </div>                            
+                            <div class="subjecWiseRoom-view-header-title">Total</div>
+                        </div>
+                      </div>
+                        <% for(let subjectInfo of slotInfo.subjectInfo){%>
+                          <div class="subjecWiseRoom-view">
+                          <div class="subject-Info">
+                            <div class="suject-info-item"><%= subjectInfo.subjectCode %></div>
+                            <div class="suject-info-item"><%= subjectInfo.subjectName %></div>
+                          </div>
+                          <div class="section-info-view">
+                        <% for(let sectionInfo of subjectInfo.sectionInfo){%>
+                          <div class="section-info">
+                            <div class="section-info-item"><%= sectionInfo.teacherInnitial  %></div>
+                            <div class="section-info-item"><%= sectionInfo.sectionName  %></div>
+                            <div class="section-info-item">
+                             <% for(let roomInfo of sectionInfo.roomInfo){%>
+                                <div class="section-room-info">
+                                <div class="section-info-roomNumber">
+                                <%=   roomInfo.roomNumber   %>
+                                </div>
+                                <div class="section-info-roomSeat">
+                                    <%=   roomInfo.roomSeat   %>
+                                </div>
+                            </div>
+                              <% } %>
+                            </div>
+                            <div class="section-info-item"><%= sectionInfo.numberOfStudent  %></div>
+
+                          </div>
+                        <% } %>
+                         </div>
+                         </div>
+                        <% } %>
+                      </div>
+                      
+                      <% } %>
+                    <% } %>
+                  </div>
+                   <!-- <pagination footer> -->     
+          <div class="pagination_footer">
+            <div class="showing_number_of">
+              <div id="page_details"></div>
+            </div>
+            <div class="pagination" id="pagination">
+              
+            </div>
+          </div>
+          <!-- <pagination footer> --> 
+      </div>
+    </div>
+</section>
+
+<!-- manu open close -->
+<%- include(`../commonPartial/manuOpenCloseScript.ejs`); %>
+<!-- must be add 
+  1.pagination records per page
+  2.pagination records where show, id="showData
+  3.pagination each records , div.class="pagination-data" ,strat = which loop data pagination make this loop inner to start,end-> where each records end
+  3. pagination footer
+-->
+<script>
+  // functiondataInformationResived(){}
+   // Get a reference to the div element, where show  genarate pganiantion information 
+   const showData = document.getElementById("showData");
+   // how many div has find this  
+  let total_records_div = document.querySelectorAll(".pagination-data");
+   // one page howmany records show 
+  let records_size = document.getElementById('records_size')
+  let records_per_page = 1;
+  let page_number = 1; 
+  let total_records = total_records_div.length
+  let total_pages = Math.ceil( total_records / records_per_page)
+  console.log('--->-->-->-->->->',total_records,total_pages)
+  grnaratePagination()
+  DisplayRecords()
+  function DisplayRecords(){
+    let start_index  =  (page_number - 1) * records_per_page;
+    let end_index  =  start_index + (records_per_page );
+    if(end_index >=total_records){
+      end_index = total_records
+    }
+    let statement ='';
+    for (let index = start_index; index < end_index; index++) {
+      console.log("------------data",total_records_div[index])
+      console.log("------------data")
+      console.log("--------------",total_records_div[index].innerHTML)
+      // data_show_div.innerHTML = total_records_div[index].innerHTML
+      statement += `${total_records_div[index].innerHTML}`
+      
+    }
+    // Set the HTML content into the div
+showData.innerHTML = statement;
+document.querySelectorAll(".pagination_link").forEach(item=>{
+  item.classList.remove('active')
+})
+if(page_number == 1){
+        document.getElementById('prvBtn').classList.add('active')
+      }
+      if(page_number == total_pages){
+        document.getElementById('nextBtn').classList.add('active')
+      }
+document.getElementById(`page${page_number}`).classList.add('active')
+document.getElementById('page_details').innerHTML =`Showing ${start_index + 1} to ${end_index} of ${total_records}`
+// if (page_number == 1 ) {
+//   document.getElementById('prvBtn').classList.add('active')
+  
+// }
+    
+  }
+
+
+  function grnaratePagination(){ 
+    let prv_btn = `<div class="pagination_item" aria-disabled="true">
+              <a class="pagination_link active" id='prvBtn' onclick='prvBtn()' href="javascript:void(0)" aria-disabled="true">Previous</a>
+            </div>`
+    let next_btn = `<div class="pagination_item">
+              <a class="pagination_link" id='nextBtn' onclick='nextBtn()' href="javascript:void(0)">Next</a>
+            </div>`
+            let pagination_page_number ='';
+            let activeClass ='';
+            for (let index = 1; index <= total_pages; index++) {
+              if (index==1) {
+                activeClass='active'
+              } else {
+                activeClass=''
+              }
+                pagination_page_number += `<div class="pagination_item">
+              <a class="pagination_link ${activeClass} "  id='page${index}' onclick='goPage(${index})'  href="javascript:void(0)">${index}</a>
+            </div>`
+            }
+            document.getElementById('pagination').innerHTML = `${prv_btn} ${pagination_page_number} ${next_btn} `
+            
+  }
+
+  function prvBtn(){
+    console.log("+++++++++++++++++++++++++++++++++++",page_number)
+    if (page_number > 1) {
+      page_number--;
+      DisplayRecords();
+    }
+  }
+  function nextBtn(){
+    console.log("+++++++++++++++++++++++++++++++++++",page_number,total_pages)
+    if (page_number < total_pages) {
+      page_number++;
+    DisplayRecords();
+    }
+  }
+  function goPage(pageNumber){
+    console.log("///////////////////////",typeof pageNumber)
+    console.log("///////////////////////",typeof parseInt(pageNumber) )
+    page_number = parseInt(pageNumber) 
+    DisplayRecords();
+  }
+   records_size.addEventListener('change',function(e){
+    records_per_page = records_size.value;
+    total_pages = Math.ceil( total_records / records_per_page)
+   page_number = 1; 
+    grnaratePagination()
+  DisplayRecords()
+   })
+
+
+  // data_show_div.innerHTML = "statement";
+  // let coloumsmax = document.getElementById("coloumsmax");
+  console.log("total_records_div", total_records_div)
+  console.log("total_records_div",typeof  total_records_div)
+  console.log("total_records_div", typeof records_per_page)
+  console.log("total_records_div", total_records_div.length,total_pages)
+
+</script>  
+
+
+          </body>
+
+          </html>
