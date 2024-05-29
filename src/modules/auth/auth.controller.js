@@ -28,17 +28,9 @@ class AuthController {
                     maxAge: 1000 * 60 * 60 * 24 * 30,
 
                 });
-                // req.session.isLoggedIn = true;
-                // req.session.user = user
-                // req.session.userType = 'student'
-                // if (studentProfile) {
-                return res.redirect("/student/dashboard")
+                return res.redirect("/api/user")
 
-                // } else {
-                //     return res.redirect("/Student/editProfile")
-                // }
-                // res.render("auth/login", { errr: er.mapped(), value: { useremail, password } })
-            } else {
+                 } else {
                 const return_value = {
                     email: email,
                 }
@@ -58,19 +50,6 @@ class AuthController {
                 emp_return_value: '',
             })
         }
-        // } else {
-        //     const return_value = {
-        //         studentEmailLog: studentEmail,
-        //     }
-        //     res.render("auth/loginSinginReg", {
-        //         errors: '',
-        //         functionCall: 1,
-        //         return_value: return_value,
-        //         emp_return_value: '',
-        //     })
-        // }
-
-
     };
 
     getLoginPage = (req, res, next) => {
@@ -81,19 +60,14 @@ class AuthController {
             emp_return_value: '',
         })
     };
+    logout = (req, res, next) => {
+        res.clearCookie("bdcom");
+        console.log("bdcom logout ")
+        res.status(200).json({ message: 'User logout successfully.'});
 
-    createUser = async (req, res, next) => {
-        let password = '12345'
-        const hashedPassword = await bcrypt.hash(password, 12);
+    }
 
-        let Obj = new userRegschema({
-            name: 'nasim',
-            email: "nasim@gamil.com",
-            password: hashedPassword,
-        });
-        const create = await Obj.save();
-        res.json(Obj);
-    };
+
 
 
 }

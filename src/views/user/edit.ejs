@@ -1,0 +1,155 @@
+<!-- ---------------------------------edit room------------------------------------ -->
+<div class="edit-model-blar" style="
+position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;">
+</div>
+<div class="" id="edit-room-modal" style="display: none;">
+  <div class="modal">
+    <a href="#" onclick="close_edit_model()" class="modal-close">+</a>
+    <div class="modal-title">
+      <h2>edit user</h2>
+    </div>
+    <div class="modal-body">
+      <form id="edit-room-form">
+        <!-- <p><span> Enter Room Number </span> </p> -->
+        <input id="roomNumber" type="text" placeholder="enter room number" name="roomnumber" />
+        <p class="edit-error roomnumber-edit-error"></p>
+   
+        <!-- <input type="text" name="rowCol"> -->
+
+
+
+          <!-- bgkuik -->
+          <p id="editRoomId" style="display: none;"></p>
+          <input type="submit" value="Submit" />
+      </form>
+    </div>
+
+    <!-- </div> -->
+  </div>
+</div>
+
+
+
+<script>
+
+  // room edit handel 
+  const editRoomModel = document.querySelector("#edit-room-modal");
+  const edit_model_blar = document.querySelector(".edit-model-blar");
+
+  function open_Edit_Modal() {
+    editRoomModel.style.display = "block";
+    edit_model_blar.style.display = "block";
+  }
+
+  function close_edit_model() {
+    editRoomModel.style.display = "none";
+    edit_model_blar.style.display = "none";
+  }
+// open ana add prv value 
+  function roomEditHandel(room, id) {
+    open_Edit_Modal()
+
+    const roominfo = room.closest('.room-header');
+    console.log("-------------------id---------------------",roominfo)
+    // id set
+    document.querySelector('#editRoomId').innerHTML =id;
+    // roomNumber set
+    const roomNumber = roominfo.querySelector('.roomNumber').innerHTML
+    document.querySelector('#roomNumber').value =roomNumber
+    // roomStatus set labRoom
+    const roomStatus = roominfo.querySelector('.roomStatus').innerHTML
+    
+    const cloumnNames = roominfo.nextElementSibling.querySelectorAll('.cloumnName')
+    const rowNumbers = roominfo.nextElementSibling.querySelectorAll('.rowNumber')
+
+   
+  }
+
+// server send information
+  const form_edit = document.querySelector("#edit-room-form");
+  form_edit.onsubmit = async function (event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    const errorPlaceholders = document.querySelectorAll("p.edit-error");
+    console.log("errorPlaceholders");
+    console.log(errorPlaceholders);
+
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+      errorPlaceholders[i].style.display = "none";
+    }
+
+    const inputErrors = document.querySelectorAll("input.error");
+    console.log("inputErrors");
+    console.log(inputErrors);
+
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
+    // // ------------------------------------------>>
+
+    const formData = new FormData(form_edit);
+    console.log("formData");
+    console.log("formData",form_edit);
+    const editRoom_Id = document.getElementById('editRoomId').innerHTML;
+  console.log("111111111111111111",editRoom_Id)
+  console.log("111111111111111111",editRoom_Id.innerHTML)
+    console.log(formData);
+    // send the request to server
+    let response = await fetch(`/Administrator/Room/edit/${editRoom_Id}`, {
+      method: "post",
+      body: formData,
+    });
+
+    let responseData = await response.json();
+    console.log("responseData",responseData);
+    console.log("responseData.error",responseData.errors);
+
+    // handle error and response
+    if (responseData.errors) {
+      // errors
+      console.log("working go");
+      await showToast(responseData.msg,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+      // console.log(fieldName)
+
+
+      Object.keys(responseData.errors).forEach((fieldName) => {
+        // add error class to all inputs
+        console.log("fieldName",fieldName);
+        if (!(fieldName == "rowCol")) {
+          form_edit[fieldName].classList.add("error");
+        }
+        // set all error placeholders (p tag) textContent
+        const errorPlaceholder = document.querySelector(
+          `.${fieldName}-edit-error`
+        );
+        console.log("errorPlaceholderDown");
+        console.log(errorPlaceholder);
+        console.log(responseData.errors.columnname);
+
+       console.log("---------------------",responseData.errors.rowCol)
+        errorPlaceholder.innerHTML =
+          responseData.errors[fieldName];
+
+        // make all placeholders visible
+        errorPlaceholder.style.display = "block";
+      });
+    } else {
+      // success
+      await showToast(responseData.msg ); 
+      console.log("close");
+      // successToast.showToast();
+      close_edit_model();
+      document.querySelector("p.edit-error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      },500);
+    }
+  };
+
+
+
+</script>

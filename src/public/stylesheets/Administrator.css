@@ -520,8 +520,7 @@ div.dtsp-topRow button.dtsp-collapseButton.dtsp-rotated {
   position: relative;
   background: var(--primary);;
   height: 10vh;
-  left: 260px;
-  width: calc(100% - 260px);
+  
   transition: all 0.5s ease;
   /* padding: 12px; */
 }
@@ -533,7 +532,7 @@ div.dtsp-topRow button.dtsp-collapseButton.dtsp-rotated {
   display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding: 20px;
+    padding: 0px 50px;
     position: relative;
     background: var(--primary);
 }
@@ -562,48 +561,12 @@ div.dtsp-topRow button.dtsp-collapseButton.dtsp-rotated {
   font-size: 26px;
   font-weight: 600;
 }
-.home-section nav .sidebar-button{
-  display: flex;
-  align-items: center;
-  font-size: 24px;
-  font-weight: 500;
-}
+
 nav .sidebar-button i{
   font-size: 35px;
   margin-right: 10px;
 }
-/* profile icon */
-.sidebar.active ~ .home-section nav{
-  width: calc(100% - 260px);
-  left: 260px;
-  
-}
-.home-section nav{
-  display: flex;
-  justify-content: space-between;
-  height: 65px;
-  background: var(--light);
-  color: var(--dark);
-  display: flex;
-  align-items: center;
-  position: fixed;
-  left: 78px;
-  width: calc(100% -  78px);
-  z-index: 100;
-  padding: 0 20px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  transition: all 0.5s ease;
-}
-.home-section nav .profile-details{
-  display: flex;
-  align-items: center;
-  /* background: var(--tertiary); */
-  border: 2px solid #EFEEF1;
-  border-radius: 6px;
-  height: 50px;
-  min-width: 190px;
-  padding: 0 15px 0 2px;
-}
+
 nav .profile-details img{
   height: 40px;
   width: 40px;

@@ -1,0 +1,153 @@
+<!-- --------------------------add -->
+<div class="model-blar" style="position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-index: 80;background-color: rgba(255, 255, 255, 0.096);backdrop-filter: blur(2px);cursor: pointer;display: none;">
+</div>
+<div class="subject-add-modal"  id="popup-model" >
+  <!-- <div class="modal"> -->
+  <a href="#" onclick="closeModal()" class="modal-close">+</a>
+  <div class="modal-title">
+    <h2>Add New Room</h2>
+  </div>
+  <div class="modal-body"> 
+    <form id="add-room-form" >
+      <!-- <p><span> Enter Room Number </span> </p> -->
+      <input type="text" placeholder="enter user name" name="name" />
+      <p class="error roomnumber-error"></p>
+
+      <input type="text" placeholder="enter user email" name="email" />
+      <p class="error roomnumber-error"></p>
+
+      <input type="password" placeholder="enter password" name="password" />
+      <p class="error roomnumber-error"></p>
+
+      
+
+
+      </div>
+      <!-- bgkuik -->
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+
+<!-- </div> -->
+</div>
+</div>
+
+
+<script>
+    console.log("formData");
+
+  // newrowcloumn.addEventListener("click", addnewinputbox)
+  //-------------------------------------
+
+  // console.log("ridoy", rooms);
+  const popupModel = document.querySelector("#popup-model");
+
+  console.log("popupModel",popupModel )
+  const form = document.querySelector("#add-room-form");
+  const model_blar = document.querySelector(".model-blar");
+  function closeModal() {
+    popupModel.style.display = "none";
+    model_blar.style.display = "none";
+
+  }
+  function openAddRoomsModal() {
+    popupModel.style.display = "block";
+    model_blar.style.display = "block";
+  }
+
+// Function to show a toast message
+function showToast(message, isError = false) {
+  Toastify({
+    text: message,
+    duration: 1000,
+    backgroundColor: isError ? "#f44336" : "",
+  }).showToast();
+}
+
+
+
+  form.onsubmit = async function (event) {
+    event.preventDefault();
+    // clear errors first---------------------------->>
+    // const errorPlaceholders = document.querySelectorAll("p.error");
+    // console.log("errorPlaceholders");
+    // console.log(errorPlaceholders);
+
+    // for (let i = 0; i < errorPlaceholders.length; i++) {
+    //   errorPlaceholders[i].style.display = "none";
+    // }
+
+    // const inputErrors = document.querySelectorAll("input.error");
+    // console.log("inputErrors");
+    // console.log(inputErrors);
+
+    // if (inputErrors.length > 0) {
+    //   for (let j = 0; j < inputErrors.length; j++) {
+    //     inputErrors[j].classList.remove("error");
+    //   }
+    // }
+    // // ------------------------------------------>>
+ 
+    const formData = new FormData(form);
+    console.log("formData");
+    console.log("formData",form);
+    console.log(formData);
+    // send the request to server
+    let response = await fetch("/api/user", {
+      method: "post",
+      body: formData,
+    });
+    
+    let responseData = await response.json();
+    console.log("responseData",responseData);
+    console.log("responseData.error",responseData.errors);
+
+    // handle error and response
+    if (responseData.errors) {
+      // errors
+      console.log("working go");
+      await showToast(responseData.message,responseData.error ); // Show the toast message for 9000 milliseconds (9 seconds)
+      // console.log(fieldName)
+
+
+      // Object.keys(responseData.errors).forEach((fieldName) => {
+      //   // add error class to all inputs
+      //   console.log("fieldName",fieldName);
+      //   if (!(fieldName == "rowCol")) {
+      //     form[fieldName].classList.add("error");
+      //   }
+      //   // set all error placeholders (p tag) textContent
+      //   const errorPlaceholder = document.querySelector(
+      //     `.${fieldName}-error`
+      //   );
+      //   console.log("errorPlaceholderDown");
+      //   console.log(errorPlaceholder);
+      //   console.log(responseData.errors.columnname);
+        
+      //  console.log("---------------------",responseData.errors.rowCol)
+      //   errorPlaceholder.innerHTML =
+      //     responseData.errors[fieldName];
+
+      //   // make all placeholders visible
+      //   errorPlaceholder.style.display = "block";
+      // });
+    
+    } else {
+      // success
+      await showToast(responseData.message ); 
+      console.log("close");
+      // successToast.showToast();
+      closeModal();
+      document.querySelector("p.error").style.display = "none";
+
+      // reload the page after 1 second
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+  };
+  
+</script>
+
+
+

@@ -7,17 +7,44 @@
             <img src="/imges/landingPages_img/logo.png">
           </a> -->
           <nav id="navbar" class="navbar">
-          <a href="index.html" class="mr-auto"><img src="/imges/landingPages_img/logo.png" alt="" class="img-fluid"></a> 
-  
+          
             <ul>
-              <li><a class="nav-link" href="/">Home</a></li>
-              <li><a class="nav-link " href="/login">Log in</a></li>
-              <li><a class="nav-link" href="#resume">Help Center</a></li>
-              <li><a class="nav-link" href="/contact">Contact</a></li>
+              <li><a class="nav-link" href="/api/home">Home</a></li>
+              <li><a class="nav-link " href="/login">Role</a></li>
+              <li><a class="nav-link" href="/api/user">User</a></li>
+              <li><a class="nav-link" href="/contact">News</a></li>
+              <li><a class="nav-link" href="#" onclick="logout()">Log Out</a></li>
             </ul>
-            <i class="bi bi-list mobile-nav-toggle"></i>
   
-          </nav><!-- .navbar -->
+          </nav>
     
         </div>
       </header>
+
+<script>
+  function showToast(message, isError = false) {
+      Toastify({
+        text: message,
+        duration: 500,
+        backgroundColor: isError ? "#f44336" : "",
+      }).showToast();
+    }
+
+
+   async function logout() {
+    console.log("logout");
+      try {
+        let response = await fetch(`/api/auth/logout`, {
+          method: "DELETE",
+        });
+        const responseData = await response.json();
+        await showToast(responseData.message, responseData.error); 
+        setTimeout(() => {
+            window.location.replace('/api/auth');
+        }, 500);
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+</script>
