@@ -4,9 +4,7 @@ import moment from 'moment-timezone';
 import morgan from 'morgan';
 import mongoose from "mongoose";
 import rootRouter from './api/routes/index.js';
-import config from './config/config.js';
-import globalErrorHandler from './middleware/errors/globalErrorHandler.js';
-import colors from 'colors'
+import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -20,6 +18,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(cookieParser('cookie'));
 // Use the body-parser middleware to parse JSON data
 app.use(bodyParser.json());
 

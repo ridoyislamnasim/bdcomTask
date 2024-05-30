@@ -26,11 +26,13 @@ class AuthController {
                 };
                 res.cookie("bdcom", JSON.stringify(token), {
                     maxAge: 1000 * 60 * 60 * 24 * 30,
+                    httpOnly: true,
+                    signed: true,
 
                 });
                 return res.redirect("/api/user")
 
-                 } else {
+            } else {
                 const return_value = {
                     email: email,
                 }
@@ -63,7 +65,7 @@ class AuthController {
     logout = (req, res, next) => {
         res.clearCookie("bdcom");
         console.log("bdcom logout ")
-        res.status(200).json({ message: 'User logout successfully.'});
+        res.status(200).json({ message: 'User logout successfully.' });
 
     }
 
