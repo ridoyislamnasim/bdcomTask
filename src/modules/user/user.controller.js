@@ -3,7 +3,7 @@ import { userRegschema } from "../../models/auth/user.js";
 
 class userController {
   
-  getUser = async (req, res, next) => {
+  getUserPage = async (req, res, next) => {
     const users = await userRegschema.find();
     res.render("user/user", {
       users : users,

@@ -2,10 +2,11 @@ import { Router } from 'express';
 import controller from '../../modules/user/user.controller.js';
 import multer from 'multer';
 import jwtAuth from '../../middleware/auth/jwtAuth.js';
+import { doLoginValidationHandler } from '../../middleware/auth/isLogin.js';
 const upload = multer();
 const UserRouter = Router();
 UserRouter
-  .get('/',  controller.getUser)
+  .get('/',doLoginValidationHandler,  controller.getUserPage)
   .post('/',  upload.any(), jwtAuth('') , controller.createUser)
 //   .get('/', controller.getAllUser);
 

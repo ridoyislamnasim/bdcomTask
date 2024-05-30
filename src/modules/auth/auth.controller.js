@@ -59,7 +59,7 @@ class AuthController {
             errors: "",
             functionCall: 1,
             return_value: '',
-            emp_return_value: '',
+            
         })
     };
     logout = (req, res, next) => {

@@ -23,11 +23,11 @@
             <form action="/api/auth/login" method="post">
                 <div class="for_login_input" style="display: flex;align-items: center;flex-direction: column;">
                   <input  type="text" class="houmanyCol logInput" placeholder="User Email" name="email" 
-                  value = "<%= emp_return_value.emp_log_emailOrId  ?  emp_return_value.emp_log_emailOrId :"" %>" />
+                  value = "" />
                   <input class="houmanyCol logInput" type="password" placeholder="Password" name="password" min="0"
                     max="15" />
                     <div class="error_show">
-                      <p class="error_P"><%= errors.emp_log_emailOrId || errors.emp_log_password %></p>  
+                      <p class="error_P"></p>  
                     </div>
                 </div>
                 <div class="student_foroet">
