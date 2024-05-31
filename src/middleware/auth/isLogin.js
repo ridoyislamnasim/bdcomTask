@@ -5,6 +5,7 @@ export const doLoginValidationHandler = function (req, res, next) {
   if (!cookies) {
    return res.render("auth/loginSinginReg", {
       errors: "",
+      return_value :""
     }); 
   }
   next();

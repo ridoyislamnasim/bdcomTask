@@ -225,9 +225,9 @@ section_1_navbar starts
     display: block;
   }
 
-  .navbar ul {
+  /* .navbar ul {
     display: none;
-  }
+  } */
 }
 
 .navbar-mobile {

@@ -9,7 +9,7 @@ const upload = multer();
 const UserRouter = Router();
 UserRouter
   .get('/',doLoginValidationHandler, jwtAuth('admin','user'), controller.getUserPage)
-  .post('/',  upload.any(), jwtAuth(''), validateCreateUser , controller.createUser)
+  .post('/',  upload.any(), jwtAuth('admin'), validateCreateUser , controller.createUser)
 
 UserRouter
   .route('/:id')

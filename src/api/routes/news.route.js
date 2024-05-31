@@ -8,8 +8,8 @@ import { doLoginValidationHandler } from '../../middleware/auth/isLogin.js';
 const upload = multer();
 const NewsRouter = Router();
 NewsRouter
-  .get('/',doLoginValidationHandler, jwtAuth(''),  controller.getNewsPage)
-  .post('/',  upload.any(), jwtAuth(''), validateNews , controller.createNews)
+  .get('/',doLoginValidationHandler, jwtAuth('admin','user'),  controller.getNewsPage)
+  .post('/',  upload.any(), jwtAuth('admin'), validateNews , controller.createNews)
 
 NewsRouter
   .route('/:id')

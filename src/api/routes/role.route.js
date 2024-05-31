@@ -9,8 +9,8 @@ import { validateUpdateRole } from '../../middleware/validator/role/UpdateRoleVa
 const upload = multer();
 const RoleRouter = Router();
 RoleRouter
-  .get('/',doLoginValidationHandler, jwtAuth(''), controller.getRolePage)
-  .post('/',  upload.any(), jwtAuth(''), validateRole , controller.createRole)
+  .get('/',doLoginValidationHandler, jwtAuth('admin','user'), controller.getRolePage)
+  .post('/',  upload.any(), jwtAuth('admin'), validateRole , controller.createRole)
 
 RoleRouter
   .route('/:id')

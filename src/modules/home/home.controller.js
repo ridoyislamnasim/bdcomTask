@@ -73,24 +73,8 @@ class HomeController {
     home = (req, res, next) => {
         res.render("home/home", {
             errors: "",
-            functionCall: 1,
-            return_value: '',
-            emp_return_value: '',
         })
     };
-
-    // createUser = async (req, res, next) => {
-    //     let password = '12345'
-    //     const hashedPassword = await bcrypt.hash(password, 12);
-
-    //     let Obj = new userRegschema({
-    //         name: 'nasim',
-    //         email: "nasim@gamil.com",
-    //         password: hashedPassword,
-    //     });
-    //     const create = await Obj.save();
-    //     res.json(Obj);
-    // };
 
 
 }

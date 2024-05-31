@@ -7,6 +7,25 @@ import config from "../../config/config.js";
 class AuthController {
     createLogin = async (req, res, next) => {
         const { email, password } = req.body;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!email) {
+            res.render("auth/loginSinginReg", {
+                errors: 'Please enter an email',
+                return_value: email
+            });
+        } else if (!emailRegex.test(email)) {
+            res.render("auth/loginSinginReg", {
+                errors: 'Please enter a valid email',
+                return_value: email
+            });
+        }
+        if (!password) {
+            res.render("auth/loginSinginReg", {
+                errors: 'Please enter password.',
+                return_value: email,
+            })
+        }
         const user = await userRegschema.findOne({ email: email });
         if (user) {
             const isPassMatch = await bcrypt.compare(password, user.password);
@@ -31,26 +50,18 @@ class AuthController {
                     signed: true,
 
                 });
-                return res.redirect("/api/user")
+                return res.redirect("/api/home")
 
             } else {
-                const return_value = {
-                    email: email,
-                }
                 res.render("auth/loginSinginReg", {
-                    errors: '',
-                    return_value: return_value,
-                    emp_return_value: '',
+                    errors: 'Unauthorize user.',
+                    return_value: email,
                 })
             }
         } else {
-            const return_value = {
-                email: email,
-            }
             res.render("auth/loginSinginReg", {
-                errors: '',
-                return_value: return_value,
-                emp_return_value: '',
+                errors: 'Unauthorize user.',
+                return_value: email,
             })
         }
     };
@@ -58,6 +69,7 @@ class AuthController {
     getLoginPage = (req, res, next) => {
         res.render("auth/loginSinginReg", {
             errors: "",
+            return_value: "",
         })
     };
     logout = (req, res, next) => {
