@@ -528,14 +528,7 @@ div.dtsp-topRow button.dtsp-collapseButton.dtsp-rotated {
   left: 78px;
   width: calc(100% - 78px);
 }
-.home-content{
-  display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 0px 50px;
-    position: relative;
-    background: var(--primary);
-}
+
 .bx-menu,
 .bx-menu-alt-right{
   font-size: 30px;
@@ -1486,11 +1479,7 @@ a#profile-edit {
   color: #666;
 }
 
-.container {
-  max-width: 960px;
-  margin: 30px auto;
-  padding: 20px;
-}
+
 
 h1 {
   font-size: 20px;

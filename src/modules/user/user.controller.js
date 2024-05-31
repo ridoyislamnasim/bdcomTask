@@ -4,10 +4,12 @@ import { userRegschema } from "../../models/auth/user.js";
 class userController {
   
   getUserPage = async (req, res, next) => {
+    console.log("req.user", req.user)
+    console.log("req.role", req.role)
     const users = await userRegschema.find();
     res.render("user/user", {
       users : users,
-      return_value: '',
+      role: req.role,
   })
     // const payload = {
 		// 	room_number: req.body?.room_number,
@@ -52,6 +54,32 @@ class userController {
       res.status(500).json({ message: 'An error occurred while creating the user.', error: true });
   }
 };
+
+updateUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    let {name, email, password} = req.body;
+
+    password = await bcrypt.hash(password, 12);
+ const updateObj = {
+  name: name,
+  email: email,
+  password:  password,
+ }
+
+    const updatedUser = await userRegschema.findByIdAndUpdate(id, updateObj, { new: true });
+
+    if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found.' });
+    }
+
+    res.status(200).json({ message: 'User updated successfully.', user: updatedUser });
+} catch (error) {
+    console.error(error); 
+    res.status(500).json({ message: 'An error occurred while updating the user.', error: error.message });
+}
+};
+
 
  deleteUser = async (req, res) => {
   try {

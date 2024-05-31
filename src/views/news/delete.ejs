@@ -1,0 +1,33 @@
+
+  <script>
+    function showToast(message, isError = false) {
+      Toastify({
+        text: message,
+        duration: 500,
+        backgroundColor: isError ? "#f44336" : "",
+      }).showToast();
+    }
+
+
+   async function openDeleteModal(id) {
+      try {
+        let response = await fetch(`/api/news/${id}`, {
+          method: "DELETE",
+        });
+        const responseData = await response.json();
+        console.log('Response:', responseData);
+        await showToast(responseData.message, responseData.error); 
+        setTimeout(() => {
+          setTimeout(() => {
+            location.reload();
+          }, 500); 
+        }, 500);
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+    }
+
+
+  </script>

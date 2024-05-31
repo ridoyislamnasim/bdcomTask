@@ -1,4 +1,0 @@
-{"Exam Date":[{"text":"May 21, 2023 -( Sunday )","rowspan":2}],"Slot ":[{"text":"A","rowspan":2}],"Room Number":[{"text":"AB04-204","rowspan":2}],"Column":[{"text":"1","rowspan":1}],"Subject":":","Level/Term":"/","Section":"(0)","Te. Initial":""}
-,{"Exam Date":[{"text":"2","rowspan":1}],"Slot ":"CSE-132: Discrete Math","Room Number":"L5 / T5","Column":"BS2 (51)","Subject":"ABR"},
-
-{"Exam Date":[{"text":"May 21, 2023 -( Sunday )","rowspan":5}],"Slot ":[{"text":"A","rowspan":5}],"Room Number":[{"text":"AB04-208","rowspan":5}],"Column":[{"text":"1","rowspan":1}],"Subject":":","Level/Term":"/","Section":"(0)","Te. Initial":""},{"Exam Date":[{"text":"2","rowspan":1}],"Slot ":"CSE-132: Discrete Math","Room Number":"L5 / T5","Column":"BS2 (10)","Subject":"ABR"},{"Exam Date":[{"text":"3","rowspan":1}],"Slot ":":","Room Number":"/","Column":"(0)","Subject":""},{"Exam Date":[{"text":"4","rowspan":1}],"Slot ":"CSE-132: Discrete Math","Room Number":"L5 / T5","Colu

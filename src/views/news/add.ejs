@@ -5,21 +5,15 @@
   <!-- <div class="modal"> -->
   <a href="#" onclick="closeModal()" class="modal-close">+</a>
   <div class="modal-title">
-    <h2>Add New User</h2>
+    <h2>Add New News</h2>
   </div>
   <div class="modal-body"> 
     <form id="add-room-form" >
-      <input type="text" placeholder="enter user name" name="name" />
-      <p class="error name-error"></p>
+      <input type="text" placeholder="enter news title" name="title" />
+      <p class="error title-error"></p>
 
-      <input type="text" placeholder="enter user email" name="email" />
-      <p class="error email-error"></p>
-
-      <input type="password" placeholder="enter password" name="password" />
-      <p class="error password-error"></p>
-
-      
-
+      <input type="text" placeholder="enter news body" name="body" />
+      <p class="error body-error"></p>
 
       </div>
       <!-- bgkuik -->
@@ -35,10 +29,6 @@
 <script>
     console.log("formData");
 
-  // newrowcloumn.addEventListener("click", addnewinputbox)
-  //-------------------------------------
-
-  // console.log("ridoy", rooms);
   const popupModel = document.querySelector("#popup-model");
 
   console.log("popupModel",popupModel )
@@ -88,23 +78,19 @@ function showToast(message, isError = false) {
     // // ------------------------------------------>>
  
     const formData = new FormData(form);
-    console.log("formData");
-    console.log("formData",form);
     console.log(formData);
     // send the request to server
-    let response = await fetch("/api/user", {
+    let response = await fetch("/api/news", {
       method: "post",
       body: formData,
     });
     
     let responseData = await response.json();
-    console.log("responseData",responseData);
-    console.log("responseData.error",responseData.errors);
 
     // handle error and response
     if (responseData.errors) {
       // errors
-      await showToast(responseData.message ? responseData.message : "Fail to Create User !!!",responseData.error ); 
+      await showToast(responseData.message ? responseData.message : "Fail to Create News !!!",responseData.error ); 
 
       Object.keys(responseData.errors).forEach((fieldName) => {
         // add error class to all inputs

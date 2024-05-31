@@ -3,21 +3,18 @@ import controller from '../../modules/user/user.controller.js';
 import multer from 'multer';
 import jwtAuth from '../../middleware/auth/jwtAuth.js';
 import { doLoginValidationHandler } from '../../middleware/auth/isLogin.js';
+import { validateCreateUser } from '../../middleware/validator/createUserValidator.js';
+import { validateUpdateUser } from '../../middleware/validator/updateUserValidator.js';
 const upload = multer();
 const UserRouter = Router();
 UserRouter
-  .get('/',doLoginValidationHandler,  controller.getUserPage)
-  .post('/',  upload.any(), jwtAuth('') , controller.createUser)
-//   .get('/', controller.getAllUser);
+  .get('/',doLoginValidationHandler, jwtAuth('admin','user'), controller.getUserPage)
+  .post('/',  upload.any(), jwtAuth(''), validateCreateUser , controller.createUser)
 
 UserRouter
   .route('/:id')
-//   .get(controller.getSingleUser)
-//   .put(controller.updateUser)
+  .put(upload.any(),validateUpdateUser, controller.updateUser)
   .delete(controller.deleteUser);
-
-//   UserRouter
-//   .put('/:id/status', controller.updateUserStatus)
 
 
 export default UserRouter;

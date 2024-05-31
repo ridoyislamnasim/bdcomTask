@@ -10,6 +10,7 @@ const {
   JWT_REFRESH_SECRET_KEY,
   UPLOAD_FOLDER,
   UPLOAD_PATH,
+  COOKIE_MAX_AGE,
 
 } = process.env;
 
@@ -20,6 +21,7 @@ const config = {
   jwtRefreshSecretKey: JWT_REFRESH_SECRET_KEY,
   uploadFolder: UPLOAD_FOLDER,
   uploadPath: UPLOAD_PATH,
+  cookieMaxAge: COOKIE_MAX_AGE
 
 
 };

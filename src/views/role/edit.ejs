@@ -6,26 +6,14 @@ position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-ind
   <div class="modal">
     <a href="#" onclick="close_edit_model()" class="modal-close">+</a>
     <div class="modal-title">
-      <h2>edit user</h2>
+      <h2>edit news</h2>
     </div>
     <div class="modal-body">
       <form id="edit-user-form">
-        <!-- <p><span> Enter  Number </span> </p> -->
-        <input id="userName" type="text" placeholder="enter user name" name="name" />
-        <p class="edit-error name-edit-error"></p>
+        <input id="Role" type="text" placeholder="enter news title" name="role" />
+        <p class="edit-error role-edit-error"></p>
 
-        <input id="userEmail" type="email" placeholder="enter user email" name="email" />
-        <p class="edit-error email-edit-error"></p>
-
-        <input  type="password" placeholder="enter user password" name="password" />
-        <p class="edit-error password-edit-error"></p>
-   
-        <!-- <input type="text" name="rowCol"> -->
-
-
-
-          <!-- bgkuik -->
-          <p id="userId" style="display: none;"></p>
+          <p id="roleId" style="display: none;"></p>
           <input type="submit" value="Submit" />
       </form>
     </div>
@@ -58,15 +46,11 @@ position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-ind
     const editinfo = edit.closest('.user_header');
     console.log("-------------------id---------------------",editinfo)
     // id set
-    document.querySelector('#userId').innerHTML =id;
-    // userName set
-    const userName = editinfo.querySelector('.userName').innerHTML
-    console.log("userName",userName)
-    document.querySelector('#userName').value =userName
-    // userEmail set 
-    const userEmail = editinfo.querySelector('.userEmail').innerHTML
-    console.log("userEmail",userEmail)
-    document.querySelector('#userEmail').value =userEmail
+    document.querySelector('#roleId').innerHTML =id;
+    // Role set
+    const Role = editinfo.querySelector('.Role').innerHTML
+    console.log("Role",Role)
+    document.querySelector('#Role').value =Role
   
   }
 
@@ -88,8 +72,8 @@ position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-ind
     // // ------------------------------------------>>
 
     const formData = new FormData(form_edit);
-    const userId = document.getElementById('userId').innerHTML;
-    let response = await fetch(`/api/user/${userId}`, {
+    const roleId = document.getElementById('roleId').innerHTML;
+    let response = await fetch(`/api/role/${roleId}`, {
       method: "put",
       body: formData,
     });
@@ -99,7 +83,6 @@ position: fixed;/* position: absolute; */left: 0;right: 0;top: 0;bottom: 0;z-ind
     if (responseData.errors) {
       // errors
       await showToast(responseData?.message ? responseData?.message : 'Error',responseData.error ); 
-
       Object.keys(responseData.errors).forEach((fieldName) => {
         if (!(fieldName == "rowCol")) {
           form_edit[fieldName].classList.add("error");

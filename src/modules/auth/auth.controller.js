@@ -2,6 +2,7 @@
 import bcrypt from "bcryptjs";
 import { userRegschema } from '../../models/auth/user.js';
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.js";
+import config from "../../config/config.js";
 
 class AuthController {
     createLogin = async (req, res, next) => {
@@ -25,7 +26,7 @@ class AuthController {
                     refreshToken: refreshToken
                 };
                 res.cookie("bdcom", JSON.stringify(token), {
-                    maxAge: 1000 * 60 * 60 * 24 * 30,
+                    maxAge: config.cookieMaxAge,
                     httpOnly: true,
                     signed: true,
 
@@ -57,9 +58,6 @@ class AuthController {
     getLoginPage = (req, res, next) => {
         res.render("auth/loginSinginReg", {
             errors: "",
-            functionCall: 1,
-            return_value: '',
-            
         })
     };
     logout = (req, res, next) => {

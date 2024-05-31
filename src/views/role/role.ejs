@@ -1,0 +1,77 @@
+
+
+<%- include(`../common/header.ejs`); %>
+<section class="home-section">
+  <div class="home-content">
+    <%- include(`../common/landingMenu.ejs`); %>
+
+    <div class="manage-container">
+      <div id="title">
+        <h2>Manage Role</h2>
+      </div>
+
+      <div class="table_top">
+        <div class="left">
+          <% if (role === 'admin') { %>
+            <button class="newadd" onclick="openAddModal()">Add New Role</button>
+        <% } else { %>
+          
+        <% } %>
+
+        </div>
+      </div>
+     
+
+      <div id="rooms-Info">
+        <div id="showData" >
+          <div class="user-info-level">
+            <span class="userNameLevel">Role</span>
+            <% if (role === 'admin') { %>
+              <span class="editLevel">edit</span>
+          <% } else { %>
+            <span class="editLevel"></span>
+          <% } %>
+           
+          </div>
+          
+        <% for(let role of roles){%>
+        <div class="pagination-data" style="display: block;">
+          <div class="user_header">
+            <div class="user-info">
+              <span class="userName Role"><%= role.role %></span>
+              <% if (role === 'admin') { %>
+                <div class="edit-delete">
+                  <a href="#" onclick="editHandel(this,'<%= role._id   %>')">
+                    <!-- edit -->
+                    <i class="fa-regular fa-pen-to-square"></i>
+                  </a>
+                  <a method="delete" href="#" onclick="openDeleteModal('<%=role._id %>')">
+                    <!-- delete -->
+                    <i class="fa-regular fa-trash-can"></i>
+                  </a>
+              </div>
+            <% } else { %>
+              <div class="edit-delete"></div>
+            <% } %>
+              
+            </div>
+          </div>
+          
+        </div>
+        <%} %>
+
+      </div>   
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- add news -->
+<%- include(`./delete.ejs`); %>
+<%- include(`./add.ejs`); %>
+<%- include(`./edit.ejs`); %>
+</body>
+
+</html>

@@ -5,54 +5,57 @@
   <div class="home-content">
     <%- include(`../common/landingMenu.ejs`); %>
 
-    <div class="manageAddRoom-container">
+    <div class="manage-container">
       <div id="title">
         <h2>Manage User</h2>
       </div>
 
-      <!-- <div class="new-room-container new-room">
-        <button class="newadd" onclick="openAddRoomsModal()"> Add New Room </button>
-      </div> -->
-      <div class="table_top">
-        <div class="left">
-          <button class="newadd" onclick="openAddRoomsModal()">Add New user</button>
+      <div id="rooms-Info">
+        <div class="table_top">
+          <div class="left">
+            <% if (role === 'admin') { %>
+              <button class="newadd" onclick="openAddModal()">Add New user</button>
+          <% } else { %>
+             
+          <% } %>
+            
+          </div>
+          
         </div>
         
-      </div>
-     
-
-      <div id="rooms-Info">
-        <!-- info title -->
-        
-        <!-- < pagination records per page > -->
-       
-        <!-- < pagination records per page > -->
-        <!-- < pagination records where show, id="showData" > -->
         <div id="showData" >
-          <div class="room-info">
-            <span class="roomNumber">name</span>
-            <span class="roomStatus">email</span>
+          <div class="user-info-level">
+            <span class="userNameLevel">name</span>
+            <span class="userEmailLevel">email</span>
+            <% if (role === 'admin') { %>
+              <span class="editLevel">edit</span>
+          <% } else { %>
+              <span class="editLevel"></span>
+          <% } %>
           </div>
+          
         <% for(let user of users){%>
-        <!-- < pagination each records , class="pagination-data" ,end-> where each records end > -->
         <div class="pagination-data" style="display: block;">
-          <!-- <tr> -->
-          <div class="room-header">
-            <div class="gap"></div>
-            <div class="room-info">
-              <span class="roomNumber"><%= user.name %></span>
-              <span class="roomStatus"><%= user.email %></span>
+          <div class="user_header">
+            <div class="user-info">
+              <span class="userName"><%= user.name %></span>
+              <span class="userEmail"><%= user.email %></span>
+              <% if (role === 'admin') { %>
+                <div class="edit-delete">
+                  <a href="#" onclick="editHandel(this,'<%= user._id   %>')">
+                    <!-- edit -->
+                    <i class="fa-regular fa-pen-to-square"></i>
+                  </a>
+                  <a method="delete" href="#" onclick="openDeleteModal('<%=user._id %>')">
+                    <!-- delete -->
+                    <i class="fa-regular fa-trash-can"></i>
+                  </a>
+              </div>
+            <% } else { %>
+              <div class="edit-delete"></div>
+            <% } %>
+ 
             </div>
-            <div class="edit-delete">
-              <a href="#" onclick="roomEditHandel(this,'<%= user._id   %>')">
-                <!-- edit -->
-                <i class="fa-regular fa-pen-to-square"></i>
-              </a>
-              <a method="delete" href="#" onclick="openDeleteModal('<%=user._id %>')">
-                <!-- delete -->
-                <i class="fa-regular fa-trash-can"></i>
-              </a>
-          </div>
           </div>
           
         </div>
